@@ -4,10 +4,10 @@ from obspy import *
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 # -*- coding: ascii -*-
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget,QFileDialog
 import copy
 from numpy import arange, sin, pi
-from n_rcsui import *
+import n_rcsui
 from matplotlib.figure import Figure
 import sys
 
@@ -23,15 +23,32 @@ class MplCanvas(FigureCanvas):
         FigureCanvas.updateGeometry(self)
     def compute_initial_figure(self):
         pass
-class Rcspy(object):
-    #aw,instance of UI
-    def __init__(self,aw):
-        print aw.qmlcanvas.width
-        self.qml = MplCanvas(aw.qmlcanvas,dpi=100)
+class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
 
-    def drawAxes(self):
-        td1 = "C:\\Users\\v\\Desktop\\My_final_PC\\data_for_debug\\YN.201506152046.0002.seed"
-        st = read(td1)
+    def __init__(self,parent=None):
+        app = QApplication(sys.argv)
+        super(Rcspy,self).__init__()
+        self.setupUi(self)
+
+        self.initqml()
+        self.menuconncect()
+        self.show()
+        app.exec_()
+        # print aw.qmlcanvas.width
+
+    def initqml(self):
+        self.qml = MplCanvas(self.qmlcanvas, dpi=100)
+
+    def menuconncect(self):
+        self.actionopen.triggered.connect(self.onfileopen)
+    def onfileopen(self):
+        filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './')
+        self.drawAxes(self,filename)
+        print filename
+    def drawAxes(self,filename):
+        #td1 = "C:\\Users\\v\\Desktop\\My_final_PC\\data_for_debug\\YN.201506152046.0002.seed"
+        st = read(filename)
+        #st=read(td1)
         tr = st[5]
         s = tr.data
         time = tr.stats.starttime
@@ -39,6 +56,7 @@ class Rcspy(object):
         tt = []
         ss = []
         axs = []
+        print 6
         drawnum=6
         for i in range(0, drawnum):
             tr = st[i]
@@ -55,17 +73,8 @@ class Rcspy(object):
             else:
                 ax =self.qml.fig.add_subplot(drawnum, 1, i + 1, sharex=axs[0], sharey=axs[0])
             axs.append(copy.copy(ax))
+        print 5
         for i in range(0, drawnum):
             axs[i].plot(tt[i], ss[i][0:-1])
-def main(aw):
-    rc=Rcspy(aw)
-    rc.drawAxes()
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    QM=QMainWindow()
-    aw = Ui_MainWindow()
-    aw.setupUi(QM)
-    main(aw)
-    QM.show()
-    #sys.exit(qApp.exec_())
-    app.exec_()
+    Rcspy()
