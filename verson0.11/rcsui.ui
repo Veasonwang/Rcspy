@@ -72,7 +72,7 @@
         <property name="currentIndex">
          <number>0</number>
         </property>
-        <widget class="QWidget" name="page">
+        <widget class="QWidget" name="tools1">
          <property name="geometry">
           <rect>
            <x>0</x>
@@ -82,20 +82,20 @@
           </rect>
          </property>
          <attribute name="label">
-          <string>Page 1</string>
+          <string>tools1</string>
          </attribute>
         </widget>
-        <widget class="QWidget" name="page_2">
+        <widget class="QWidget" name="toos2">
          <property name="geometry">
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>98</width>
-           <height>28</height>
+           <width>256</width>
+           <height>257</height>
           </rect>
          </property>
          <attribute name="label">
-          <string>Page 2</string>
+          <string>tools2</string>
          </attribute>
         </widget>
        </widget>
@@ -126,6 +126,7 @@
      <string>file</string>
     </property>
     <addaction name="actionopen"/>
+    <addaction name="actionexit"/>
    </widget>
    <addaction name="menuopen"/>
   </widget>
@@ -133,6 +134,11 @@
   <action name="actionopen">
    <property name="text">
     <string>open</string>
+   </property>
+  </action>
+  <action name="actionexit">
+   <property name="text">
+    <string>exit</string>
    </property>
   </action>
  </widget>

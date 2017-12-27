@@ -30,21 +30,19 @@ class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
         super(Rcspy,self).__init__()
         self.setupUi(self)
 
-        self.initqml()
         self.menuconncect()
+        #self.onfileopen()
+        self.qml = MplCanvas(self.qmlcanvas, dpi=100)
         self.show()
         app.exec_()
         # print aw.qmlcanvas.width
 
-    def initqml(self):
-        self.qml = MplCanvas(self.qmlcanvas, dpi=100)
 
     def menuconncect(self):
         self.actionopen.triggered.connect(self.onfileopen)
     def onfileopen(self):
         filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './')
-        self.drawAxes(self,filename)
-        print filename
+        self.drawAxes(filename)
     def drawAxes(self,filename):
         #td1 = "C:\\Users\\v\\Desktop\\My_final_PC\\data_for_debug\\YN.201506152046.0002.seed"
         st = read(filename)
@@ -62,7 +60,7 @@ class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
             tr = st[i]
             s = tr.data
             time1 = tr.stats.starttime
-           # print time1
+            # print time1
             time2 = tr.stats.endtime
             #print time2
             t = arange(1.0, 30000, 1)
@@ -76,5 +74,6 @@ class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
         print 5
         for i in range(0, drawnum):
             axs[i].plot(tt[i], ss[i][0:-1])
+
 if __name__ == '__main__':
     Rcspy()
