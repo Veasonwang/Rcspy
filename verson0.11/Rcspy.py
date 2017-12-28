@@ -10,19 +10,46 @@ from numpy import arange, sin, pi
 import n_rcsui
 from matplotlib.figure import Figure
 import sys
-
+import random
 class MplCanvas(FigureCanvas):
-    def __init__(self, parent=None, dpi=300):
-        self.fig = Figure(figsize=(16,9),dpi=dpi)
-        #self.axes.hold(False)
+    def __init__(self, parent=None, width=10, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+
         self.compute_initial_figure()
-        #
-        FigureCanvas.__init__(self, self.fig)
+
+        FigureCanvas.__init__(self, fig)
         self.setParent(parent)
-        FigureCanvas.setSizePolicy(self,QSizePolicy.Expanding,QSizePolicy.Expanding)
+
+        FigureCanvas.setSizePolicy(self,
+                                   QSizePolicy.Expanding,
+                                   QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
+
     def compute_initial_figure(self):
         pass
+class MyDynamicMplCanvas(MplCanvas):
+    """A canvas that updates itself every second with a new plot."""
+
+    def __init__(self, *args, **kwargs):
+        MplCanvas.__init__(self, *args, **kwargs)
+
+    def update_figure(self):
+        # Build a list of 4 random integers between 0 and 10 (both inclusive)
+        l = [random.randint(0, 10) for i in range(4)]
+        self.axes.cla()
+        self.axes.plot([0, 1, 2, 3], l, 'r')
+        self.draw()
+    def doing(self,filename):
+        st = read(filename)
+        tr = st[5]
+        s = tr.data
+        t = arange(1.0, len(s), 1)
+        self.axes.cla()
+        self.axes.plot(t,s[0:-1],'r')
+        self.draw()
+
+
 class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
 
     def __init__(self,parent=None):
@@ -32,7 +59,7 @@ class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
 
         self.menuconncect()
         #self.onfileopen()
-        self.qml = MplCanvas(self.qmlcanvas, dpi=100)
+        self.qml = MyDynamicMplCanvas(self.qmlcanvas, dpi=100)
         self.show()
         app.exec_()
         # print aw.qmlcanvas.width
@@ -41,22 +68,26 @@ class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
     def menuconncect(self):
         self.actionopen.triggered.connect(self.onfileopen)
     def onfileopen(self):
+
+
         filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './')
-        self.drawAxes(filename)
+        self.qml.doing(filename)
+        #self.drawAxes(filename)
+        #self.qmlcanvas.update()
+        #self.listWidget.addItem(filename)
     def drawAxes(self,filename):
         #td1 = "C:\\Users\\v\\Desktop\\My_final_PC\\data_for_debug\\YN.201506152046.0002.seed"
         st = read(filename)
+        self.qml.addaxs(6)
         #st=read(td1)
         tr = st[5]
         s = tr.data
         time = tr.stats.starttime
         t = arange(0.0, len(s), 1)
-        tt = []
-        ss = []
-        axs = []
+
         print 6
-        drawnum=6
-        for i in range(0, drawnum):
+        #self.qml.axes.cla()
+        for i in range(0, self.qml.drawnum):
             tr = st[i]
             s = tr.data
             time1 = tr.stats.starttime
@@ -64,16 +95,17 @@ class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
             time2 = tr.stats.endtime
             #print time2
             t = arange(1.0, 30000, 1)
-            tt.append(copy.deepcopy(t))
-            ss.append(copy.deepcopy(s))
+            self.qml.tt.append(copy.deepcopy(t))
+            self.qml.ss.append(copy.deepcopy(s))
             if i == 0:
-                ax =self.qml.fig.add_subplot(drawnum, 1, i + 1)
+                ax =self.qml.fig.add_subplot(self.qml.drawnum, 1, i + 1)
             else:
-                ax =self.qml.fig.add_subplot(drawnum, 1, i + 1, sharex=axs[0], sharey=axs[0])
-            axs.append(copy.copy(ax))
+                ax =self.qml.fig.add_subplot(self.qml.drawnum, 1, i + 1, sharex=self.axes[0], sharey=self.axs[0])
+            self.qml.axes.append(copy.copy(ax))
         print 5
-        for i in range(0, drawnum):
-            axs[i].plot(tt[i], ss[i][0:-1])
+        for i in range(0, self.qml.drawnum):
+            self.qml.axes[i].plot(self.tt[i], self.qml.ss[i][0:-1])
+        self.qml.draw()
 
 if __name__ == '__main__':
     Rcspy()
