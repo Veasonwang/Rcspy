@@ -75,7 +75,8 @@ class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
             print tr.stats
             self.listWidget.addItem(tr.stats.network+"/"+tr.stats.station+"/"+tr.stats.location+"/"+tr.stats.channel)
 
-
+    def testgit(self):
+        pass
 
 
 if __name__ == '__main__':
