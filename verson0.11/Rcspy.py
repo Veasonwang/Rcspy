@@ -6,6 +6,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget,QFileDialog
 import copy
+import obspy.core.trace as tc
 from numpy import arange, sin, pi
 import n_rcsui
 from matplotlib.figure import Figure
@@ -28,27 +29,20 @@ class MplCanvas(FigureCanvas):
 
     def compute_initial_figure(self):
         pass
-class MyDynamicMplCanvas(MplCanvas):
-    """A canvas that updates itself every second with a new plot."""
-
-    def __init__(self, *args, **kwargs):
-        MplCanvas.__init__(self, *args, **kwargs)
-
     def update_figure(self):
         # Build a list of 4 random integers between 0 and 10 (both inclusive)
         l = [random.randint(0, 10) for i in range(4)]
         self.axes.cla()
         self.axes.plot([0, 1, 2, 3], l, 'r')
         self.draw()
-    def doing(self,filename):
+    def readfile(self,filename):
         st = read(filename)
         tr = st[5]
         s = tr.data
-        t = arange(1.0, len(s), 1)
+        t=tr.times()
         self.axes.cla()
-        self.axes.plot(t,s[0:-1],'r')
+        self.axes.plot(t[0:-1],s[0:-1],'r')
         self.draw()
-
 
 class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
 
@@ -56,22 +50,18 @@ class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
         app = QApplication(sys.argv)
         super(Rcspy,self).__init__()
         self.setupUi(self)
-
         self.menuconncect()
         #self.onfileopen()
-        self.qml = MyDynamicMplCanvas(self.qmlcanvas, dpi=100)
+        self.qml = MplCanvas(self.qmlcanvas, dpi=100)
         self.show()
         app.exec_()
         # print aw.qmlcanvas.width
 
-
     def menuconncect(self):
         self.actionopen.triggered.connect(self.onfileopen)
     def onfileopen(self):
-
-
         filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './')
-        self.qml.doing(filename)
+        self.qml.readfile(filename)
         #self.drawAxes(filename)
         #self.qmlcanvas.update()
         #self.listWidget.addItem(filename)
