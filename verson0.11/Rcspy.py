@@ -15,8 +15,8 @@ import random
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=18, height=10, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-
+        self.axes = []
+        self.fig=fig
         self.compute_initial_figure()
 
         FigureCanvas.__init__(self, fig)
@@ -29,19 +29,26 @@ class MplCanvas(FigureCanvas):
 
     def compute_initial_figure(self):
         pass
-    def update_figure(self):
-        # Build a list of 4 random integers between 0 and 10 (both inclusive)
-        l = [random.randint(0, 10) for i in range(4)]
-        self.axes.cla()
-        self.axes.plot([0, 1, 2, 3], l, 'r')
-        self.draw()
-    def readfile(self,filename):
+    def readfile(self,filename,drawnumber):
+        axes=[]
         st = read(filename)
-        tr = st[5]
-        s = tr.data
-        t=tr.times()
-        self.axes.cla()
-        self.axes.plot(t[0:-1],s[0:-1],'r')
+        s=[]
+        t=[]
+        self.ss=s
+        self.tt=t
+        self.axes=axes
+        for i in range(drawnumber):
+            if i==0:
+                ax=self.fig.add_subplot(drawnumber,1,1)
+            else:
+                ax = self.fig.add_subplot(drawnumber, 1, i + 1)
+            axes.append(ax)
+            t.append(st[i].times())
+            s.append(st[i].data)
+        for i in range(drawnumber):
+            self.axes[i].cla()
+        for i in range(drawnumber):
+            self.axes[i].plot(self.tt[i],self.ss[i],'r')
         self.draw()
 
 class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
@@ -51,7 +58,6 @@ class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
         super(Rcspy,self).__init__()
         self.setupUi(self)
         self.menuconncect()
-        #self.onfileopen()
         self.qml = MplCanvas(self.qmlcanvas, dpi=100)
         self.show()
         app.exec_()
@@ -61,41 +67,9 @@ class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
         self.actionopen.triggered.connect(self.onfileopen)
     def onfileopen(self):
         filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './')
-        self.qml.readfile(filename)
-        #self.drawAxes(filename)
-        #self.qmlcanvas.update()
-        #self.listWidget.addItem(filename)
-    def drawAxes(self,filename):
-        #td1 = "C:\\Users\\v\\Desktop\\My_final_PC\\data_for_debug\\YN.201506152046.0002.seed"
-        st = read(filename)
-        self.qml.addaxs(6)
-        #st=read(td1)
-        tr = st[5]
-        s = tr.data
-        time = tr.stats.starttime
-        t = arange(0.0, len(s), 1)
+        self.qml.readfile(filename,3)
 
-        print 6
-        #self.qml.axes.cla()
-        for i in range(0, self.qml.drawnum):
-            tr = st[i]
-            s = tr.data
-            time1 = tr.stats.starttime
-            # print time1
-            time2 = tr.stats.endtime
-            #print time2
-            t = arange(1.0, 30000, 1)
-            self.qml.tt.append(copy.deepcopy(t))
-            self.qml.ss.append(copy.deepcopy(s))
-            if i == 0:
-                ax =self.qml.fig.add_subplot(self.qml.drawnum, 1, i + 1)
-            else:
-                ax =self.qml.fig.add_subplot(self.qml.drawnum, 1, i + 1, sharex=self.axes[0], sharey=self.axs[0])
-            self.qml.axes.append(copy.copy(ax))
-        print 5
-        for i in range(0, self.qml.drawnum):
-            self.qml.axes[i].plot(self.tt[i], self.qml.ss[i][0:-1])
-        self.qml.draw()
+
 
 if __name__ == '__main__':
     Rcspy()
