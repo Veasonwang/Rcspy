@@ -29,9 +29,9 @@ class MplCanvas(FigureCanvas):
 
     def compute_initial_figure(self):
         pass
-    def readfile(self,filename,drawnumber):
+    def drawAxes(self,steam,drawnumber):
         axes=[]
-        st = read(filename)
+        st = steam
         s=[]
         t=[]
         self.ss=s
@@ -53,6 +53,7 @@ class MplCanvas(FigureCanvas):
 
 class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
 
+
     def __init__(self,parent=None):
         app = QApplication(sys.argv)
         super(Rcspy,self).__init__()
@@ -62,12 +63,18 @@ class Rcspy(n_rcsui.Ui_MainWindow,QMainWindow):
         self.show()
         app.exec_()
         # print aw.qmlcanvas.width
-
     def menuconncect(self):
         self.actionopen.triggered.connect(self.onfileopen)
     def onfileopen(self):
         filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './')
-        self.qml.readfile(filename,3)
+        self.steam=read(filename)
+        self.qml.drawAxes(self.steam,3)
+        self.listivew_additem(self.steam)
+    def listivew_additem(self,steam):
+        for tr in steam:
+            print tr.stats
+            self.listWidget.addItem(tr.stats.network+"/"+tr.stats.station+"/"+tr.stats.location+"/"+tr.stats.channel)
+
 
 
 

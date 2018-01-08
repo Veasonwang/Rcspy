@@ -14,7 +14,7 @@
       <file leaf-file-name="n_rcsui.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/verson0.11/n_rcsui.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1482">
+            <state relative-caret-position="817">
               <caret line="57" column="42" lean-forward="false" selection-start-line="57" selection-start-column="35" selection-end-line="57" selection-end-column="42" />
               <folding />
             </state>
@@ -24,7 +24,7 @@
       <file leaf-file-name="rcsui.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/verson0.11/rcsui.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="-156">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
@@ -34,8 +34,8 @@
       <file leaf-file-name="Rcspy.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-15">
-              <caret line="36" column="17" lean-forward="true" selection-start-line="36" selection-start-column="17" selection-end-line="36" selection-end-column="17" />
+            <state relative-caret-position="635">
+              <caret line="78" column="0" lean-forward="true" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -54,7 +54,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="97" />
     <option name="y" value="-8" />
     <option name="width" value="960" />
@@ -180,7 +180,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14285715" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -208,13 +208,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/../embedding_in_qt5.py</url>
-          <line>58</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -426,7 +419,7 @@
     <entry file="file://$PROJECT_DIR$/../embedding_in_qt5.py" />
     <entry file="file://$PROJECT_DIR$/verson0.11/rcsui.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state relative-caret-position="-156">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -434,7 +427,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/verson0.11/n_rcsui.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1482">
+        <state relative-caret-position="817">
           <caret line="57" column="42" lean-forward="false" selection-start-line="57" selection-start-column="35" selection-end-line="57" selection-end-column="42" />
           <folding />
         </state>
@@ -442,8 +435,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-15">
-          <caret line="36" column="17" lean-forward="true" selection-start-line="36" selection-start-column="17" selection-end-line="36" selection-end-column="17" />
+        <state relative-caret-position="635">
+          <caret line="78" column="0" lean-forward="true" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
           <folding />
         </state>
       </provider>
