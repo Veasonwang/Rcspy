@@ -1,2 +1,2 @@
 # Rcspy
-A tool for Seismic pretreatment, based on Obspy
+A tool for seismic pretreatment, based on Obspy
