@@ -14,10 +14,8 @@ class MplCanvas(FigureCanvas):
         self.axes = []
         self.fig=fig
         self.compute_initial_figure()
-
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
-
         FigureCanvas.setSizePolicy(self,
                                    QSizePolicy.Expanding,
                                    QSizePolicy.Expanding)
@@ -26,6 +24,7 @@ class MplCanvas(FigureCanvas):
     def compute_initial_figure(self):
         pass
     def drawAxes(self,steam,drawnumber):
+        self.fig.clear()
         axes=[]
         st = steam
         s=[]
@@ -47,6 +46,7 @@ class MplCanvas(FigureCanvas):
             self.axes[i].plot(self.tt[i],self.ss[i],'g')
         self.draw()
     def drawStations(self,stations,drawtype):
+        self.fig.clear()
         axes=[]
         s=[]
         t=[]
@@ -56,15 +56,15 @@ class MplCanvas(FigureCanvas):
             self.axes[i].cla()
         self.axes=axes
         drawnumber=len(stations)
+        self.fig.clear()
         for i in range(drawnumber):
             if i == 0:
                 ax = self.fig.add_subplot(drawnumber, 1, 1)
             else:
                 ax = self.fig.add_subplot(drawnumber, 1, i + 1)
+                #ax.xaxis.set_ticks_position("top")
             axes.append(ax)
         for station in stations:
-            print station.stats
-            print "=="
             if(drawtype=='N'):
                 t.append(station.channels[0].tr.times().copy())
                 s.append(copy.deepcopy(station.channels[0].tr.data.copy()))

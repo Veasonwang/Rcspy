@@ -16,8 +16,7 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.setupUi(self)
         self.menuconncect()
         self. _initStationTree()
-        self.qml = MplCanvas(self.qmlcanvas, dpi=100)
-
+        self.qml = MplCanvas(self.qmlcanvas,dpi=100)
         self.show()
         app.exec_()
         # print aw.qmlcanvas.width
