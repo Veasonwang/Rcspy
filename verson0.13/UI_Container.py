@@ -5,6 +5,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget,QFileDialog
 from PyQt5.QtGui import QFont,QIcon
+import copy
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 class MplCanvas(FigureCanvas):
@@ -52,20 +53,23 @@ class MplCanvas(FigureCanvas):
         self.ss=s
         self.tt=t
         for i in range(len(self.axes)):
-            self.axes[i].cla
+            self.axes[i].cla()
         self.axes=axes
         drawnumber=len(stations)
+        for i in range(drawnumber):
+            if i == 0:
+                ax = self.fig.add_subplot(drawnumber, 1, 1)
+            else:
+                ax = self.fig.add_subplot(drawnumber, 1, i + 1)
+            axes.append(ax)
         for station in stations:
+            print station.stats
+            print "=="
             if(drawtype=='N'):
-                for i in range(drawnumber):
-                    if i==0:
-                        ax=self.fig.add_subplot(drawnumber,1,1)
-                    else:
-                        ax =self.fig.add_subplot(drawnumber, 1, i + 1)
-                    axes.append(ax)
-                    t.append(station.channels[0].tr.times())
-                    s.append(station.channels[0].tr.data)
+                t.append(station.channels[0].tr.times().copy())
+                s.append(copy.deepcopy(station.channels[0].tr.data.copy()))
         for i in range(len(self.axes)):
+            self.axes[i].cla()
             self.axes[i].plot(self.tt[i], self.ss[i], 'g')
         self.draw()
 

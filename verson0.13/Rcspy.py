@@ -34,7 +34,7 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.qml.drawStations(drawstations,'N')
 
     def Fdebug(self):
-        for i in range(6):
+        for i in range(3):
             self.stations[i].setVisible(True)
 
     def redraw(self):
@@ -55,5 +55,16 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         #self.stationTree.itemDoubleClicked.connect(self._changeStationVisibility)
         #self.stationTree.setContextMenuPolicy(Qt.CustomContextMenu)          #add menu
         #self.stationTree.customContextMenuRequested.connect(self.stations.showSortQMenu)
+
+    def _changeStationVisibility(self, item):
+        '''
+        Change selected stations visibility
+        '''
+        for station in self.stations:
+            if station.QStationItem.isSelected():
+                station.setVisible(not station.visible)
+        self.draw()
+
+
 if __name__ == '__main__':
     Rcspy()
