@@ -4,6 +4,7 @@ from  PyQt5.QtWidgets import QTreeWidgetItem
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget,QFileDialog
+from PyQt5.QtGui import QFont,QIcon
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 class MplCanvas(FigureCanvas):
@@ -44,7 +45,139 @@ class MplCanvas(FigureCanvas):
         for i in range(drawnumber):
             self.axes[i].plot(self.tt[i],self.ss[i],'g')
         self.draw()
-class Stations(object):
+class Stations:
+    '''
+    Station() container object
+    '''
+    def __init__(self, st, parent):
+        '''
+        Inits with
+
+        :parent: grapePicker QtGui.QMainWindow
+        '''
+        self.parent = parent
+        self.stream = st
+        self.stations = []
+        for stat in set([tr.stats.station for tr in st]):
+            self.addStation(st=st.select(station=stat))
+        self.sorted_by = None
+        self.sortableAttribs()
+
+    def addStation(self, st):
+        '''
+        Adds a station from
+        :param st: obspy stream
+        '''
+        self.stations.append(Station(stream=st, parent=self))
+        self.parent.stationTree.addTopLevelItem(
+            self.stations[-1].QStationItem)
+
+    def visibleStations(self):
+        '''
+        Returns a list of all visible stations
+
+        :return: list of Station()
+        '''
+        return [station for station in self.stations
+                if station.visible]
+
+    def sortableAttribs(self):
+        ignore_attribs = ['channel', 'mseed', 'SAC', 'sampling_rate',
+                          '_format', 'delta', 'calib']
+        self.sortable_attribs = {}
+        attribs = set.intersection(*(set(station.stats.keys())
+                                     for station in self.stations))
+        for key in attribs:
+            if key in ignore_attribs:
+                continue
+            self.sortable_attribs[key] = True
+            if isinstance(eval('self.stations[0].stats.%s' % key), AttribDict):
+                self.sortable_attribs[key] = {}
+                subkeys = set(['%s.%s' % (key, subkey) for tr in self.stream
+                               for subkey in eval('tr.stats.%s.keys()' % key)])
+                for skey in subkeys:
+                    self.sortable_attribs[key][skey] = True
+
+    def sortByAttrib(self, key):
+        '''
+        Sort station by attribute key
+        '''
+        from operator import attrgetter
+        self.stations = sorted(self.stations, key=attrgetter('stats.%s' % key))
+        self.sorted_by = key
+
+        self._sortStationsOnGUI()
+
+    def _sortStationsOnGUI(self):
+        '''
+        Sort the stations on QTreeWidget and GraphicsLayout
+        '''
+        # Clear all plots
+        self.parent.qtGraphLayout.clear()
+        # Update QtreeWidget
+        for station in self.stations:
+            self.parent.stationTree.takeTopLevelItem(self.parent.stationTree.indexOfTopLevelItem(station.QStationItem))
+        for station in self.stations:
+            self.parent.stationTree.addTopLevelItem(station.QStationItem)
+            station.initPlot()
+        self.updateAllPlots()
+
+    def showSortQMenu(self, pos):
+        '''
+        Sort Menu for the QTreeWidget
+        '''
+        sort_menu = QMenu()
+        sort_menu.setFont(QFont('', 9))
+        _t = sort_menu.addAction('Sort by attribute')
+        _t.setEnabled(False)
+        _t.setFont(QFont('', 8, QFont.Bold))
+        for attrib, subattrib in self.sortable_attribs.items():
+            if isinstance(subattrib, bool):
+                self._addActionSortMenu(attrib, sort_menu)
+            else:
+                _submenu = sort_menu.addMenu(attrib)
+                for sattrib in subattrib.keys():
+                    self._addActionSortMenu(sattrib, _submenu)
+        sort_menu.exec_(self.parent.stationTree.mapToGlobal(pos))
+
+    def _addActionSortMenu(self, attrib, menu):
+        '''
+        Help function for self.showSortQMenu
+        '''
+        _action = menu.addAction(attrib)
+        _action.setCheckable(True)
+        _action.triggered.connect(lambda: self.sortByAttrib(attrib))
+        if attrib == self.sorted_by:
+            _action.setChecked(True)
+        else:
+            _action.setChecked(False)
+
+    def updateAllPlots(self):
+        '''
+        Updates the plots, links the axis and clears the labeling
+        '''
+        visible_stations = self.visibleStations()
+        for station in visible_stations:
+            station.plotItem.setXLink(visible_stations[0].plotItem)
+            station.plotItem.getAxis('bottom').setStyle(showValues=False)
+        visible_stations[-1].plotItem.getAxis('bottom').setStyle(showValues=True)
+            #except:
+            #    pass
+
+    def exportHypStaFile(self, filename):
+        with open(filename, 'w') as stat_file:
+            for station in self.stations:
+                stat_file.write(station.getStaStringAllComponents() + '\n')
+
+    def __iter__(self):
+        return iter(self.stations)
+
+    def __getitem__(self, index):
+        return self.stations[index]
+
+    def __len__(self):
+        return len(self.stations)
+class Station(object):
     '''
     Represents a single Station and hold the plotItem in the layout
     '''
@@ -76,6 +209,22 @@ class Stations(object):
         self.channels = []
         for tr in self.st:
             self.channels.append(Channel(tr, station=self))
+        self.setVisible(False)
+    def setVisible(self, visible=True):
+        '''
+        Sets wheather the station is visible in the plot view
+        '''
+        basedir = os.path.dirname(__file__)
+
+        self.visible = visible
+        if visible:
+            self.QStationItem.setIcon(0,
+                                      QIcon(os.path.join(basedir,
+                                            'icons/eye-24.png')))
+        else:
+            self.QStationItem.setIcon(0,
+                                      QIcon(os.path.join(basedir,
+                                            'icons/eye-hidden-24.png')))
 
 class Channel(object):
     '''

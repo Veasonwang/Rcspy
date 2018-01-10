@@ -25,11 +25,11 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.actionopen.triggered.connect(self.onfileopen)
     def onfileopen(self):
         filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './')
-        self.steam=read(filename)
+        self.stream=read(filename)
         self.stations = Stations(self.stream, self)
         self.redraw()
     def redraw(self):
-        self.qml.drawAxes(self.steam, 3)
+        self.qml.drawAxes(self.stream, 3)
     def testgit(self):
         pass
     def _initStationTree(self):
