@@ -45,6 +45,31 @@ class MplCanvas(FigureCanvas):
         for i in range(drawnumber):
             self.axes[i].plot(self.tt[i],self.ss[i],'g')
         self.draw()
+    def drawStations(self,stations,drawtype):
+        axes=[]
+        s=[]
+        t=[]
+        self.ss=s
+        self.tt=t
+        for i in range(len(self.axes)):
+            self.axes[i].cla
+        self.axes=axes
+        drawnumber=len(stations)
+        for station in stations:
+            if(drawtype=='N'):
+                for i in range(drawnumber):
+                    if i==0:
+                        ax=self.fig.add_subplot(drawnumber,1,1)
+                    else:
+                        ax =self.fig.add_subplot(drawnumber, 1, i + 1)
+                    axes.append(ax)
+                    t.append(station.channels[0].tr.times())
+                    s.append(station.channels[0].tr.data)
+        for i in range(len(self.axes)):
+            self.axes[i].plot(self.tt[i], self.ss[i], 'g')
+        self.draw()
+
+
 class Stations:
     '''
     Station() container object
@@ -62,7 +87,6 @@ class Stations:
             self.addStation(st=st.select(station=stat))
         self.sorted_by = None
         self.sortableAttribs()
-
     def addStation(self, st):
         '''
         Adds a station from

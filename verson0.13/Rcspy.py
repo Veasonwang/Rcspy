@@ -27,11 +27,22 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './')
         self.stream=read(filename)
         self.stations = Stations(self.stream, self)
-        self.redraw()
+        self.Fdebug()
+        self.draw()
+    def draw(self):
+        drawstations=self.stations.visibleStations()
+        self.qml.drawStations(drawstations,'N')
+
+    def Fdebug(self):
+        for i in range(6):
+            self.stations[i].setVisible(True)
+
     def redraw(self):
         self.qml.drawAxes(self.stream, 3)
+
     def testgit(self):
         pass
+
     def _initStationTree(self):
         '''
                 Setup stationtree :QTreeWidgetItem:
