@@ -9,7 +9,7 @@ import copy
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 class MplCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=18, height=10, dpi=100):
+    def __init__(self, parent=None, width=17, height=10, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = []
         self.fig=fig
@@ -90,7 +90,6 @@ class Stations:
         for stat in set([tr.stats.station for tr in st]):
             self.addStation(st=st.select(station=stat))
         self.sorted_by = None
-        self.sortableAttribs()
     def addStation(self, st):
         '''
         Adds a station from
@@ -109,23 +108,15 @@ class Stations:
         return [station for station in self.stations
                 if station.visible]
 
-    def sortableAttribs(self):
-        ignore_attribs = ['channel', 'mseed', 'SAC', 'sampling_rate',
-                          '_format', 'delta', 'calib']
-        self.sortable_attribs = {}
-        attribs = set.intersection(*(set(station.stats.keys())
-                                     for station in self.stations))
-        for key in attribs:
-            if key in ignore_attribs:
-                continue
-            self.sortable_attribs[key] = True
-            if isinstance(eval('self.stations[0].stats.%s' % key), AttribDict):
-                self.sortable_attribs[key] = {}
-                subkeys = set(['%s.%s' % (key, subkey) for tr in self.stream
-                               for subkey in eval('tr.stats.%s.keys()' % key)])
-                for skey in subkeys:
-                    self.sortable_attribs[key][skey] = True
-
+    def showQMenu(self):
+        '''
+        Sort Menu for the QTreeWidget
+        '''
+        T_menu = QMenu()
+        T_menu.setFont(QFont('', 9))
+        allinvi = T_menu.addAction('Sort by attribute')
+        allinvi.setEnabled(False)
+        allinvi.setFont(QFont('', 8, QFont.Bold))
     def sortByAttrib(self, key):
         '''
         Sort station by attribute key
@@ -135,68 +126,6 @@ class Stations:
         self.sorted_by = key
 
         self._sortStationsOnGUI()
-
-    def _sortStationsOnGUI(self):
-        '''
-        Sort the stations on QTreeWidget and GraphicsLayout
-        '''
-        # Clear all plots
-        self.parent.qtGraphLayout.clear()
-        # Update QtreeWidget
-        for station in self.stations:
-            self.parent.stationTree.takeTopLevelItem(self.parent.stationTree.indexOfTopLevelItem(station.QStationItem))
-        for station in self.stations:
-            self.parent.stationTree.addTopLevelItem(station.QStationItem)
-            station.initPlot()
-        self.updateAllPlots()
-
-    def showSortQMenu(self, pos):
-        '''
-        Sort Menu for the QTreeWidget
-        '''
-        sort_menu = QMenu()
-        sort_menu.setFont(QFont('', 9))
-        _t = sort_menu.addAction('Sort by attribute')
-        _t.setEnabled(False)
-        _t.setFont(QFont('', 8, QFont.Bold))
-        for attrib, subattrib in self.sortable_attribs.items():
-            if isinstance(subattrib, bool):
-                self._addActionSortMenu(attrib, sort_menu)
-            else:
-                _submenu = sort_menu.addMenu(attrib)
-                for sattrib in subattrib.keys():
-                    self._addActionSortMenu(sattrib, _submenu)
-        sort_menu.exec_(self.parent.stationTree.mapToGlobal(pos))
-
-    def _addActionSortMenu(self, attrib, menu):
-        '''
-        Help function for self.showSortQMenu
-        '''
-        _action = menu.addAction(attrib)
-        _action.setCheckable(True)
-        _action.triggered.connect(lambda: self.sortByAttrib(attrib))
-        if attrib == self.sorted_by:
-            _action.setChecked(True)
-        else:
-            _action.setChecked(False)
-
-    def updateAllPlots(self):
-        '''
-        Updates the plots, links the axis and clears the labeling
-        '''
-        visible_stations = self.visibleStations()
-        for station in visible_stations:
-            station.plotItem.setXLink(visible_stations[0].plotItem)
-            station.plotItem.getAxis('bottom').setStyle(showValues=False)
-        visible_stations[-1].plotItem.getAxis('bottom').setStyle(showValues=True)
-            #except:
-            #    pass
-
-    def exportHypStaFile(self, filename):
-        with open(filename, 'w') as stat_file:
-            for station in self.stations:
-                stat_file.write(station.getStaStringAllComponents() + '\n')
-
     def __iter__(self):
         return iter(self.stations)
 
@@ -205,6 +134,8 @@ class Stations:
 
     def __len__(self):
         return len(self.stations)
+
+
 class Station(object):
     '''
     Represents a single Station and hold the plotItem in the layout
