@@ -23,29 +23,7 @@ class MplCanvas(FigureCanvas):
 
     def compute_initial_figure(self):
         pass
-    def drawAxes(self,steam,drawnumber):
-        self.fig.clear()
-        axes=[]
-        st = steam
-        s=[]
-        t=[]
-        self.ss=s
-        self.tt=t
-        self.axes=axes
-        for i in range(drawnumber):
-            if i==0:
-                ax=self.fig.add_subplot(drawnumber,1,1)
-            else:
-                ax = self.fig.add_subplot(drawnumber, 1, i + 1)
-            axes.append(ax)
-            t.append(st[i].times())
-            s.append(st[i].data)
-        for i in range(drawnumber):
-            self.axes[i].cla()
-        for i in range(drawnumber):
-            self.axes[i].plot(self.tt[i],self.ss[i],'g')
-        self.draw()
-    def drawStations(self,stations,drawtype):
+    def drawStations(self,stations,VisibleChn):
         self.fig.clear()
         axes=[]
         s=[]
@@ -55,7 +33,16 @@ class MplCanvas(FigureCanvas):
         for i in range(len(self.axes)):
             self.axes[i].cla()
         self.axes=axes
-        drawnumber=len(stations)
+
+        visnum=0
+        if VisibleChn.ZVisible==True:
+            visnum=visnum+1
+        if VisibleChn.NVisible==True:
+            visnum=visnum+1
+        if VisibleChn.EVisible==True:
+            visnum=visnum+1
+
+        drawnumber=len(stations)*visnum
         self.fig.clear()
         for i in range(drawnumber):
             if i == 0:
@@ -65,15 +52,27 @@ class MplCanvas(FigureCanvas):
                 #ax.xaxis.set_ticks_position("top")
             axes.append(ax)
         for station in stations:
-            if(drawtype=='N'):
-                t.append(station.channels[0].tr.times().copy())
-                s.append(copy.deepcopy(station.channels[0].tr.data.copy()))
+            if(VisibleChn.ZVisible==True):
+                t.append(station.getchannelbyNZE('Z').times().copy())
+                s.append(copy.deepcopy(station.getchannelbyNZE('Z').data.copy()))
+            if (VisibleChn.NVisible == True):
+                t.append(station.getchannelbyNZE('N').times().copy())
+                s.append(copy.deepcopy(station.getchannelbyNZE('N').data.copy()))
+            if (VisibleChn.EVisible == True):
+                t.append(station.getchannelbyNZE('E').times().copy())
+                s.append(copy.deepcopy(station.getchannelbyNZE('E').data.copy()))
+
         for i in range(len(self.axes)):
             self.axes[i].cla()
             self.axes[i].plot(self.tt[i], self.ss[i], 'g')
+
         self.draw()
-
-
+class ChannelVisible:
+    def __init__(self,parent=None):
+        self.parent=parent
+        self.ZVisible=True
+        self.NVisible=False
+        self.EVisible=False
 class Stations:
     '''
     Station() container object
@@ -134,8 +133,6 @@ class Stations:
 
     def __len__(self):
         return len(self.stations)
-
-
 class Station(object):
     '''
     Represents a single Station and hold the plotItem in the layout
@@ -184,7 +181,10 @@ class Station(object):
             self.QStationItem.setIcon(0,
                                       QIcon(os.path.join(basedir,
                                             'icons/eye-hidden-24.png')))
-
+    def getchannelbyNZE(self,direction):
+        for channel in self.channels:
+            if channel.channel[-1]==direction:
+                return channel.tr
 class Channel(object):
     '''
     Channel Container Object handels an individual channel
@@ -195,14 +195,12 @@ class Channel(object):
     def __init__(self, tr, station):
         '''
         init the channel with parent Station() and obspy trace
-
         :param tr: obspy.core.trace of the channel
         :param station: Station()
         '''
         self.tr = tr
         self.station = station
         self.channel = tr.stats.channel
-
         self.QChannelItem = QTreeWidgetItem()
         self.QChannelItem.setText(1, '%s @ %d Hz' %
                                   (self.tr.stats.channel,
@@ -210,19 +208,5 @@ class Channel(object):
         self.QChannelItem.setText(2, '%s\n%s' %
                                   (self.tr.stats.starttime,
                                    self.tr.stats.endtime))
-        #self.QChannelItem.setFont(1, QFont('', 7))
-        #self.QChannelItem.setFont(2, QFont('', 7))
         self.station.QStationItem.addChild(self.QChannelItem)
-
-    def plotTraceItem(self):
-        '''
-        Plots the pg.PlotCurveItem into self.station.plotItem
-        '''
-        self.plotTrace = self.tr.copy()
-        # Filter if necessary
-        if self.station.parent.parent.filterArgs is not None:
-            self.plotTrace.filter('bandpass',
-                                  **self.station.parent.parent.filterArgs)
-        self.traceItem.setData(y=self.plotTrace.data, antialias=True)
-        self.station.plotItem.getAxis('bottom').setScale(self.tr.stats.delta)
 
