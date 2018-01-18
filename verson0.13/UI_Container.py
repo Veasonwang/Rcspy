@@ -6,6 +6,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget,QFileDialog
 from PyQt5.QtGui import QFont,QIcon
 import copy
+import math
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 class MplCanvas(FigureCanvas):
@@ -13,17 +14,19 @@ class MplCanvas(FigureCanvas):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = []
         self.fig=fig
-        self.compute_initial_figure()
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
         FigureCanvas.setSizePolicy(self,
                                    QSizePolicy.Expanding,
                                    QSizePolicy.Expanding)
+        self.ondrawtr=[]             #To writr down the trace order
+        self.labeloffset = 1         #offset label offset
         FigureCanvas.updateGeometry(self)
-
-    def compute_initial_figure(self):
-        pass
-    def drawStations(self,stations,VisibleChn):
+        self.connectevent()
+    def getstream(self,stream):
+        self.stream=stream
+    def drawAxes(self,stations,VisibleChn):
+        self.ondrawtr=[]
         self.fig.clear()
         axes=[]
         s=[]
@@ -44,6 +47,9 @@ class MplCanvas(FigureCanvas):
 
         drawnumber=len(stations)*visnum
         self.fig.clear()
+        self.labeloffset=2.0/float(math.sqrt(float(drawnumber)))
+        if self.labeloffset>1:
+            self.labeloffset=1
         for i in range(drawnumber):
             if i == 0:
                 ax = self.fig.add_subplot(drawnumber, 1, 1)
@@ -55,18 +61,42 @@ class MplCanvas(FigureCanvas):
             if(VisibleChn.ZVisible==True):
                 t.append(station.getchannelbyNZE('Z').times().copy())
                 s.append(copy.deepcopy(station.getchannelbyNZE('Z').data.copy()))
+                self.ondrawtr.append(copy.deepcopy(station.getchannelbyNZE('Z')))
             if (VisibleChn.NVisible == True):
                 t.append(station.getchannelbyNZE('N').times().copy())
                 s.append(copy.deepcopy(station.getchannelbyNZE('N').data.copy()))
+                self.ondrawtr.append(copy.deepcopy(station.getchannelbyNZE('N')))
             if (VisibleChn.EVisible == True):
                 t.append(station.getchannelbyNZE('E').times().copy())
                 s.append(copy.deepcopy(station.getchannelbyNZE('E').data.copy()))
+                self.ondrawtr.append(copy.deepcopy(station.getchannelbyNZE('E')))
 
         for i in range(len(self.axes)):
             self.axes[i].cla()
             self.axes[i].plot(self.tt[i], self.ss[i], 'g')
-
+        self.drawIds()
+        self.fig.subplots_adjust(bottom=0.001, hspace=0.000, right=0.999, top=0.999, left=0.001)
         self.draw()
+
+
+    def onclick(self, event):
+        print(event.button, event.x, event.y, event.xdata, event.ydata)
+    def connectevent(self):
+        self.cid = self.fig.canvas.mpl_connect('button_press_event',self.onclick)
+    def drawIds(self):
+        """
+                draws the trace ids plotted as text into each axes.
+                """
+        # make a Stream with the traces that are plotted
+
+        x = 0.01
+        y = 0.92
+        bbox = dict(boxstyle="round,pad=0.4", fc="w", ec="k", lw=1.2, alpha=1.0)
+        kwargs = dict(va="top", ha="left", fontsize=16*self.labeloffset, family='monospace',
+                      zorder=10000)
+        for ax, tr in zip(self.axes, self.ondrawtr):
+            ax.text(x, y, tr.id, color="k", transform=ax.transAxes,
+                    bbox=bbox, **kwargs)
 class ChannelVisible:
     def __init__(self,parent=None):
         self.parent=parent
