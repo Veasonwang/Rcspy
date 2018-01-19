@@ -21,15 +21,29 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         # print aw.qmlcanvas.width
     def menuconncect(self):
         self.actionopen.triggered.connect(self.onfileopen)
+        self.actionexit.triggered.connect(self.onexit)
     def onfileopen(self):
-        filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './')
+        filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './','*.seed')
         if filename!="":
-            self.stream=read(filename)
-            self.stations = Stations(self.stream, self)
-            for i in range(3):
-                self.stations[i].setVisible(True)
-            self.qml.getstream(self.stream)
-            self.draw()
+            try:
+                self.stream=read(filename)
+                self.stations = Stations(self.stream, self)
+                for i in range(3):
+                    self.stations[i].setVisible(True)
+                self.qml.getstream(self.stream)
+                self.draw()
+            except:
+                pass
+    def onexit(self):
+        reply = QMessageBox.question(self,'Message', 'You sure to quit?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            try:
+                os._exit(0)
+            except:
+                pass
+        else:
+            pass
     def draw(self):
         drawstations=self.stations.visibleStations()
         self.qml.drawAxes(drawstations,self.VisibleChannel)

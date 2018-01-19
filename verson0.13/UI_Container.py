@@ -1,3 +1,8 @@
+'''
+To handle gui events and draw cruve
+'''
+
+
 from obspy.core import UTCDateTime, AttribDict
 import os
 from  PyQt5.QtWidgets import QTreeWidgetItem
@@ -10,7 +15,7 @@ import math
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 class MplCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=17, height=10, dpi=100):
+    def __init__(self, parent=None, width=17, height=9.9, dpi=100):
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = []
         self.fig=fig
@@ -22,7 +27,7 @@ class MplCanvas(FigureCanvas):
         self.ondrawtr=[]             #To writr down the trace order
         self.labeloffset = 1         #offset label offset
         FigureCanvas.updateGeometry(self)
-        self.connectevent()
+        #self.connectevent()         #connect to recive the mouse event
     def getstream(self,stream):
         self.stream=stream
     def drawAxes(self,stations,VisibleChn):
@@ -47,7 +52,7 @@ class MplCanvas(FigureCanvas):
 
         drawnumber=len(stations)*visnum
         self.fig.clear()
-        self.labeloffset=2.0/float(math.sqrt(float(drawnumber)))
+        self.labeloffset=2.0/(float(math.sqrt(float(drawnumber)))+0.1)
         if self.labeloffset>1:
             self.labeloffset=1
         for i in range(drawnumber):
@@ -85,13 +90,14 @@ class MplCanvas(FigureCanvas):
         self.cid = self.fig.canvas.mpl_connect('button_press_event',self.onclick)
     def drawIds(self):
         """
-                draws the trace ids plotted as text into each axes.
-                """
-        # make a Stream with the traces that are plotted
-
+        draws the trace ids plotted as text into each axes.
+        """
         x = 0.01
         y = 0.92
         bbox = dict(boxstyle="round,pad=0.4", fc="w", ec="k", lw=1.2, alpha=1.0)
+
+        # labeloffset to adjust the size of the label in case of too many plotted number
+
         kwargs = dict(va="top", ha="left", fontsize=16*self.labeloffset, family='monospace',
                       zorder=10000)
         for ax, tr in zip(self.axes, self.ondrawtr):
@@ -165,7 +171,7 @@ class Stations:
         return len(self.stations)
 class Station(object):
     '''
-    Represents a single Station and hold the plotItem in the layout
+    Represents a single Station and hold the channel
     '''
     def __init__(self, stream, parent):
         '''
@@ -217,10 +223,9 @@ class Station(object):
                 return channel.tr
 class Channel(object):
     '''
-    Channel Container Object handels an individual channel
+    Channel Container Object handels an individual channel,obspy.core.trace
 
     self.QChannelItem represents the QTreeWidgetItem
-    self.traceItem is the inherited pyqtgraph.PlotCurveItem
     '''
     def __init__(self, tr, station):
         '''
