@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2f68cfe7-8842-4cf6-b4e0-d652ea0747ff" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Function_test.py" afterPath="$PROJECT_DIR$/Function_test.py" />
       <change beforePath="$PROJECT_DIR$/verson0.13/Rcspy.py" afterPath="$PROJECT_DIR$/verson0.13/Rcspy.py" />
       <change beforePath="$PROJECT_DIR$/verson0.13/UI_Container.py" afterPath="$PROJECT_DIR$/verson0.13/UI_Container.py" />
     </list>
@@ -19,8 +18,8 @@
       <file leaf-file-name="Rcspy.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/verson0.13/Rcspy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="139">
-              <caret line="52" column="17" lean-forward="true" selection-start-line="52" selection-start-column="17" selection-end-line="52" selection-end-column="18" />
+            <state relative-caret-position="511">
+              <caret line="94" column="81" lean-forward="false" selection-start-line="94" selection-start-column="81" selection-end-line="94" selection-end-column="81" />
               <folding />
             </state>
           </provider>
@@ -29,13 +28,13 @@
       <file leaf-file-name="UI_Container.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/verson0.13/UI_Container.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="504">
-              <caret line="55" column="30" lean-forward="true" selection-start-line="55" selection-start-column="30" selection-end-line="55" selection-end-column="30" />
+            <state relative-caret-position="21">
+              <caret line="61" column="17" lean-forward="true" selection-start-line="61" selection-start-column="17" selection-end-line="61" selection-end-column="17" />
               <folding>
                 <element signature="e#46#92#0" expanded="true" />
-                <element signature="e#4331#5979#0" expanded="false" />
-                <element signature="e#6120#7100#0" expanded="false" />
-                <element signature="e#7149#7689#0" expanded="false" />
+                <element signature="e#4132#5780#0" expanded="false" />
+                <element signature="e#5921#6901#0" expanded="false" />
+                <element signature="e#6950#7490#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -44,8 +43,8 @@
       <file leaf-file-name="Function_test.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Function_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="3" column="18" lean-forward="true" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
+            <state relative-caret-position="0">
+              <caret line="3" column="18" lean-forward="false" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -54,8 +53,8 @@
       <file leaf-file-name="rcsui.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/verson0.13/rcsui.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-113">
-              <caret line="56" column="20" lean-forward="false" selection-start-line="56" selection-start-column="13" selection-end-line="56" selection-end-column="20" />
+            <state relative-caret-position="23">
+              <caret line="36" column="64" lean-forward="false" selection-start-line="36" selection-start-column="64" selection-end-line="36" selection-end-column="64" />
               <folding />
             </state>
           </provider>
@@ -80,8 +79,8 @@
         <option value="$PROJECT_DIR$/verson0.11/UI_Container.py" />
         <option value="$PROJECT_DIR$/verson0.11/Rcspy.py" />
         <option value="$PROJECT_DIR$/Function_test.py" />
-        <option value="$PROJECT_DIR$/verson0.13/Rcspy.py" />
         <option value="$PROJECT_DIR$/verson0.13/UI_Container.py" />
+        <option value="$PROJECT_DIR$/verson0.13/Rcspy.py" />
       </list>
     </option>
   </component>
@@ -106,7 +105,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -123,6 +121,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -342,39 +341,39 @@
     <entry file="file://$PROJECT_DIR$/verson0.11/n_rcsui.py" />
     <entry file="file://$PROJECT_DIR$/verson0.11/UI_Container.py" />
     <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.13/rcsui.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-113">
-          <caret line="56" column="20" lean-forward="false" selection-start-line="56" selection-start-column="13" selection-end-line="56" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Function_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="3" column="18" lean-forward="true" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
+        <state relative-caret-position="0">
+          <caret line="3" column="18" lean-forward="false" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/verson0.13/UI_Container.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="55" column="30" lean-forward="true" selection-start-line="55" selection-start-column="30" selection-end-line="55" selection-end-column="30" />
+        <state relative-caret-position="21">
+          <caret line="61" column="17" lean-forward="true" selection-start-line="61" selection-start-column="17" selection-end-line="61" selection-end-column="17" />
           <folding>
             <element signature="e#46#92#0" expanded="true" />
-            <element signature="e#4331#5979#0" expanded="false" />
-            <element signature="e#6120#7100#0" expanded="false" />
-            <element signature="e#7149#7689#0" expanded="false" />
+            <element signature="e#4132#5780#0" expanded="false" />
+            <element signature="e#5921#6901#0" expanded="false" />
+            <element signature="e#6950#7490#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/verson0.13/rcsui.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="23">
+          <caret line="36" column="64" lean-forward="false" selection-start-line="36" selection-start-column="64" selection-end-line="36" selection-end-column="64" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/verson0.13/Rcspy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="52" column="17" lean-forward="true" selection-start-line="52" selection-start-column="17" selection-end-line="52" selection-end-column="18" />
+        <state relative-caret-position="511">
+          <caret line="94" column="81" lean-forward="false" selection-start-line="94" selection-start-column="81" selection-end-line="94" selection-end-column="81" />
           <folding />
         </state>
       </provider>

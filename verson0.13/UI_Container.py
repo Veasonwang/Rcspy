@@ -15,8 +15,9 @@ import math
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 class MplCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=17, height=9.9, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
+    def __init__(self, parent=None, width=23, height=14, dpi=72):
+
+        fig = Figure(figsize=(width, height), dpi=72,linewidth=1)
         self.axes = []
         self.fig=fig
         FigureCanvas.__init__(self, fig)
@@ -28,6 +29,7 @@ class MplCanvas(FigureCanvas):
         self.labeloffset = 1         #offset label offset
         FigureCanvas.updateGeometry(self)
         #self.connectevent()         #connect to recive the mouse event
+
     def getstream(self,stream):
         self.stream=stream
     def drawAxes(self,stations,VisibleChn):
@@ -41,7 +43,6 @@ class MplCanvas(FigureCanvas):
         for i in range(len(self.axes)):
             self.axes[i].cla()
         self.axes=axes
-
         visnum=0
         if VisibleChn.ZVisible==True:
             visnum=visnum+1
@@ -84,10 +85,9 @@ class MplCanvas(FigureCanvas):
         self.draw()
 
 
-    def onclick(self, event):
-        print(event.button, event.x, event.y, event.xdata, event.ydata)
-    def connectevent(self):
-        self.cid = self.fig.canvas.mpl_connect('button_press_event',self.onclick)
+
+
+
     def drawIds(self):
         """
         draws the trace ids plotted as text into each axes.

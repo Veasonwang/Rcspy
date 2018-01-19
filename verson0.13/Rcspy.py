@@ -15,7 +15,10 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.menuconncect()
         self._initStationTree()
         self._initVistblebtn()
-        self.qml = MplCanvas(self.qmlcanvas,dpi=100)
+        self.qml = MplCanvas(self.qmlcanvas,width=23,height=14,dpi=72)
+        self.fig=self.qml.fig
+        self.connectevent()
+        self.statusbar.showMessage("Done")
         self.show()
         app.exec_()
         # print aw.qmlcanvas.width
@@ -87,5 +90,20 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         else:
             self.VisibleChannel.EVisible = False
         self.draw()
+    def connectevent(self):
+        self.cid = self.fig.canvas.mpl_connect('button_press_event',self.onclick)
+        self.qml.mpl_connect('button_release_event', self.__mpl_mouseButtonReleaseEvent)
+        self.qml.mpl_connect('button_press_event', self.__mpl_mouseButtonPressEvent)
+        self.qml.mpl_connect('motion_notify_event', self.__mpl_motionNotifyEvent)
+    def onclick(self, event):
+        print(event.button, event.x, event.y, event.xdata, event.ydata)
+    def __mpl_mouseButtonReleaseEvent(self,event):
+        pass
+    def __mpl_mouseButtonPressEvent(self,event):
+        pass
+    def __mpl_motionNotifyEvent(self,event):
+        string="X:"+str(event.xdata)+" , Y:"+str(event.ydata)
+        self.statusbar.showMessage(string)
+        pass
 if __name__ == '__main__':
     Rcspy()
