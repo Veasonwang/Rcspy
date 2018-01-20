@@ -83,11 +83,6 @@ class MplCanvas(FigureCanvas):
         self.drawIds()
         self.fig.subplots_adjust(bottom=0.001, hspace=0.000, right=0.999, top=0.999, left=0.001)
         self.draw()
-
-
-
-
-
     def drawIds(self):
         """
         draws the trace ids plotted as text into each axes.
@@ -103,6 +98,8 @@ class MplCanvas(FigureCanvas):
         for ax, tr in zip(self.axes, self.ondrawtr):
             ax.text(x, y, tr.id, color="k", transform=ax.transAxes,
                     bbox=bbox, **kwargs)
+
+
 class ChannelVisible:
     def __init__(self,parent=None):
         self.parent=parent

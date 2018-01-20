@@ -90,11 +90,14 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         else:
             self.VisibleChannel.EVisible = False
         self.draw()
+
     def connectevent(self):
         self.cid = self.fig.canvas.mpl_connect('button_press_event',self.onclick)
         self.qml.mpl_connect('button_release_event', self.__mpl_mouseButtonReleaseEvent)
         self.qml.mpl_connect('button_press_event', self.__mpl_mouseButtonPressEvent)
         self.qml.mpl_connect('motion_notify_event', self.__mpl_motionNotifyEvent)
+        self.qml.mpl_connect('axes_enter_event', self.enter_axes)
+        self.qml.mpl_connect('axes_leave_event', self.leave_axes)
     def onclick(self, event):
         print(event.button, event.x, event.y, event.xdata, event.ydata)
     def __mpl_mouseButtonReleaseEvent(self,event):
@@ -105,5 +108,14 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         string="X:"+str(event.xdata)+" , Y:"+str(event.ydata)
         self.statusbar.showMessage(string)
         pass
+    def enter_axes(self,event):
+        print('enter_axes', event.inaxes)
+        event.inaxes.patch.set_facecolor('grey')
+
+        event.canvas.draw()
+    def leave_axes(self,event):
+        print('leave_axes', event.inaxes)
+        event.inaxes.patch.set_facecolor('white')
+        event.canvas.draw()
 if __name__ == '__main__':
     Rcspy()
