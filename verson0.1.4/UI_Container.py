@@ -13,8 +13,11 @@ from PyQt5.QtGui import QFont,QIcon
 import copy
 import math
 <<<<<<< HEAD
+<<<<<<< HEAD
 from matplotlib.widgets import MultiCursor
 from util import *
+=======
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 from PyQt5 import QtGui
@@ -31,6 +34,7 @@ class MplCanvas(FigureCanvas):
                                    QSizePolicy.Expanding,
                                    QSizePolicy.Expanding)
 <<<<<<< HEAD
+<<<<<<< HEAD
         self.ondrawchn=[]             #To write down the trace order
         self.labeloffset = 1         #offset label offset
         FigureCanvas.updateGeometry(self)
@@ -39,6 +43,8 @@ class MplCanvas(FigureCanvas):
     def drawAxes(self,stations,VisibleChn):
 
 =======
+=======
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
         self.ondrawtr=[]             #To writr down the trace order
         self.labeloffset = 1         #offset label offset
         FigureCanvas.updateGeometry(self)
@@ -47,6 +53,9 @@ class MplCanvas(FigureCanvas):
     def getstream(self,stream):
         self.stream=stream
     def drawAxes(self,stations,VisibleChn):
+<<<<<<< HEAD
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
+=======
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
         self.ondrawchn=[]
         self.fig.clear()
@@ -69,6 +78,7 @@ class MplCanvas(FigureCanvas):
         drawnumber=len(stations)*visnum
         self.fig.clear()
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
         """
@@ -84,12 +94,18 @@ class MplCanvas(FigureCanvas):
         if self.labeloffset>1:
             self.labeloffset=1
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
+=======
+        self.labeloffset=2.0/(float(math.sqrt(float(drawnumber)))+0.1)
+        if self.labeloffset>1:
+            self.labeloffset=1
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
         for i in range(drawnumber):
             if i == 0:
                 ax = self.fig.add_subplot(drawnumber, 1, 1)
             else:
                 ax = self.fig.add_subplot(drawnumber, 1, i + 1)
                 #ax.xaxis.set_ticks_position("top")
+<<<<<<< HEAD
 <<<<<<< HEAD
 
             self.axes.append(ax)
@@ -112,6 +128,8 @@ class MplCanvas(FigureCanvas):
                 t.append(station.getchannelbyNZE('E').tr.times().copy())
                 s.append(station.getchannelbyNZE('E').tr.data.copy())
 =======
+=======
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
             self.axes.append(ax)
         for station in stations:
             if(VisibleChn.ZVisible==True):
@@ -126,6 +144,9 @@ class MplCanvas(FigureCanvas):
             if (VisibleChn.EVisible == True):
                 t.append(station.gettrbyNZE('E').times().copy())
                 s.append(station.gettrbyNZE('E').data.copy())
+<<<<<<< HEAD
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
+=======
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
                 self.ondrawchn.append(station.getchannelbyNZE('E'))
         for i in range(len(self.axes)):
@@ -152,6 +173,11 @@ class MplCanvas(FigureCanvas):
             ax.text(x, y, tr.tr.id, color="k", transform=ax.transAxes,
                     bbox=bbox, **kwargs)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
 
 
@@ -191,6 +217,10 @@ class Stations:
         '''
         Returns a list of all visible stations
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
 
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
@@ -199,6 +229,10 @@ class Stations:
         return [station for station in self.stations
                 if station.visible]
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
 
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
@@ -219,6 +253,10 @@ class Stations:
         self.stations = sorted(self.stations, key=attrgetter('stats.%s' % key))
         self.sorted_by = key
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
 
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
@@ -288,6 +326,10 @@ class Station(object):
             if chann.channel[-1]==direction:
                 return chann.tr
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
 
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031

@@ -6,7 +6,10 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget,QFileDialog
 import ctypes
 <<<<<<< HEAD
+<<<<<<< HEAD
 from util import *
+=======
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 import rcsui
@@ -28,6 +31,10 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.show()
         app.exec_()
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        # print aw.qmlcanvas.width
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
         # print aw.qmlcanvas.width
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
@@ -72,7 +79,11 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
     def _initVistblebtn(self):
         self.VisibleChannel=ChannelVisible(self)
 <<<<<<< HEAD
+<<<<<<< HEAD
     def _changeStationVisibility(self):
+=======
+    def _changeStationVisibility(self, item):
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
     def _changeStationVisibility(self, item):
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
@@ -103,10 +114,15 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
             self.VisibleChannel.EVisible = False
         self.draw()
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     def gettracebyaxes(self,ax):
         return self.qml.get_drawarray(self.qml.axes.index(ax))
 
+=======
+    def gettracebyaxes(self,ax):
+        return self.qml.get_drawarray(self.qml.axes.index(ax))
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
     def gettracebyaxes(self,ax):
         return self.qml.get_drawarray(self.qml.axes.index(ax))
@@ -119,7 +135,10 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.qml.mpl_connect('axes_enter_event', self.enter_axes)
         self.qml.mpl_connect('axes_leave_event', self.leave_axes)
 <<<<<<< HEAD
+<<<<<<< HEAD
         self.qml.mpl_connect('scroll_event',self.onmouse_scroll)
+=======
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
     def onclick(self, event):
@@ -135,10 +154,16 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         trace=self.gettracebyaxes(event.inaxes)
         self.trname =trace.station.stats.network+"."+trace.station.stats.station+"."+trace.channel+"    "
 <<<<<<< HEAD
+<<<<<<< HEAD
         #event.inaxes.patch.set_facecolor('grey')
         event.canvas.draw()
     def leave_axes(self,event):
         self.trname=""
+=======
+        event.inaxes.patch.set_facecolor('grey')
+        event.canvas.draw()
+    def leave_axes(self,event):
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
         event.inaxes.patch.set_facecolor('grey')
         event.canvas.draw()
@@ -150,6 +175,7 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         string=trname+" X:"+str(xdata)+" , Y:"+str(ydata)
         self.statusbar.showMessage(string)
 <<<<<<< HEAD
+<<<<<<< HEAD
     def onmouse_scroll(self,event):
         if event.button=='down':
             print 1
@@ -159,6 +185,8 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         pass
     def scrollup(self):
         pass
+=======
+>>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 =======
 >>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 if __name__ == '__main__':
