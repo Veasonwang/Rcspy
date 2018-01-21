@@ -1,48 +1,18 @@
-"""
-Illustrate the figure and axes enter and leave events by changing the
-frame colors on enter and leave
-"""
-import matplotlib.pyplot as plt
-
-def enter_axes(event):
-    print event
-    print('enter_axes', event.inaxes)
-    event.inaxes.patch.set_facecolor('yellow')
-    event.canvas.draw()
-
-def leave_axes(event):
-    print('leave_axes', event.inaxes)
-    event.inaxes.patch.set_facecolor('white')
-    event.canvas.draw()
-
-def enter_figure(event):
-    print('enter_figure', event.canvas.figure)
-    event.canvas.figure.patch.set_facecolor('red')
-    event.canvas.draw()
-
-def leave_figure(event):
-    print('leave_figure', event.canvas.figure)
-    event.canvas.figure.patch.set_facecolor('grey')
-    event.canvas.draw()
-
-fig1 = plt.figure()
-fig1.suptitle('mouse hover over figure or axes to trigger events')
-ax1 = fig1.add_subplot(211)
-ax2 = fig1.add_subplot(212)
-
-fig1.canvas.mpl_connect('figure_enter_event', enter_figure)
-fig1.canvas.mpl_connect('figure_leave_event', leave_figure)
-fig1.canvas.mpl_connect('axes_enter_event', enter_axes)
-fig1.canvas.mpl_connect('axes_leave_event', leave_axes)
-
-fig2 = plt.figure()
-fig2.suptitle('mouse hover over figure or axes to trigger events')
-ax1 = fig2.add_subplot(211)
-ax2 = fig2.add_subplot(212)
-
-fig2.canvas.mpl_connect('figure_enter_event', enter_figure)
-fig2.canvas.mpl_connect('figure_leave_event', leave_figure)
-fig2.canvas.mpl_connect('axes_enter_event', enter_axes)
-fig2.canvas.mpl_connect('axes_leave_event', leave_axes)
-
-plt.show()
+    # -*- coding: utf-8 -*-  
+      
+from matplotlib.widgets import MultiCursor
+from pylab import figure, show, np
+      
+t = np.arange(0.0, 2.0, 0.01)
+s1 = np.sin(2*np.pi*t)
+s2 = np.sin(4*np.pi*t)
+fig = figure()
+ax1 = fig.add_subplot(211)
+ax1.plot(t, s1)
+      
+      
+ax2 = fig.add_subplot(212, sharex=ax1)
+ax2.plot(t, s2)
+      
+multi = MultiCursor(fig.canvas, (ax1, ax2), color='r', lw=1)
+show()
