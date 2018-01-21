@@ -12,14 +12,8 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSize
 from PyQt5.QtGui import QFont,QIcon
 import copy
 import math
-<<<<<<< HEAD
-<<<<<<< HEAD
 from matplotlib.widgets import MultiCursor
 from util import *
-=======
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
-=======
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 class MplCanvas(FigureCanvas):
@@ -33,8 +27,6 @@ class MplCanvas(FigureCanvas):
         FigureCanvas.setSizePolicy(self,
                                    QSizePolicy.Expanding,
                                    QSizePolicy.Expanding)
-<<<<<<< HEAD
-<<<<<<< HEAD
         self.ondrawchn=[]             #To write down the trace order
         self.labeloffset = 1         #offset label offset
         FigureCanvas.updateGeometry(self)
@@ -42,21 +34,6 @@ class MplCanvas(FigureCanvas):
         self.stream=stream
     def drawAxes(self,stations,VisibleChn):
 
-=======
-=======
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
-        self.ondrawtr=[]             #To writr down the trace order
-        self.labeloffset = 1         #offset label offset
-        FigureCanvas.updateGeometry(self)
-        #self.connectevent()         #connect to recive the mouse event
-
-    def getstream(self,stream):
-        self.stream=stream
-    def drawAxes(self,stations,VisibleChn):
-<<<<<<< HEAD
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
-=======
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
         self.ondrawchn=[]
         self.fig.clear()
         axes=[]
@@ -77,8 +54,6 @@ class MplCanvas(FigureCanvas):
 
         drawnumber=len(stations)*visnum
         self.fig.clear()
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 
         """
@@ -89,24 +64,12 @@ class MplCanvas(FigureCanvas):
             self.labeloffset=1
 
 
-=======
-        self.labeloffset=2.0/(float(math.sqrt(float(drawnumber)))+0.1)
-        if self.labeloffset>1:
-            self.labeloffset=1
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
-=======
-        self.labeloffset=2.0/(float(math.sqrt(float(drawnumber)))+0.1)
-        if self.labeloffset>1:
-            self.labeloffset=1
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
         for i in range(drawnumber):
             if i == 0:
                 ax = self.fig.add_subplot(drawnumber, 1, 1)
             else:
                 ax = self.fig.add_subplot(drawnumber, 1, i + 1)
                 #ax.xaxis.set_ticks_position("top")
-<<<<<<< HEAD
-<<<<<<< HEAD
 
             self.axes.append(ax)
 
@@ -127,27 +90,6 @@ class MplCanvas(FigureCanvas):
             if (VisibleChn.EVisible == True):
                 t.append(station.getchannelbyNZE('E').tr.times().copy())
                 s.append(station.getchannelbyNZE('E').tr.data.copy())
-=======
-=======
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
-            self.axes.append(ax)
-        for station in stations:
-            if(VisibleChn.ZVisible==True):
-                t.append(station.gettrbyNZE('Z').times().copy())
-                s.append(station.gettrbyNZE('Z').data.copy())
-                self.ondrawchn.append(station.getchannelbyNZE('Z'))
-            if (VisibleChn.NVisible == True):
-                t.append(station.gettrbyNZE('N').times().copy())
-                s.append(station.gettrbyNZE('N').data.copy())
-                self.ondrawchn.append(station.getchannelbyNZE('N'))
-
-            if (VisibleChn.EVisible == True):
-                t.append(station.gettrbyNZE('E').times().copy())
-                s.append(station.gettrbyNZE('E').data.copy())
-<<<<<<< HEAD
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
-=======
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
                 self.ondrawchn.append(station.getchannelbyNZE('E'))
         for i in range(len(self.axes)):
             self.axes[i].cla()
@@ -172,16 +114,6 @@ class MplCanvas(FigureCanvas):
         for ax, tr in zip(self.axes, self.ondrawchn):
             ax.text(x, y, tr.tr.id, color="k", transform=ax.transAxes,
                     bbox=bbox, **kwargs)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
-=======
-
-
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 class ChannelVisible:
     def __init__(self,parent=None):
         self.parent=parent
@@ -216,26 +148,10 @@ class Stations:
     def visibleStations(self):
         '''
         Returns a list of all visible stations
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
-=======
-
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
         :return: list of Station()
         '''
         return [station for station in self.stations
                 if station.visible]
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
-=======
-
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
     def showQMenu(self):
         '''
         Sort Menu for the QTreeWidget
@@ -252,14 +168,6 @@ class Stations:
         from operator import attrgetter
         self.stations = sorted(self.stations, key=attrgetter('stats.%s' % key))
         self.sorted_by = key
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
-=======
-
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
         self._sortStationsOnGUI()
     def __iter__(self):
         return iter(self.stations)
@@ -325,14 +233,6 @@ class Station(object):
         for chann in self.channels:
             if chann.channel[-1]==direction:
                 return chann.tr
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
-=======
-
->>>>>>> 311683f4cf2f350d03007eb28ff0316ae09c2031
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace
