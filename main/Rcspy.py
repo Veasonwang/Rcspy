@@ -6,6 +6,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget,QFileDialog
 import ctypes
 from util import *
+from obspy import  UTCDateTime
 import rcsui
 import sys
 from UI_Container import *
@@ -22,6 +23,8 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.connectevent()
         self.statusbar.showMessage("Done")
         self.trname=""
+        self.mousetime=""
+        self.mousestarttime=""
         self.show()
         app.exec_()
     def menuconncect(self):
@@ -102,12 +105,12 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
             except:
                 pass
             pass
-    def gettracebyaxes(self,ax):
-        return self.qml.get_drawarray(self.qml.axes.index(ax))
     def set_MultiCursor(self):
         self.multi = MultiCursor(self.qml.fig.canvas, self.qml.axes, color='r', lw=0.5, horizOn=False,
                                  vertOn=True,useblit=True)
         self.qml.fig.canvas.draw()
+    def getchnbyaxes(self,ax):
+        return self.qml.get_drawchnarray(self.qml.axes.index(ax))
     def connectevent(self):
         self.cid = self.fig.canvas.mpl_connect('button_press_event',self.onclick)
         self.qml.mpl_connect('button_release_event', self.__mpl_mouseButtonReleaseEvent)
@@ -138,17 +141,23 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         #    ax.axvline(x=event.xdata, ymin=0, ymax=1)
         #event.canvas.draw()
 
+        try:
+            self.mousetime = UTCDateTime(self.mousestarttime.timestamp+event.xdata)
+        except:
+            pass
         self.setstaus(self.trname,event.xdata,event.ydata)
         pass
     def enter_axes(self,event):
-        trace=self.gettracebyaxes(event.inaxes)
-        self.trname =trace.station.stats.network+"."+trace.station.stats.station+"."+trace.channel+"    "
+        chn=self.getchnbyaxes(event.inaxes)
+        self.trname =chn.station.stats.network+"."+chn.station.stats.station+"."+chn.channel+"    "
+        self.mousestarttime=UTCDateTime(self.getchnbyaxes(event.inaxes).starttime)
 
     def leave_axes(self,event):
+        self.mousetime=""
         self.trname=""
 
     def setstaus(self,trname,xdata,ydata):
-        string=trname+" X:"+str(xdata)+" , Y:"+str(ydata)
+        string=trname+" X:"+str(xdata)+" , Y:"+str(ydata) +"    time: "+str(self.mousetime)
         self.statusbar.showMessage(string)
     def onmouse_scroll(self,event):
         if event.button=='down':

@@ -98,7 +98,7 @@ class MplCanvas(FigureCanvas):
         self.drawIds()
         self.fig.subplots_adjust(bottom=0.001, hspace=0.000, right=0.999, top=0.999, left=0.001)
         self.draw()
-    def get_drawarray(self,index):
+    def get_drawchnarray(self,index):
         return self.ondrawchn[index]
     def drawIds(self):
         """
@@ -249,6 +249,8 @@ class Channel(object):
         self.tr = tr
         self.station = station
         self.channel = tr.stats.channel
+        self.starttime=tr.stats.starttime
+        self.edntime=tr.stats.endtime
         self.QChannelItem = QTreeWidgetItem()
         self.QChannelItem.setText(1, '%s @ %d Hz' %
                                   (self.tr.stats.channel,
