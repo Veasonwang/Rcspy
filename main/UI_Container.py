@@ -76,7 +76,7 @@ class MplCanvas(FigureCanvas):
         """
         why it doesn't work???
         """
-        #multi = MultiCursor(self.fig.canvas, self.axes, color='r', lw=1 , horizOn=False,vertOn=True)
+
 
         for station in stations:
             if(VisibleChn.ZVisible==True):
@@ -94,6 +94,7 @@ class MplCanvas(FigureCanvas):
         for i in range(len(self.axes)):
             self.axes[i].cla()
             self.axes[i].plot(self.tt[i], self.ss[i], 'g')
+
         self.drawIds()
         self.fig.subplots_adjust(bottom=0.001, hspace=0.000, right=0.999, top=0.999, left=0.001)
         self.draw()

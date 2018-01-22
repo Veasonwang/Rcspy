@@ -37,6 +37,7 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
                     self.stations[i].setVisible(True)
                 self.qml.getstream(self.stream)
                 self.draw()
+                self._changebtn_cursor()
             except:
                 pass
     def onexit(self):
@@ -91,10 +92,22 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         else:
             self.VisibleChannel.EVisible = False
         self.draw()
-
+    def _changebtn_cursor(self):
+        if self.btn_cursor.isChecked():
+            self.set_MultiCursor()
+        else:
+            try:
+                del(self.multi)
+                self.qml.fig.canvas.draw()
+            except:
+                pass
+            pass
     def gettracebyaxes(self,ax):
         return self.qml.get_drawarray(self.qml.axes.index(ax))
-
+    def set_MultiCursor(self):
+        self.multi = MultiCursor(self.qml.fig.canvas, self.qml.axes, color='r', lw=0.5, horizOn=False,
+                                 vertOn=True,useblit=True)
+        self.qml.fig.canvas.draw()
     def connectevent(self):
         self.cid = self.fig.canvas.mpl_connect('button_press_event',self.onclick)
         self.qml.mpl_connect('button_release_event', self.__mpl_mouseButtonReleaseEvent)
@@ -103,24 +116,37 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.qml.mpl_connect('axes_enter_event', self.enter_axes)
         self.qml.mpl_connect('axes_leave_event', self.leave_axes)
         self.qml.mpl_connect('scroll_event',self.onmouse_scroll)
+
     def onclick(self, event):
         print(event.button, event.x, event.y, event.xdata, event.ydata)
     def __mpl_mouseButtonReleaseEvent(self,event):
+        event.inaxes.patch.set_facecolor('white')
+        event.canvas.draw()
         pass
     def __mpl_mouseButtonPressEvent(self,event):
+        event.inaxes.patch.set_facecolor('grey')
+        event.canvas.draw()
         pass
     def __mpl_motionNotifyEvent(self,event):
+        """
+        bas performance
+        :param event:
+        :return:
+        """
+        #self.draw()
+        #for ax in self.qml.axes:
+        #    ax.axvline(x=event.xdata, ymin=0, ymax=1)
+        #event.canvas.draw()
+
         self.setstaus(self.trname,event.xdata,event.ydata)
         pass
     def enter_axes(self,event):
         trace=self.gettracebyaxes(event.inaxes)
         self.trname =trace.station.stats.network+"."+trace.station.stats.station+"."+trace.channel+"    "
-        #event.inaxes.patch.set_facecolor('grey')
-        event.canvas.draw()
+
     def leave_axes(self,event):
         self.trname=""
-        event.inaxes.patch.set_facecolor('white')
-        event.canvas.draw()
+
     def setstaus(self,trname,xdata,ydata):
         string=trname+" X:"+str(xdata)+" , Y:"+str(ydata)
         self.statusbar.showMessage(string)

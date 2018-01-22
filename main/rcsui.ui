@@ -93,7 +93,7 @@
            <x>0</x>
            <y>0</y>
            <width>256</width>
-           <height>348</height>
+           <height>332</height>
           </rect>
          </property>
          <attribute name="label">
@@ -156,6 +156,25 @@
            <bool>false</bool>
           </property>
          </widget>
+         <widget class="QPushButton" name="btn_cursor">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>50</y>
+            <width>97</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>辅助竖线</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="toos2">
          <property name="geometry">
@@ -163,7 +182,7 @@
            <x>0</x>
            <y>0</y>
            <width>256</width>
-           <height>348</height>
+           <height>332</height>
           </rect>
          </property>
          <attribute name="label">
@@ -190,7 +209,7 @@
      <x>0</x>
      <y>0</y>
      <width>1117</width>
-     <height>23</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuopen">
@@ -271,8 +290,8 @@
    <slot>_changeSelectedChannel()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>225</x>
-     <y>482</y>
+     <x>233</x>
+     <y>506</y>
     </hint>
     <hint type="destinationlabel">
      <x>630</x>
@@ -280,9 +299,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btn_cursor</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_changebtn_cursor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>76</x>
+     <y>537</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>6</x>
+     <y>454</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>_changeStationVisibility()</slot>
   <slot>_changeSelectedChannel()</slot>
+  <slot>_changebtn_cursor()</slot>
  </slots>
 </ui>
