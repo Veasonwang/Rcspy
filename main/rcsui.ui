@@ -27,6 +27,9 @@
        <enum>Qt::Horizontal</enum>
       </property>
       <widget class="QSplitter" name="splitter">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -57,15 +60,27 @@
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
-       <widget class="QListWidget" name="listWidget">
+       <widget class="QTreeWidget" name="stationTree">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>400</height>
+         </size>
+        </property>
         <property name="focusPolicy">
          <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="columnCount">
+         <number>0</number>
         </property>
        </widget>
        <widget class="QToolBox" name="toolBox">
@@ -78,12 +93,69 @@
            <x>0</x>
            <y>0</y>
            <width>256</width>
-           <height>257</height>
+           <height>348</height>
           </rect>
          </property>
          <attribute name="label">
-          <string>tools1</string>
+          <string/>
          </attribute>
+         <widget class="QPushButton" name="ZButton">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>10</y>
+            <width>61</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Z</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="NButton">
+          <property name="geometry">
+           <rect>
+            <x>90</x>
+            <y>10</y>
+            <width>61</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>N</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="EButton">
+          <property name="geometry">
+           <rect>
+            <x>180</x>
+            <y>10</y>
+            <width>61</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>E</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="toos2">
          <property name="geometry">
@@ -91,11 +163,11 @@
            <x>0</x>
            <y>0</y>
            <width>256</width>
-           <height>257</height>
+           <height>348</height>
           </rect>
          </property>
          <attribute name="label">
-          <string>tools2</string>
+          <string/>
          </attribute>
         </widget>
        </widget>
@@ -123,7 +195,7 @@
    </property>
    <widget class="QMenu" name="menuopen">
     <property name="title">
-     <string>file</string>
+     <string>文件</string>
     </property>
     <addaction name="actionopen"/>
     <addaction name="actionexit"/>
@@ -133,15 +205,84 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionopen">
    <property name="text">
-    <string>open</string>
+    <string>打开</string>
    </property>
   </action>
   <action name="actionexit">
    <property name="text">
-    <string>exit</string>
+    <string>退出</string>
    </property>
   </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>stationTree</sender>
+   <signal>itemDoubleClicked(QTreeWidgetItem*,int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_changeStationVisibility()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>113</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>27</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ZButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_changeSelectedChannel()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>484</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>265</x>
+     <y>842</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>NButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_changeSelectedChannel()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>126</x>
+     <y>489</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>461</x>
+     <y>844</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_changeSelectedChannel()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>225</x>
+     <y>482</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>630</x>
+     <y>843</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>_changeStationVisibility()</slot>
+  <slot>_changeSelectedChannel()</slot>
+ </slots>
 </ui>
