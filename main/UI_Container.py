@@ -121,6 +121,19 @@ class ChannelVisible:
         self.ZVisible=True
         self.NVisible=False
         self.EVisible=False
+class File:
+    def __init__(self,path,parent):
+        self.path=path
+        self.parent=parent
+        self.Stations=[]
+        self.QStationItem = QTreeWidgetItem()
+        self.QStationItem.setText(1, '%s' %
+                                  (self.path.split('/')[-1]))
+        self.QStationItem.setToolTip(1,self.path)
+        self.QStationItem.setToolTip(2, self.path)
+        self.parent.stationTree.addTopLevelItem(self.QStationItem)
+
+
 class Stations:
     '''
     Station() container object
@@ -143,9 +156,9 @@ class Stations:
         :param st: obspy stream
         '''
         self.stations.append(Station(stream=st, parent=self))
-        self.parent.stationTree.addTopLevelItem(
-            self.stations[-1].QStationItem)
-
+        #self.parent.stationTree.addTopLevelItem(
+        #    self.stations[-1].QStationItem)
+        self.parent.QStationItem.addChild(self.stations[-1].QStationItem)
     def visibleStations(self):
         '''
         Returns a list of all visible stations

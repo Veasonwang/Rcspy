@@ -20,11 +20,12 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self._initVistblebtn()
         self.qml = MplCanvas(self.qmlcanvas,width=23,height=14,dpi=72)
         self.fig=self.qml.fig
-        self.connectevent()
         self.statusbar.showMessage("Done")
         self.trname=""
         self.mousetime=""
         self.mousestarttime=""
+        self.mouseydata=""
+        self.setstaus()
         self.show()
         app.exec_()
     def menuconncect(self):
@@ -34,12 +35,15 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './','*.seed')
         if filename!="":
             try:
+                self.file=File(filename,self)
                 self.stream=read(filename)
-                self.stations = Stations(self.stream, self)
+                self.stations = Stations(self.stream, self.file)
+                self.file.Stations=self.stations
                 for i in range(3):
                     self.stations[i].setVisible(True)
                 self.qml.getstream(self.stream)
                 self.draw()
+                self.connectevent()
                 self._changebtn_cursor()
             except:
                 pass
@@ -61,11 +65,12 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         Setup stationtree :QTreeWidgetItem:
         '''
         self.stationTree.setColumnCount(3)
-        self.stationTree.setColumnWidth(0, 40)
-        self.stationTree.setColumnWidth(1, 90)
+        self.stationTree.setColumnWidth(0, 60)
+        self.stationTree.setColumnWidth(1, 100)
         self.stationTree.setColumnWidth(2, 150)
         self.stationTree.setExpandsOnDoubleClick(False)
-        self.stationTree.setHeaderHidden(True)
+        self.stationTree.setHeaderLabels([" "," "," "])
+        #self.stationTree.setHeaderHidden(True)
     def _initVistblebtn(self):
         self.VisibleChannel=ChannelVisible(self)
     def _changeStationVisibility(self):
@@ -100,14 +105,16 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
             self.set_MultiCursor()
         else:
             try:
-                del(self.multi)
-                self.qml.fig.canvas.draw()
+                self.del_MultiCursor()
             except:
                 pass
             pass
     def set_MultiCursor(self):
         self.multi = MultiCursor(self.qml.fig.canvas, self.qml.axes, color='r', lw=0.5, horizOn=False,
                                  vertOn=True,useblit=True)
+        self.qml.fig.canvas.draw()
+    def del_MultiCursor(self):
+        del (self.multi)
         self.qml.fig.canvas.draw()
     def getchnbyaxes(self,ax):
         return self.qml.get_drawchnarray(self.qml.axes.index(ax))
@@ -119,17 +126,22 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.qml.mpl_connect('axes_enter_event', self.enter_axes)
         self.qml.mpl_connect('axes_leave_event', self.leave_axes)
         self.qml.mpl_connect('scroll_event',self.onmouse_scroll)
-
+        self.qml.mpl_connect('figure_leave_event',self.leave_figure)
+        self.qml.mpl_connect('figure_enter_event', self.enter_figure)
     def onclick(self, event):
         print(event.button, event.x, event.y, event.xdata, event.ydata)
     def __mpl_mouseButtonReleaseEvent(self,event):
-        event.inaxes.patch.set_facecolor('white')
-        event.canvas.draw()
-        pass
+        try:
+            event.inaxes.patch.set_facecolor('white')
+            event.canvas.draw()
+        except:
+            pass
     def __mpl_mouseButtonPressEvent(self,event):
-        event.inaxes.patch.set_facecolor('grey')
-        event.canvas.draw()
-        pass
+        try:
+            event.inaxes.patch.set_facecolor('grey')
+            event.canvas.draw()
+        except:
+            pass
     def __mpl_motionNotifyEvent(self,event):
         """
         bas performance
@@ -140,25 +152,40 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         #for ax in self.qml.axes:
         #    ax.axvline(x=event.xdata, ymin=0, ymax=1)
         #event.canvas.draw()
-
         try:
+            x=int(event.xdata*100)
             self.mousetime = UTCDateTime(self.mousestarttime.timestamp+event.xdata)
+            self.mouseydata = self.currentchn.tr.data[x]
+            #print self.currentchn.station.stats
+            #print self.currentchn.tr.data[5000]
         except:
             pass
-        self.setstaus(self.trname,event.xdata,event.ydata)
+        self.setstaus(self.trname,self.mousetime,self.mouseydata)
         pass
     def enter_axes(self,event):
         chn=self.getchnbyaxes(event.inaxes)
+        self.currentchn=chn
         self.trname =chn.station.stats.network+"."+chn.station.stats.station+"."+chn.channel+"    "
         self.mousestarttime=UTCDateTime(self.getchnbyaxes(event.inaxes).starttime)
 
     def leave_axes(self,event):
         self.mousetime=""
         self.trname=""
-
-    def setstaus(self,trname,xdata,ydata):
-        string=trname+" X:"+str(xdata)+" , Y:"+str(ydata) +"    time: "+str(self.mousetime)
-        self.statusbar.showMessage(string)
+    def enter_figure(self,event):
+        self._changebtn_cursor()
+    def leave_figure(self,event):
+        try:
+            self.del_MultiCursor()
+            self.setstaus()
+        except:
+            pass
+    def setstaus(self,trname="",mousetime="",mouseydata=""):
+        if (trname,mousetime,mouseydata)==("","",""):
+            self.statusbar.showMessage("Ready")
+        else:
+            #string = trname +"  time: "+str(mousetime.day)+"D"+str(mousetime.hour)+"h"+str(mousetime.minute)+"m"+str(mousetime.second)+"s"+" , Y:"+str(mouseydata)
+            string=trname +"  UTCTime: "+str(mousetime)[0:-1]+"        Y:"+str(mouseydata)
+            self.statusbar.showMessage(string)
     def onmouse_scroll(self,event):
         if event.button=='down':
             print 1
