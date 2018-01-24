@@ -94,17 +94,16 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.stationTree.setHeaderLabels([" "," "," "])
 
         #self.stationTree.setContextMenuPolicy(Qt.CustomContextMenu)
-
         #self.stationTree.setHeaderHidden(True)
         self.stationTree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.stationTree.customContextMenuRequested.connect(self.popmenu)
     def popmenu(self):
         if len(self.stationTree.selectedItems())>0:
             if isinstance(self.stationTree.selectedItems()[0].parent,File)==True:
-                Menu = QMenu()
-                _t = Menu.addAction('set all stations invisible')
-                Menu.exec_(QtGui.QCursor.pos())
-
+                MenuASI = QMenu()
+                ASI = MenuASI.addAction('All Stations Invisible')
+                ASI.triggered.connect(lambda :self.Files.setstationsinvisible(self.stationTree.selectedItems()[0].parent))
+                MenuASI.exec_(QtGui.QCursor.pos())
     def _initVistblebtn(self):
         self.VisibleChannel=ChannelVisible(self)
     def _changeStationVisibility(self):
@@ -225,6 +224,7 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
             #string = trname +"  time: "+str(mousetime.day)+"D"+str(mousetime.hour)+"h"+str(mousetime.minute)+"m"+str(mousetime.second)+"s"+" , Y:"+str(mouseydata)
             string=trname +"  UTCTime: "+str(mousetime)[0:-1]+"        Y:"+str(mouseydata)
             self.statusbar.showMessage(string)
+            self.qmlcanvas.setToolTip(string)
     def onmouse_scroll(self,event):
         if event.button=='down':
             print 1

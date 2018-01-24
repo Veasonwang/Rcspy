@@ -133,24 +133,10 @@ class Files:
         self.parent=parent
     def addfile(self,file):
         self.files.append(file)
-    def showSortQMenu(self,pos):
-        '''
-        Sort Menu for the QTreeWidget
-        '''
-        sort_menu = QMenu()
-        sort_menu.setFont(QFont('', 9))
-        _t = sort_menu.addAction('Sort by attribute')
-        _t.setEnabled(False)
-        _t.setFont(QFont('', 8, QFont.Bold))
-        #for attrib, subattrib in self.sortable_attribs.items():
-        #    if isinstance(subattrib, bool):
-        #        self._addActionSortMenu(attrib, sort_menu)
-        #   else:
-        #       _submenu = sort_menu.addMenu(attrib)
-        #       for sattrib in subattrib.keys():
-        #           self._addActionSortMenu(sattrib, _submenu)
-        sort_menu.exec_(self.parent.stationTree.mapToGlobal(pos))
-
+    def setstationsinvisible(self,File):
+        File.setinvisible()
+        self.parent.update_ondraw_stations()
+        self.parent.draw()
 class File:
     """
     Represents a single file and hold the Stations()
@@ -173,7 +159,9 @@ class File:
         :return:
         """
         self.stations=stations
-
+    def setinvisible(self):
+        for station in self.stations:
+            station.setVisible(False)
 class Stations:
     '''
     Station() container object
