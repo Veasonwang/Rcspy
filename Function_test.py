@@ -2,7 +2,7 @@
 # http://www.scipy.org/Cookbook/Matplotlib/Animations
 import numpy as np
 import matplotlib.pyplot as plt
-
+import copy
 
 class DraggableRectangle:
     lock = None  # only one can be animated at a time
@@ -88,14 +88,25 @@ class DraggableRectangle:
         self.rect.figure.canvas.mpl_disconnect(self.cidrelease)
         self.rect.figure.canvas.mpl_disconnect(self.cidmotion)
 
+def main2():
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    rects = ax.bar(range(10), 20 * np.random.rand(10))
+    drs = []
+    for rect in rects:
+        dr = DraggableRectangle(rect)
+        dr.connect()
+        drs.append(dr)
+    plt.show()
 
-fig = plt.figure()
-ax = fig.add_subplot(111)
-rects = ax.bar(range(10), 20 * np.random.rand(10))
-drs = []
-for rect in rects:
-    dr = DraggableRectangle(rect)
-    dr.connect()
-    drs.append(dr)
-
-plt.show()
+class cs:
+    def __init__(self,num):
+        self.data=num
+def main():
+    a=cs(1)
+    print a.data
+    b=copy.deepcopy(a)
+    b.data=2
+    print a.data
+if __name__ == '__main__':
+    main()

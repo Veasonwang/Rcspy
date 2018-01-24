@@ -5,7 +5,7 @@ To handle gui events and draw cruve
 
 from obspy.core import UTCDateTime, AttribDict
 import os
-from  PyQt5.QtWidgets import QTreeWidgetItem
+#from  PyQt5.QtWidgets import QTreeWidgetItem
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget,QFileDialog
@@ -13,7 +13,7 @@ from PyQt5.QtGui import QFont,QIcon
 import copy
 import math
 from matplotlib.widgets import MultiCursor
-from util import *
+from util import QTreeWidgetItem
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 class MplCanvas(FigureCanvas):
@@ -27,13 +27,17 @@ class MplCanvas(FigureCanvas):
         FigureCanvas.setSizePolicy(self,
                                    QSizePolicy.Expanding,
                                    QSizePolicy.Expanding)
-        self.ondrawchn=[]             #To write down the trace order
+        self.ondrawchn=[]             #To write down the channel order
         self.labeloffset = 1         #offset label offset
         FigureCanvas.updateGeometry(self)
-    def getstream(self,stream):
-        self.stream=stream
     def drawAxes(self,stations,VisibleChn):
-
+        """
+        final drawing function
+        draw stations on the figure
+        :param stations:
+        :param VisibleChn:
+        :return:
+        """
         self.ondrawchn=[]
         self.fig.clear()
         axes=[]
@@ -52,6 +56,9 @@ class MplCanvas(FigureCanvas):
         if VisibleChn.EVisible==True:
             visnum=visnum+1
 
+        """
+        cauculate the drawnumber to create axes
+        """
         drawnumber=len(stations)*visnum
         self.fig.clear()
 
@@ -73,11 +80,6 @@ class MplCanvas(FigureCanvas):
 
             self.axes.append(ax)
 
-        """
-        why it doesn't work???
-        """
-
-
         for station in stations:
             if(VisibleChn.ZVisible==True):
                 t.append(station.getchannelbyNZE('Z').tr.times().copy())
@@ -95,7 +97,7 @@ class MplCanvas(FigureCanvas):
             self.axes[i].cla()
             self.axes[i].plot(self.tt[i], self.ss[i], 'g')
 
-        self.drawIds()
+        self.drawIds()          #draw label
         self.fig.subplots_adjust(bottom=0.001, hspace=0.000, right=0.999, top=0.999, left=0.001)
         self.draw()
     def get_drawchnarray(self,index):
@@ -108,7 +110,7 @@ class MplCanvas(FigureCanvas):
         y = 0.92
         bbox = dict(boxstyle="round,pad=0.4", fc="w", ec="k", lw=1.2, alpha=1.0)
 
-        # labeloffset to adjust the size of the label in case of too many plotted number
+        # labeloffset to adjust the size of the label in case of too large plotted number
 
         kwargs = dict(va="top", ha="left", fontsize=16*self.labeloffset, family='monospace',
                       zorder=10000)
@@ -121,18 +123,56 @@ class ChannelVisible:
         self.ZVisible=True
         self.NVisible=False
         self.EVisible=False
+
+class Files:
+    """
+    File() container object
+    """
+    def __init__(self,parent):
+        self.files=[]
+        self.parent=parent
+    def addfile(self,file):
+        self.files.append(file)
+    def showSortQMenu(self,pos):
+        '''
+        Sort Menu for the QTreeWidget
+        '''
+        sort_menu = QMenu()
+        sort_menu.setFont(QFont('', 9))
+        _t = sort_menu.addAction('Sort by attribute')
+        _t.setEnabled(False)
+        _t.setFont(QFont('', 8, QFont.Bold))
+        #for attrib, subattrib in self.sortable_attribs.items():
+        #    if isinstance(subattrib, bool):
+        #        self._addActionSortMenu(attrib, sort_menu)
+        #   else:
+        #       _submenu = sort_menu.addMenu(attrib)
+        #       for sattrib in subattrib.keys():
+        #           self._addActionSortMenu(sattrib, _submenu)
+        sort_menu.exec_(self.parent.stationTree.mapToGlobal(pos))
+
 class File:
+    """
+    Represents a single file and hold the Stations()
+    """
     def __init__(self,path,parent):
         self.path=path
         self.parent=parent
-        self.Stations=[]
-        self.QStationItem = QTreeWidgetItem()
+        self.stations=[]
+        self.QStationItem = QTreeWidgetItem(self)
         self.QStationItem.setText(1, '%s' %
                                   (self.path.split('/')[-1]))
         self.QStationItem.setToolTip(1,self.path)
         self.QStationItem.setToolTip(2, self.path)
-        self.parent.stationTree.addTopLevelItem(self.QStationItem)
 
+        self.parent.stationTree.addTopLevelItem(self.QStationItem)
+    def appointstations(self,stations):
+        """
+        add childstations
+        :param stations:
+        :return:
+        """
+        self.stations=stations
 
 class Stations:
     '''
@@ -209,7 +249,7 @@ class Station(object):
         self.stats.channel = None
         self.channel_components = set([tr.stats.channel for tr in self.st])
 
-        self.QStationItem = QTreeWidgetItem()
+        self.QStationItem = QTreeWidgetItem(self)
         self.QStationItem.setText(1, '%s.%s' %
                                   (self.stats.network,
                                    self.stats.station))
@@ -264,7 +304,7 @@ class Channel(object):
         self.channel = tr.stats.channel
         self.starttime=tr.stats.starttime
         self.edntime=tr.stats.endtime
-        self.QChannelItem = QTreeWidgetItem()
+        self.QChannelItem = QTreeWidgetItem(self)
         self.QChannelItem.setText(1, '%s @ %d Hz' %
                                   (self.tr.stats.channel,
                                    1./self.tr.stats.delta))
