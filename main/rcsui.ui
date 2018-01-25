@@ -175,6 +175,32 @@
            <bool>true</bool>
           </property>
          </widget>
+         <widget class="QPushButton" name="AmpUP">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>90</y>
+            <width>97</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>放大振幅</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="Ampdown">
+          <property name="geometry">
+           <rect>
+            <x>130</x>
+            <y>90</y>
+            <width>97</width>
+            <height>26</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>缩小振幅</string>
+          </property>
+         </widget>
         </widget>
         <widget class="QWidget" name="toos2">
          <property name="geometry">
@@ -258,8 +284,8 @@
    <slot>_changeSelectedChannel()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>42</x>
-     <y>484</y>
+     <x>50</x>
+     <y>572</y>
     </hint>
     <hint type="destinationlabel">
      <x>265</x>
@@ -274,8 +300,8 @@
    <slot>_changeSelectedChannel()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>126</x>
-     <y>489</y>
+     <x>134</x>
+     <y>572</y>
     </hint>
     <hint type="destinationlabel">
      <x>461</x>
@@ -290,8 +316,8 @@
    <slot>_changeSelectedChannel()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>233</x>
-     <y>506</y>
+     <x>241</x>
+     <y>572</y>
     </hint>
     <hint type="destinationlabel">
      <x>630</x>
@@ -306,12 +332,44 @@
    <slot>_changebtn_cursor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>76</x>
-     <y>537</y>
+     <x>84</x>
+     <y>615</y>
     </hint>
     <hint type="destinationlabel">
      <x>6</x>
      <y>454</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>AmpUP</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_Ampup()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>642</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>5</x>
+     <y>531</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Ampdown</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>_Ampdown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>185</x>
+     <y>641</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>6</x>
+     <y>574</y>
     </hint>
    </hints>
   </connection>
@@ -320,5 +378,7 @@
   <slot>_changeStationVisibility()</slot>
   <slot>_changeSelectedChannel()</slot>
   <slot>_changebtn_cursor()</slot>
+  <slot>_Ampup()</slot>
+  <slot>_Ampdown()</slot>
  </slots>
 </ui>

@@ -273,10 +273,14 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
             xmin = xmin + (abs(xmax - xmin)) * 0.15 * downratio
             xmax = xmax - (abs(xmax - xmin)) * 0.15 * upratio
         event.inaxes.set_xlim(xmin, xmax)
-    def scrolldown(self):
-        pass
-    def scrollup(self):
-        pass
+    def _Ampup(self):
+        self.qml.limratio=self.qml.limratio*0.75
+        self.update_ondraw_stations()
+        self.draw()
+    def _Ampdown(self):
+        self.qml.limratio = self.qml.limratio *1.25
+        self.update_ondraw_stations()
+        self.draw()
 if __name__ == '__main__':
     Rcspy()
 

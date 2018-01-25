@@ -18,6 +18,7 @@ class MplCanvas(FigureCanvas):
         fig = Figure(figsize=(width, height), dpi=72,linewidth=1)
         self.axes = []
         self.fig=fig
+        self.limratio=1
         FigureCanvas.__init__(self, fig)
         self.setParent(parent)
         FigureCanvas.setSizePolicy(self,
@@ -91,6 +92,15 @@ class MplCanvas(FigureCanvas):
         for i in range(len(self.axes)):
             self.axes[i].cla()
             self.axes[i].plot(self.tt[i], self.ss[i], 'g')
+            mean=self.ondrawchn[i].datamean
+            ymin,ymax=self.axes[i].get_ylim()
+            ymin=ymin*self.limratio
+            ymax=ymax*self.limratio
+            if (ymax-mean)>(mean-ymin):
+                ymin=ymin-(ymax+ymin-2*mean)
+            else:
+                ymax=ymax+(2*mean-ymax-ymin)
+            self.axes[i].set_ylim(ymin,ymax)
 
         self.drawIds()          #draw label
         self.fig.subplots_adjust(bottom=0.001, hspace=0.000, right=0.999, top=0.999, left=0.001)

@@ -7,7 +7,7 @@ import os
 from PyQt5.QtWidgets import QMenu
 from PyQt5.QtGui import QFont,QIcon
 from util import QTreeWidgetItem
-
+from numpy import mean
 class ChannelVisible:
     def __init__(self,parent=None):
         self.parent=parent
@@ -191,4 +191,6 @@ class Channel(object):
                                   (self.tr.stats.starttime,
                                    self.tr.stats.endtime))
         self.station.QStationItem.addChild(self.QChannelItem)
+        self.datamean=self.tr.data.mean()
+
 
