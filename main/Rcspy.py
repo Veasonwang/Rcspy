@@ -24,6 +24,8 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.statusbar.showMessage("Done")
         self.Files=Files(self)
         self.ondrawstations=[]
+        self.dragydata=0
+        self.dragxdata=0
         self.trname=""
         self.mousetime=""
         self.mousestarttime=""
@@ -169,14 +171,20 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         print(event.button, event.x, event.y, event.xdata, event.ydata)
     def __mpl_mouseButtonReleaseEvent(self,event):
         try:
-            event.inaxes.patch.set_facecolor('white')
+            xmin, xmax = event.inaxes.get_xlim()
+            xmin = (self.dragxdata - event.xdata) + xmin
+            xmax = (self.dragxdata - event.xdata) + xmax
+            self.dragxdata = event.xdata
+            self.dragydata = event.ydata
+            event.inaxes.set_xlim(xmin, xmax)
+
             event.canvas.draw()
         except:
             pass
     def __mpl_mouseButtonPressEvent(self,event):
         try:
-            event.inaxes.patch.set_facecolor('grey')
-            event.canvas.draw()
+            self.dragxdata = event.xdata
+            self.dragydata = event.ydata
         except:
             pass
     def __mpl_motionNotifyEvent(self,event):
@@ -185,17 +193,14 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         :param event:
         :return:
         """
-        #self.draw()
-        #for ax in self.qml.axes:
-        #    ax.axvline(x=event.xdata, ymin=0, ymax=1)
-        #event.canvas.draw()
         try:
             x=int(event.xdata*100)
             self.mousetime = UTCDateTime(self.mousestarttime.timestamp+event.xdata)
             self.mouseydata = self.currentchn.tr.data[x]
-            #print self.currentchn.station.stats
-            #print self.currentchn.tr.data[5000]
+
+
         except:
+            print "error"
             pass
         self.setstaus(self.trname,self.mousetime,self.mouseydata)
         pass
@@ -225,31 +230,79 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
             self.statusbar.showMessage(string)
             self.qmlcanvas.setToolTip(string)
     def onmouse_scroll(self,event):
-        if event.button=='down':
+        self.resetYlim(event)
+        self.resetXlim(event)
+        event.canvas.draw()
+    def resetYlim(self,event):
+        if event.button == 'down':
+            ydata = event.ydata
             ymin, ymax = event.inaxes.get_ylim()
-            ymin = ymin * 1.1
-            ymax = ymax * 1.1
-            xmin,xmax=event.inaxes.get_xlim()
-            xmin =xmin *1.1
-            xmax=xmax*1.1
-            event.inaxes.set_xlim(xmin, xmax)
-            event.inaxes.set_ylim(ymin, ymax)
-            event.canvas.draw()
-            print 1
+            upoffset = ymax - ydata
+            downoffset = ydata - ymin
+            upratio = upoffset / (upoffset + downoffset)
+            downratio = downoffset / (upoffset + downoffset)
+            ymin = ymin - (abs(ymax - ymin)) * 0.15 * downratio
+            ymax = ymax + (abs(ymax - ymin)) * 0.15 * upratio
         if event.button=='up':
-            ymin,ymax=event.inaxes.get_ylim()
-            ymin=ymin*0.90
-            ymax=ymax*0.90
+            ydata = event.ydata
+            ymin, ymax = event.inaxes.get_ylim()
+            upoffset = ymax - ydata
+            downoffset = ydata - ymin
+            upratio = upoffset / (upoffset + downoffset)
+            downratio = downoffset / (upoffset + downoffset)
+            ymin = ymin  + (abs(ymax-ymin))*0.15 * downratio
+            ymax = ymax  - (abs(ymax-ymin))*0.15 * upratio
+        event.inaxes.set_ylim(ymin, ymax)
+    def resetXlim(self,event):
+        if event.button == 'down':
+            xdata = event.xdata
             xmin, xmax = event.inaxes.get_xlim()
-            xmin = xmin * 0.9
-            xmax = xmax * 0.9
-            event.inaxes.set_xlim(xmin, xmax)
-            event.inaxes.set_ylim(ymin,ymax)
-            event.canvas.draw()
-            print 2
+            upoffset = xmax - xdata
+            downoffset = xdata - xmin
+            upratio = upoffset / (upoffset + downoffset)
+            downratio = downoffset / (upoffset + downoffset)
+            xmin = xmin - (abs(xmax - xmin)) * 0.15 * downratio
+            xmax = xmax + (abs(xmax - xmin)) * 0.15 * upratio
+        if event.button=='up':
+            xdata = event.xdata
+            xmin, xmax = event.inaxes.get_xlim()
+            upoffset = xmax - xdata
+            downoffset = xdata - xmin
+            upratio = upoffset / (upoffset + downoffset)
+            downratio = downoffset / (upoffset + downoffset)
+            xmin = xmin + (abs(xmax - xmin)) * 0.15 * downratio
+            xmax = xmax - (abs(xmax - xmin)) * 0.15 * upratio
+        event.inaxes.set_xlim(xmin, xmax)
     def scrolldown(self):
         pass
     def scrollup(self):
         pass
 if __name__ == '__main__':
     Rcspy()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
