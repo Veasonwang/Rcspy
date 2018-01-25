@@ -5,10 +5,9 @@ from obspy import *
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget,QFileDialog
-import ctypes
 from util import *
 from obspy import  UTCDateTime
-
+from matplotlib.widgets import MultiCursor
 import rcsui
 import sys
 from UI_Container import *
@@ -227,8 +226,26 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
             self.qmlcanvas.setToolTip(string)
     def onmouse_scroll(self,event):
         if event.button=='down':
+            ymin, ymax = event.inaxes.get_ylim()
+            ymin = ymin * 1.1
+            ymax = ymax * 1.1
+            xmin,xmax=event.inaxes.get_xlim()
+            xmin =xmin *1.1
+            xmax=xmax*1.1
+            event.inaxes.set_xlim(xmin, xmax)
+            event.inaxes.set_ylim(ymin, ymax)
+            event.canvas.draw()
             print 1
         if event.button=='up':
+            ymin,ymax=event.inaxes.get_ylim()
+            ymin=ymin*0.90
+            ymax=ymax*0.90
+            xmin, xmax = event.inaxes.get_xlim()
+            xmin = xmin * 0.9
+            xmax = xmax * 0.9
+            event.inaxes.set_xlim(xmin, xmax)
+            event.inaxes.set_ylim(ymin,ymax)
+            event.canvas.draw()
             print 2
     def scrolldown(self):
         pass
