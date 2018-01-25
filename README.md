@@ -1,5 +1,5 @@
 # Rcspy
-A tool for seismic pretreatment, based on Obspy
+A tool for seismic pretreatment, based on Obspy,matplotlib and PyQt5
 
 ##################################################
 
