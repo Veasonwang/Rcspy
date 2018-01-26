@@ -112,11 +112,17 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
     def _changeStationVisibility(self):
         '''
         Change selected stations visibility
+
+        ###performance update)###
+
         '''
-        for file in self.Files.files:
-            for station in file.stations:
-                if station.QStationItem.isSelected():
-                    station.setVisible(not station.visible)
+        #for file in self.Files.files:
+        #    for station in file.stations:
+        #        if station.QStationItem.isSelected():
+        #            station.setVisible(not station.visible)
+        if isinstance(self.stationTree.selectedItems()[0].parent,Station)==True:
+            station=self.stationTree.selectedItems()[0].parent
+            station.setVisible(not station.visible)
         self.update_ondraw_stations()
         self.draw()
     def _changeSelectedChannel(self):
