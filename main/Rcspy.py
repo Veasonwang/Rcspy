@@ -4,6 +4,7 @@ from obspy import *
 # -*- coding: ascii -*-
 from PyQt5 import QtCore
 from PyQt5 import QtGui
+from PyQt5.QtCore import QObject
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget,QFileDialog
 from util import *
 from obspy import  UTCDateTime
@@ -19,7 +20,8 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.menuconncect()
         self._initStationTree()
         self._initVistblebtn()
-        self.qml = MplCanvas(self.qmlcanvas,width=23,height=14,dpi=72)
+        self.qmlcanvas.setRcs(self)
+        self.qml = MplCanvas(self.qmlcanvas,dpi=100)
         self.fig=self.qml.fig
         self.statusbar.showMessage("Done")
         self.Files=Files(self)
@@ -167,6 +169,11 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.qml.mpl_connect('scroll_event',self.onmouse_scroll)
         self.qml.mpl_connect('figure_leave_event',self.leave_figure)
         self.qml.mpl_connect('figure_enter_event', self.enter_figure)
+
+    def onqwidghtsizechangeed(self,QRectevent):
+        height=QRectevent.size().height()
+        width=QRectevent.size().width()
+        self.qml.resize(width,height)
     def onclick(self, event):
         print(event.button, event.x, event.y, event.xdata, event.ydata)
     def __mpl_mouseButtonReleaseEvent(self,event):
@@ -183,6 +190,9 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
             pass
     def __mpl_mouseButtonPressEvent(self,event):
         try:
+            Qrect=self.qmlcanvas.geometry()
+            print Qrect.height()
+            print Qrect.width()
             self.dragxdata = event.xdata
             self.dragydata = event.ydata
         except:

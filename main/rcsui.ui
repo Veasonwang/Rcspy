@@ -93,7 +93,7 @@
            <x>0</x>
            <y>0</y>
            <width>256</width>
-           <height>266</height>
+           <height>257</height>
           </rect>
          </property>
          <attribute name="label">
@@ -207,8 +207,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>100</width>
-           <height>30</height>
+           <width>256</width>
+           <height>257</height>
           </rect>
          </property>
          <attribute name="label">
@@ -217,7 +217,7 @@
         </widget>
        </widget>
       </widget>
-      <widget class="QWidget" name="qmlcanvas" native="true">
+      <widget class="Qcwidget" name="qmlcanvas" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>1</horstretch>
@@ -235,7 +235,7 @@
      <x>0</x>
      <y>0</y>
      <width>1117</width>
-     <height>28</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuopen">
@@ -259,6 +259,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Qcwidget</class>
+   <extends>QWidget</extends>
+   <header>qcwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -348,8 +356,8 @@
    <slot>_Ampup()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>77</x>
-     <y>642</y>
+     <x>85</x>
+     <y>669</y>
     </hint>
     <hint type="destinationlabel">
      <x>5</x>
@@ -364,8 +372,8 @@
    <slot>_Ampdown()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>185</x>
-     <y>641</y>
+     <x>193</x>
+     <y>669</y>
     </hint>
     <hint type="destinationlabel">
      <x>6</x>

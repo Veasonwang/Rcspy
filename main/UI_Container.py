@@ -7,6 +7,7 @@ import os
 from PyQt5.QtWidgets import QMenu
 from PyQt5.QtGui import QFont,QIcon
 from util import QTreeWidgetItem
+from PyQt5 import QtCore, QtGui, QtWidgets
 from numpy import mean
 class ChannelVisible:
     def __init__(self,parent=None):

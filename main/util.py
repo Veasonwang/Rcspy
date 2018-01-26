@@ -6,14 +6,22 @@ class Inheriting from Pyqt5 and Matplotlib
 from  PyQt5.QtWidgets import QTreeWidgetItem as QTWI
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from PyQt5.QtWidgets import  QMenu, QSizePolicy
+from PyQt5.QtWidgets import  QMenu, QSizePolicy,QWidget
+from PyQt5 import QtCore, QtGui, QtWidgets
 import math
+class Qcwidget(QWidget):
+    def __init__(self,arg):
+        QtWidgets.QWidget.__init__(self,arg)
+    def resizeEvent(self, QResizeEvent):
+        self.Rcs.onqwidghtsizechangeed(QResizeEvent)
+    def setRcs(self,Rcs):
+        self.Rcs=Rcs
 class QTreeWidgetItem(QTWI):
     def __init__(self,parent):
         QTWI.__init__(self)
         self.parent=parent
 class MplCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=23, height=14, dpi=72):
+    def __init__(self, parent=None, width=23, height=28, dpi=72):
 
         fig = Figure(figsize=(width, height), dpi=72,linewidth=1)
         self.axes = []
@@ -122,4 +130,5 @@ class MplCanvas(FigureCanvas):
         for ax, tr in zip(self.axes, self.ondrawchn):
             ax.text(x, y, tr.tr.id, color="k", transform=ax.transAxes,
                     bbox=bbox, **kwargs)
+
 
