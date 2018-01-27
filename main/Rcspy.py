@@ -5,7 +5,7 @@ from obspy import *
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5.QtCore import QObject
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget,QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QAbstractItemView, QSizePolicy, QMessageBox, QWidget,QFileDialog
 from util import *
 from obspy import  UTCDateTime
 from matplotlib.widgets import MultiCursor
@@ -95,18 +95,41 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.stationTree.setColumnWidth(2, 150)
         self.stationTree.setExpandsOnDoubleClick(False)
         self.stationTree.setHeaderLabels([" "," "," "])
-
+        self.stationTree.setSelectionMode(QAbstractItemView.ExtendedSelection)
         #self.stationTree.setContextMenuPolicy(Qt.CustomContextMenu)
         #self.stationTree.setHeaderHidden(True)
         self.stationTree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.stationTree.customContextMenuRequested.connect(self.popmenu)
     def popmenu(self):
         if len(self.stationTree.selectedItems())>0:
-            if isinstance(self.stationTree.selectedItems()[0].parent,File)==True:
+
+            if isinstance(self.stationTree.selectedItems()[-1].parent,File)==True:
                 MenuASI = QMenu()
                 ASI = MenuASI.addAction('All Stations Invisible')
                 ASI.triggered.connect(lambda :self.Files.setstationsinvisible(self.stationTree.selectedItems()[0].parent))
                 MenuASI.exec_(QtGui.QCursor.pos())
+
+            if isinstance(self.stationTree.selectedItems()[-1].parent,Station)==True:
+                Menu = QMenu()
+                INV = Menu.addAction('Set Invisible')
+                INV.triggered.connect(lambda :self.Set_selected_Invisible
+                                                        (self.stationTree.selectedItems()))
+                VIS=Menu.addAction('Set Visible')
+                VIS.triggered.connect(lambda: self.Set_selected_Visible
+                                                        (self.stationTree.selectedItems()))
+                Menu.exec_(QtGui.QCursor.pos())
+    def Set_selected_Invisible(self,selectedList):
+        for item in selectedList:
+            if isinstance(item.parent,Station)==True:
+                item.parent.setVisible(False)
+        self.update_ondraw_stations()
+        self.draw()
+    def Set_selected_Visible(self,selectedList):
+        for item in selectedList:
+            if isinstance(item.parent,Station)==True:
+                item.parent.setVisible(True)
+        self.update_ondraw_stations()
+        self.draw()
     def _initVistblebtn(self):
         self.VisibleChannel=ChannelVisible(self)
     def _changeStationVisibility(self):

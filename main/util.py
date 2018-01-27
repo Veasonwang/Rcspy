@@ -71,11 +71,16 @@ class MplCanvas(FigureCanvas):
         """
         setting label offset
         """
-        self.labeloffset=2.0/(float(math.sqrt(float(drawnumber)))+0.1)
+        self.labeloffset=(1.8/(float(math.sqrt(float(drawnumber)))+0.1))+0.25
         if self.labeloffset>1:
             self.labeloffset=1
-
-
+        """
+        high performance
+        """
+        axappend=self.axes.append
+        tappend=t.append
+        sappend=s.append
+        ondrawchnappend=self.ondrawchn.append
         for i in range(drawnumber):
             if i == 0:
                 ax = self.fig.add_subplot(drawnumber, 1, 1)
@@ -83,20 +88,24 @@ class MplCanvas(FigureCanvas):
                 ax = self.fig.add_subplot(drawnumber, 1, i + 1)
                 #ax.xaxis.set_ticks_position("top")
 
-            self.axes.append(ax)
+            #self.axes.append(ax)
+            """
+            high performance
+            """
+            axappend(ax)
         for station in stations:
             if(VisibleChn.ZVisible==True):
-                t.append(station.getchannelbyNZE('Z').tr.times().copy())
-                s.append(station.getchannelbyNZE('Z').tr.data.copy())
-                self.ondrawchn.append(station.getchannelbyNZE('Z'))
+                tappend(station.getchannelbyNZE('Z').tr.times().copy())
+                sappend(station.getchannelbyNZE('Z').tr.data.copy())
+                ondrawchnappend(station.getchannelbyNZE('Z'))
             if (VisibleChn.NVisible == True):
-                t.append(station.getchannelbyNZE('N').tr.times().copy())
-                s.append(station.getchannelbyNZE('N').tr.data.copy())
-                self.ondrawchn.append(station.getchannelbyNZE('N'))
+                tappend(station.getchannelbyNZE('N').tr.times().copy())
+                sappend(station.getchannelbyNZE('N').tr.data.copy())
+                ondrawchnappend(station.getchannelbyNZE('N'))
             if (VisibleChn.EVisible == True):
-                t.append(station.getchannelbyNZE('E').tr.times().copy())
-                s.append(station.getchannelbyNZE('E').tr.data.copy())
-                self.ondrawchn.append(station.getchannelbyNZE('E'))
+                tappend(station.getchannelbyNZE('E').tr.times().copy())
+                sappend(station.getchannelbyNZE('E').tr.data.copy())
+                ondrawchnappend(station.getchannelbyNZE('E'))
         for i in range(len(self.axes)):
             self.axes[i].cla()
             self.axes[i].plot(self.tt[i], self.ss[i], 'g')
