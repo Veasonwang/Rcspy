@@ -157,23 +157,23 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         '''
         Change plotted channel
         '''
-        if self.ZButton.isChecked():
+        if self.ZCheckBox.isChecked():
             self.VisibleChannel.ZVisible=True
         else:
             self.VisibleChannel.ZVisible = False
 
-        if self.NButton.isChecked():
+        if self.NCheckBox.isChecked():
             self.VisibleChannel.NVisible=True
         else:
             self.VisibleChannel.NVisible = False
 
-        if self.EButton.isChecked():
+        if self.ECheckBox.isChecked():
             self.VisibleChannel.EVisible=True
         else:
             self.VisibleChannel.EVisible = False
         self.draw()
     def _changebtn_cursor(self):
-        if self.btn_cursor.isChecked():
+        if self.cursor_switch.isChecked():
             self.set_MultiCursor()
         else:
             try:
@@ -275,6 +275,7 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
             string=trname +"  UTCTime: "+str(mousetime)[0:-1]+"        Y:"+str(mouseydata)
             self.statusbar.showMessage(string)
             self.qmlcanvas.setToolTip(string)
+            self.current_time.setText(str(mousetime)[0:-1])
     def onmouse_scroll(self,event):
         self.resetYlim(event)
         self.resetXlim(event)
@@ -327,6 +328,11 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.qml.limratio = self.qml.limratio *1.25
         self.update_ondraw_stations()
         self.draw()
+    def _AmpReset(self):
+        self.update_ondraw_stations()
+        self.draw()
+        pass
+
 if __name__ == '__main__':
     Rcspy()
 
