@@ -7,6 +7,7 @@ import os
 from PyQt5.QtWidgets import QMenu
 from PyQt5.QtGui import QFont,QIcon
 from util import QTreeWidgetItem
+from operator import attrgetter
 from PyQt5 import QtCore, QtGui, QtWidgets
 from numpy import mean
 class ChannelVisible:
@@ -29,6 +30,11 @@ class Files:
         File.setinvisible()
         self.parent.update_ondraw_stations()
         self.parent.draw()
+    def SortByName(self,File):
+        stations=File.stations.stations
+        stations.sort(key=attrgetter('stats.network','stats.station'))
+        File.rebuildTreeview()
+
 class File:
     """
     Represents a single file and hold the Stations()
@@ -52,8 +58,15 @@ class File:
         """
         self.stations=stations
     def setinvisible(self):
-        for station in self.stations:
+        for station in self.stations.stations:
             station.setVisible(False)
+    def rebuildTreeview(self):
+        for station in self.stations.stations:
+            self.QStationItem.removeChild(station.QStationItem)
+        for station in self.stations.stations:
+            self.QStationItem.addChild(station.QStationItem)
+
+
 class Stations:
     '''
     Station() container object

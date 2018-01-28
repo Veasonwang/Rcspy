@@ -52,13 +52,12 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
                 self.draw()
                 self.connectevent()
                 self._changebtn_cursor()
-
             except:
                 pass
     def initdrawstation(self):
         if len(self.ondrawstations) == 0:
             for file in self.Files.files:
-                for station in file.stations:
+                for station in file.stations.stations:
                     self.ondrawstations.append(station)
                     station.setVisible(True)
                     break
@@ -99,17 +98,18 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         #self.stationTree.setContextMenuPolicy(Qt.CustomContextMenu)
         #self.stationTree.setHeaderHidden(True)
         self.stationTree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.stationTree.customContextMenuRequested.connect(self.popmenu)
-    def popmenu(self):
+        self.stationTree.customContextMenuRequested.connect(self.poptreemenu)
+    def poptreemenu(self):
         if len(self.stationTree.selectedItems())>0:
-
             if isinstance(self.stationTree.selectedItems()[-1].parent,File)==True:
-                MenuASI = QMenu()
-                ASI = MenuASI.addAction('All Stations Invisible')
-                ASI.triggered.connect(lambda :self.Files.setstationsinvisible(self.stationTree.selectedItems()[0].parent))
-                MenuASI.exec_(QtGui.QCursor.pos())
+                Menu = QMenu()
+                ASI = Menu.addAction('All Stations Invisible')
+                ASI.triggered.connect(lambda :self.Files.setstationsinvisible(self.stationTree.selectedItems()[-1].parent))
+                Sortbyname=Menu.addAction('Sort by Name')
+                Sortbyname.triggered.connect(lambda:self.Files.SortByName(self.stationTree.selectedItems()[-1].parent))
+                Menu.exec_(QtGui.QCursor.pos())
 
-            if isinstance(self.stationTree.selectedItems()[-1].parent,Station)==True:
+            elif isinstance(self.stationTree.selectedItems()[-1].parent,Station)==True:
                 Menu = QMenu()
                 INV = Menu.addAction('Set Invisible')
                 INV.triggered.connect(lambda :self.Set_selected_Invisible
@@ -118,6 +118,11 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
                 VIS.triggered.connect(lambda: self.Set_selected_Visible
                                                         (self.stationTree.selectedItems()))
                 Menu.exec_(QtGui.QCursor.pos())
+
+    def popqmlmenu(self):
+        Menu=QMenu()
+        ac=Menu.addAction('Function')
+        Menu.exec_(QtGui.QCursor.pos())
     def Set_selected_Invisible(self,selectedList):
         for item in selectedList:
             if isinstance(item.parent,Station)==True:
@@ -205,6 +210,8 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.qml.resize(width,height)
     def onclick(self, event):
         print(event.button, event.x, event.y, event.xdata, event.ydata)
+        if event.button==3:
+            self.popqmlmenu()
     def __mpl_mouseButtonReleaseEvent(self,event):
         try:
             xmin, xmax = event.inaxes.get_xlim()
