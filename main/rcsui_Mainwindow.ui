@@ -164,7 +164,7 @@
          <enum>QFrame::Box</enum>
         </property>
         <property name="text">
-         <string>          </string>
+         <string/>
         </property>
         <property name="scaledContents">
          <bool>false</bool>
@@ -350,44 +350,59 @@
     <property name="title">
      <string>文件</string>
     </property>
-    <widget class="QMenu" name="menu">
+    <widget class="QMenu" name="menu_2">
      <property name="title">
-      <string>导出</string>
+      <string>打开</string>
      </property>
-     <addaction name="action_mseed"/>
-     <addaction name="action_sac"/>
-     <addaction name="action_seed"/>
+     <addaction name="actionRseed"/>
+     <addaction name="actionRminiseed"/>
+     <addaction name="actionRsac"/>
     </widget>
-    <addaction name="actionopen"/>
-    <addaction name="menu"/>
+    <addaction name="menu_2"/>
+    <addaction name="actionexport"/>
     <addaction name="actionexit"/>
    </widget>
    <addaction name="menuopen"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionopen">
-   <property name="text">
-    <string>打开</string>
-   </property>
-  </action>
   <action name="actionexit">
    <property name="text">
     <string>退出</string>
    </property>
   </action>
-  <action name="action_mseed">
+  <action name="actionEmseed">
    <property name="text">
     <string>.mseed</string>
    </property>
   </action>
-  <action name="action_sac">
+  <action name="actionEsac">
    <property name="text">
     <string>.sac</string>
    </property>
   </action>
-  <action name="action_seed">
+  <action name="actionEseed">
    <property name="text">
     <string>.seed</string>
+   </property>
+  </action>
+  <action name="actionRseed">
+   <property name="text">
+    <string>seed</string>
+   </property>
+  </action>
+  <action name="actionRminiseed">
+   <property name="text">
+    <string>miniseed</string>
+   </property>
+  </action>
+  <action name="actionRsac">
+   <property name="text">
+    <string>sac</string>
+   </property>
+  </action>
+  <action name="actionexport">
+   <property name="text">
+    <string>导出</string>
    </property>
   </action>
  </widget>

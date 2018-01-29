@@ -31,7 +31,7 @@
   <property name="windowTitle">
    <string>导出</string>
   </property>
-  <widget class="QListView" name="listView">
+  <widget class="QListWidget" name="File_list">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -41,7 +41,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QListWidget" name="listWidget">
+  <widget class="QListWidget" name="channel_list">
    <property name="geometry">
     <rect>
      <x>250</x>
@@ -49,45 +49,6 @@
      <width>121</width>
      <height>311</height>
     </rect>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>100</y>
-     <width>89</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>ASCII</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton_2">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>140</y>
-     <width>89</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>miniSEED</string>
-   </property>
-  </widget>
-  <widget class="QRadioButton" name="radioButton_3">
-   <property name="geometry">
-    <rect>
-     <x>400</x>
-     <y>180</y>
-     <width>89</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>SAC</string>
    </property>
   </widget>
   <widget class="QGroupBox" name="groupBox">
@@ -102,7 +63,7 @@
    <property name="title">
     <string>文件格式</string>
    </property>
-   <widget class="QRadioButton" name="radioButton_4">
+   <widget class="QRadioButton" name="radioSEED">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -113,6 +74,45 @@
     </property>
     <property name="text">
      <string>SEED</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioSAC">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>89</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SAC</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioMSEED">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>89</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>miniSEED</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioASCII">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>89</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ASCII</string>
     </property>
    </widget>
   </widget>
@@ -128,17 +128,17 @@
    <property name="title">
     <string>时间长度</string>
    </property>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="starttime_edit">
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>20</y>
+      <y>30</y>
       <width>81</width>
       <height>20</height>
      </rect>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
+   <widget class="QLineEdit" name="endtimee_edit">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -152,7 +152,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>30</y>
       <width>31</width>
       <height>16</height>
      </rect>
@@ -206,7 +206,7 @@
     <rect>
      <x>260</x>
      <y>360</y>
-     <width>71</width>
+     <width>91</width>
      <height>16</height>
     </rect>
    </property>
@@ -227,7 +227,7 @@
     <string>选择文件夹</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_3">
+  <widget class="QLineEdit" name="Exfolder_edit">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -267,17 +267,14 @@
    </property>
   </widget>
   <zorder>groupBox</zorder>
-  <zorder>listView</zorder>
-  <zorder>listWidget</zorder>
-  <zorder>radioButton</zorder>
-  <zorder>radioButton_2</zorder>
-  <zorder>radioButton_3</zorder>
+  <zorder>File_list</zorder>
+  <zorder>channel_list</zorder>
   <zorder>groupBox_2</zorder>
   <zorder>label_3</zorder>
   <zorder>label_4</zorder>
   <zorder>allchannel_checkbox</zorder>
   <zorder>btn_set_folder</zorder>
-  <zorder>lineEdit_3</zorder>
+  <zorder>Exfolder_edit</zorder>
   <zorder>btnOK</zorder>
   <zorder>btn_Cancel</zorder>
  </widget>
