@@ -4,12 +4,13 @@ To handle gui events and draw cruve
 
 import rcspy_Exportdialog
 import os
-from PyQt5.QtWidgets import QMenu
+from PyQt5.QtWidgets import QMenu,QMessageBox,QProgressBar
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QFont,QIcon
 from util import QTreeWidgetItem,QListWidgetItem
 from operator import attrgetter
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QAbstractItemView,QFileDialog
 from numpy import mean
 class ChannelVisible:
     def __init__(self,parent=None):
@@ -50,6 +51,9 @@ class File:
         self.QStationItem.setToolTip(1,self.path)
         self.QStationItem.setToolTip(2, self.path)
         self.name=self.path.split('/')[-1]
+        self.ename=""
+        for n in self.name.split('.')[0:-1]:
+            self.ename=self.ename+n
         self.parent.stationTree.addTopLevelItem(self.QStationItem)
     def appointstations(self,stations):
         """
@@ -148,6 +152,7 @@ class Station(object):
         self.QStationItem.setText(1, '%s.%s' %
                                   (self.stats.network,
                                    self.stats.station))
+        self.name=self.stats.network+"."+self.stats.station
         #self.QStationItem.setText(2, '%.3f N, %.3f E' %
         #                              (self.getCoordinates()[0],
         #                               self.getCoordinates()[1]))
@@ -211,21 +216,152 @@ class Channel(object):
 
 
 class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
-    def __init__(self):
-        super(Exportdialog, self).__init__()
+    def __init__(self,parent):
+        super(Exportdialog, self).__init__(parent)
         self.setupUi(self)
+        self.File_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.channel_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.connectevent()
+        self.expath=""
     def getFiles(self,Files):
         self.Files=Files
         for file in self.Files.files:
             listitem=QListWidgetItem(file)
             listitem.setText(file.name)
             self.File_list.addItem(listitem)
-        return 1
+
     def connectevent(self):
         self.btnOK.clicked.connect(self.Onbtnok)
         self.btn_Cancel.clicked.connect(self.Onbtncancel)
+        self.File_list.itemSelectionChanged.connect(self.OnFilelist_selectionchange)
+        self.channel_list.itemSelectionChanged.connect(self.Onchannellist_selectionchange)
+        self.allchannel_checkbox.stateChanged.connect(self.Onallchannel_change)
+        self.btn_set_folder.clicked.connect(self.set_exfolder)
+    def set_exfolder(self):
+        foldername=QFileDialog.getExistingDirectory(self,'save folder')
+        if foldername !="":
+            self.expath=foldername
+            self.Exfolder_edit.setText(foldername)
+    def Onallchannel_change(self):
+        if self.allchannel_checkbox.isChecked()==True:
+            self.channel_list.selectAll()
+        else:
+            self.channel_list.clearSelection()
+    def OnFilelist_selectionchange(self):
+        self.channel_list.clear()
+        if len(self.File_list.selectedItems())==1:
+            self.channel_list.setEnabled(True)
+            self.allchannel_checkbox.setEnabled(True)
+
+            self.radioSAC.setEnabled(True)
+            stations=self.File_list.selectedItems()[0].parent.stations
+            for station in stations.stations:
+                listitem=QListWidgetItem(station)
+                listitem.setText(station.name)
+                self.channel_list.addItem(listitem)
+        if len(self.File_list.selectedItems())>1:
+            for item in self.File_list.selectedItems():
+                stations = item.parent.stations
+                for station in stations.stations:
+                    listitem = QListWidgetItem(station)
+                    listitem.setText(station.name)
+                    self.channel_list.addItem(listitem)
+            self.channel_list.setEnabled(False)
+            self.allchannel_checkbox.setChecked(True)
+            self.allchannel_checkbox.setEnabled(False)
+            self.radioMSEED.setChecked(True)
+            self.radioSAC.setEnabled(False)
+    def Onchannellist_selectionchange(self):
+        count=self.channel_list.count()
+        if len(self.channel_list.selectedItems())==count:
+            self.allchannel_checkbox.setChecked(True)
+        else:
+            self.allchannel_checkbox.setChecked(False)
     def Onbtnok(self):
-        print 1
+        if self.expath=="":
+            QMessageBox.about(self,"tips","please set export folder")
+
+        elif len(self.File_list.selectedItems())==0:
+            QMessageBox.about(self, "tips", "please set export files")
+
+        else:
+            if self.radioMSEED.isChecked():
+                self.pgb = QProgressBar(self)
+                self.pgb.setWindowTitle("Exporting")
+                self.pgb.setGeometry(160, 380, 200, 25)
+                self.pgb.show()
+                step=0
+                allnum=len(self.File_list.selectedItems())
+                currnum=0
+                for item in self.File_list.selectedItems():
+                    file=item.parent
+                    filesave=self.expath+"/"+str(file.ename)+".mseed"
+                    file.stream.write(filesave,format='MSEED',reclen=256)
+                    currnum=currnum+1
+                    step=currnum*100/allnum
+                    self.pgb.setValue(int(step))
+                self.pgb.close()
+                QMessageBox.about(self,"tips","finished")
+
     def Onbtncancel(self):
         self.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

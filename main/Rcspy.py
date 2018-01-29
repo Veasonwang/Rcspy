@@ -39,17 +39,24 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.actionRseed.triggered.connect(self.onRseed)
         self.actionRminiseed.triggered.connect(self.onRminiseed)
         self.actionexit.triggered.connect(self.onexit)
-        self.actionEmseed.triggered.connect(self.export2meed)
-        self.actionEsac.triggered.connect(self.onEsac)
+        self.actionexport.triggered.connect(self.Export)
     def onRseed(self):
-        filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './','*.seed')
-        if filename!="":
+        filenames, _ = QFileDialog.getOpenFileNames(self, 'Open file', './','*.seed')
+
+        if len(filenames)!=0:
             try:
-                file=File(filename,parent=self,format='seed')
-                stream=read(filename)
-                self.Files.addfile(file)
-                stations = Stations(stream, file)
-                file.appointstations(stations)
+                currentfile=1
+                allfile=len(filenames)
+                for filename in filenames:
+                    string="Reading "+str(currentfile)+"  of"  +str(allfile)
+                    self.statusbar.showMessage(string)
+                    currentfile=currentfile+1
+                    file=File(filename,parent=self,format='seed')
+                    stream=read(filename)
+                    self.Files.addfile(file)
+                    stations = Stations(stream, file)
+                    file.appointstations(stations)
+                self.statusbar.showMessage("drawing")
                 self.initdrawstation()
                 self.update_ondraw_stations()
                 self.draw()
@@ -74,8 +81,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             except:
                 pass
         pass
-    def onEsac(self):
-        self.exdialog=Exportdialog()
+    def Export(self):
+        self.exdialog=Exportdialog(self)
         self.exdialog.getFiles(self.Files)
         self.exdialog.exec_()
     def initdrawstation(self):
@@ -98,11 +105,13 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             pass
     def draw(self):
         self.qml.drawAxes(self.ondrawstations,self.VisibleChannel)
+        self.statusbar.showMessage("Ready")
     def update_ondraw_stations(self):
         """
         To update the stations for self.qml.draw()
         :return:
         """
+        self.statusbar.showMessage("drawing")
         self.ondrawstations=[]
         for file in self.Files.files:
             for station in file.stations:
@@ -359,9 +368,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.draw()
         print 2
         pass
-    def export2meed(self):
-        self.Files.files[0].stream.write("test.mseed",format='MSEED',reclen=256)
-        print "OK"
 if __name__ == '__main__':
     Rcspy()
 

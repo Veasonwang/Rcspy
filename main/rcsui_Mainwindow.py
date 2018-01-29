@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'rcsui.ui'
+# Form implementation generated from reading ui file 'rcsui_Mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.6
 #
@@ -170,8 +170,6 @@ class Ui_MainWindow(object):
         self.menubar.setObjectName("menubar")
         self.menuopen = QtWidgets.QMenu(self.menubar)
         self.menuopen.setObjectName("menuopen")
-        self.menu = QtWidgets.QMenu(self.menuopen)
-        self.menu.setObjectName("menu")
         self.menu_2 = QtWidgets.QMenu(self.menuopen)
         self.menu_2.setObjectName("menu_2")
         MainWindow.setMenuBar(self.menubar)
@@ -192,14 +190,13 @@ class Ui_MainWindow(object):
         self.actionRminiseed.setObjectName("actionRminiseed")
         self.actionRsac = QtWidgets.QAction(MainWindow)
         self.actionRsac.setObjectName("actionRsac")
-        self.menu.addAction(self.actionEmseed)
-        self.menu.addAction(self.actionEsac)
-        self.menu.addAction(self.actionEseed)
+        self.actionexport = QtWidgets.QAction(MainWindow)
+        self.actionexport.setObjectName("actionexport")
         self.menu_2.addAction(self.actionRseed)
         self.menu_2.addAction(self.actionRminiseed)
         self.menu_2.addAction(self.actionRsac)
         self.menuopen.addAction(self.menu_2.menuAction())
-        self.menuopen.addAction(self.menu.menuAction())
+        self.menuopen.addAction(self.actionexport)
         self.menuopen.addAction(self.actionexit)
         self.menubar.addAction(self.menuopen.menuAction())
 
@@ -227,7 +224,6 @@ class Ui_MainWindow(object):
         self.ZCheckBox.setText(_translate("MainWindow", "Z"))
         self.cursor_switch.setText(_translate("MainWindow", "光标"))
         self.menuopen.setTitle(_translate("MainWindow", "文件"))
-        self.menu.setTitle(_translate("MainWindow", "导出"))
         self.menu_2.setTitle(_translate("MainWindow", "打开"))
         self.actionexit.setText(_translate("MainWindow", "退出"))
         self.actionEmseed.setText(_translate("MainWindow", ".mseed"))
@@ -236,5 +232,6 @@ class Ui_MainWindow(object):
         self.actionRseed.setText(_translate("MainWindow", "seed"))
         self.actionRminiseed.setText(_translate("MainWindow", "miniseed"))
         self.actionRsac.setText(_translate("MainWindow", "sac"))
+        self.actionexport.setText(_translate("MainWindow", "导出"))
 
 from util import Qcwidget
