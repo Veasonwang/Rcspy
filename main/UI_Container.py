@@ -39,7 +39,7 @@ class File:
     """
     Represents a single file and hold the Stations()
     """
-    def __init__(self,path,parent):
+    def __init__(self,path,parent,format=''):
         self.path=path
         self.parent=parent
         self.stations=[]
@@ -57,6 +57,7 @@ class File:
         :return:
         """
         self.stations=stations
+        self.stream=self.stations.stream
     def setinvisible(self):
         for station in self.stations.stations:
             station.setVisible(False)

@@ -9,10 +9,10 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QAbstractItemView,
 from util import *
 from obspy import  UTCDateTime
 from matplotlib.widgets import MultiCursor
-import rcsui
+import rcsui_Mainwindow
 import sys
 from UI_Container import *
-class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
+class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def __init__(self,parent=None):
         app = QApplication(sys.argv)
         super(Rcspy,self).__init__()
@@ -36,13 +36,15 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.show()
         app.exec_()
     def menuconncect(self):
-        self.actionopen.triggered.connect(self.onfileopen)
+        self.actionRseed.triggered.connect(self.onRseed)
+        self.actionRminiseed.triggered.connect(self.onRminiseed)
         self.actionexit.triggered.connect(self.onexit)
-    def onfileopen(self):
+        self.actionEmseed.triggered.connect(self.export2meed)
+    def onRseed(self):
         filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './','*.seed')
         if filename!="":
             try:
-                file=File(filename,parent=self)
+                file=File(filename,parent=self,format='seed')
                 stream=read(filename)
                 self.Files.addfile(file)
                 stations = Stations(stream, file)
@@ -54,6 +56,23 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
                 self._changebtn_cursor()
             except:
                 pass
+    def onRminiseed(self):
+        filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './', 'file(*.mseed *.miniseed)')
+        if filename != "":
+            try:
+                file = File(filename, parent=self, format='mseed')
+                stream = read(filename)
+                self.Files.addfile(file)
+                stations = Stations(stream, file)
+                file.appointstations(stations)
+                self.initdrawstation()
+                self.update_ondraw_stations()
+                self.draw()
+                self.connectevent()
+                self._changebtn_cursor()
+            except:
+                pass
+        pass
     def initdrawstation(self):
         if len(self.ondrawstations) == 0:
             for file in self.Files.files:
@@ -329,10 +348,15 @@ class Rcspy(rcsui.Ui_MainWindow,QMainWindow):
         self.update_ondraw_stations()
         self.draw()
     def _AmpReset(self):
+        print 1
+        self.qml.limratio=1
         self.update_ondraw_stations()
         self.draw()
+        print 2
         pass
-
+    def export2meed(self):
+        self.Files.files[0].stream.write("test.mseed",format='MSEED',reclen=256)
+        print "OK"
 if __name__ == '__main__':
     Rcspy()
 
