@@ -2,9 +2,10 @@
 To handle gui events and draw cruve
 '''
 
-
+import rcspy_Exportdialog
 import os
 from PyQt5.QtWidgets import QMenu
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QFont,QIcon
 from util import QTreeWidgetItem
 from operator import attrgetter
@@ -209,3 +210,18 @@ class Channel(object):
         self.datamean=self.tr.data.mean()
 
 
+class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
+    def __init__(self):
+        super(Exportdialog, self).__init__()
+        self.setupUi(self)
+        self.connectevent()
+    def getFiles(self,Files):
+        self.Files=Files
+        return 1
+    def connectevent(self):
+        self.btnOK.clicked.connect(self.Onbtnok)
+        self.btn_Cancel.clicked.connect(self.Onbtncancel)
+    def Onbtnok(self):
+        print 1
+    def Onbtncancel(self):
+        self.close()

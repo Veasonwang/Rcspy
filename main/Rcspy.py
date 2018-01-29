@@ -40,6 +40,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.actionRminiseed.triggered.connect(self.onRminiseed)
         self.actionexit.triggered.connect(self.onexit)
         self.actionEmseed.triggered.connect(self.export2meed)
+        self.actionEsac.triggered.connect(self.onEsac)
     def onRseed(self):
         filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './','*.seed')
         if filename!="":
@@ -73,6 +74,10 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             except:
                 pass
         pass
+    def onEsac(self):
+        self.exdialog=Exportdialog()
+        self.exdialog.getFiles(self.Files)
+        self.exdialog.exec_()
     def initdrawstation(self):
         if len(self.ondrawstations) == 0:
             for file in self.Files.files:
