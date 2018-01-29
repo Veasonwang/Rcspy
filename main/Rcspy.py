@@ -122,6 +122,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         Setup stationtree :QTreeWidgetItem:
         '''
         self.stationTree.setColumnCount(3)
+
         self.stationTree.setColumnWidth(0, 60)
         self.stationTree.setColumnWidth(1, 100)
         self.stationTree.setColumnWidth(2, 150)
