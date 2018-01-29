@@ -7,7 +7,7 @@ import os
 from PyQt5.QtWidgets import QMenu
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QFont,QIcon
-from util import QTreeWidgetItem
+from util import QTreeWidgetItem,QListWidgetItem
 from operator import attrgetter
 from PyQt5 import QtCore, QtGui, QtWidgets
 from numpy import mean
@@ -49,7 +49,7 @@ class File:
                                   (self.path.split('/')[-1]))
         self.QStationItem.setToolTip(1,self.path)
         self.QStationItem.setToolTip(2, self.path)
-
+        self.name=self.path.split('/')[-1]
         self.parent.stationTree.addTopLevelItem(self.QStationItem)
     def appointstations(self,stations):
         """
@@ -217,6 +217,10 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
         self.connectevent()
     def getFiles(self,Files):
         self.Files=Files
+        for file in self.Files.files:
+            listitem=QListWidgetItem(file)
+            listitem.setText(file.name)
+            self.File_list.addItem(listitem)
         return 1
     def connectevent(self):
         self.btnOK.clicked.connect(self.Onbtnok)

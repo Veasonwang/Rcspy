@@ -2,7 +2,7 @@
 class Inheriting from Pyqt5 and Matplotlib
 """
 
-
+from PyQt5.QtWidgets import QListWidgetItem as QLWI
 from  PyQt5.QtWidgets import QTreeWidgetItem as QTWI
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -16,6 +16,12 @@ class Qcwidget(QWidget):
         self.Rcs.onqwidghtsizechangeed(QResizeEvent)
     def setRcs(self,Rcs):
         self.Rcs=Rcs
+class QListWidgetItem(QLWI):
+    def __init__(self,parent):
+        QLWI.__init__(self)
+        self.parent=parent
+
+
 class QTreeWidgetItem(QTWI):
     def __init__(self,parent):
         QTWI.__init__(self)
