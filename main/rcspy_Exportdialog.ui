@@ -266,6 +266,19 @@
     <string>取消</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="single_channel_checkbox">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>380</y>
+     <width>121</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>一个通道一个文件</string>
+   </property>
+  </widget>
   <zorder>groupBox</zorder>
   <zorder>File_list</zorder>
   <zorder>channel_list</zorder>
@@ -277,6 +290,7 @@
   <zorder>Exfolder_edit</zorder>
   <zorder>btnOK</zorder>
   <zorder>btn_Cancel</zorder>
+  <zorder>single_channel_checkbox</zorder>
  </widget>
  <resources/>
  <connections/>

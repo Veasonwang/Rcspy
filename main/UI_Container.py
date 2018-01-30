@@ -7,11 +7,13 @@ import os
 from PyQt5.QtWidgets import QMenu,QMessageBox,QProgressBar
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QFont,QIcon
+from PyQt5.QtCore import QDir
 from util import QTreeWidgetItem,QListWidgetItem
 from operator import attrgetter
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QAbstractItemView,QFileDialog
 import obspy.core
+import multiprocessing
 from numpy import mean
 class ChannelVisible:
     def __init__(self,parent=None):
@@ -249,12 +251,13 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
             self.channel_list.selectAll()
         else:
             self.channel_list.clearSelection()
+            self.single_channel_checkbox.setEnabled(True)
     def OnFilelist_selectionchange(self):
         self.channel_list.clear()
         if len(self.File_list.selectedItems())==1:
             self.channel_list.setEnabled(True)
             self.allchannel_checkbox.setEnabled(True)
-            self.radioSAC.setEnabled(True)
+            #self.radioSAC.setEnabled(True)
             stations=self.File_list.selectedItems()[0].parent.stations
             for station in stations.stations:
                 listitem=QListWidgetItem(station)
@@ -271,7 +274,7 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
             self.allchannel_checkbox.setChecked(True)
             self.allchannel_checkbox.setEnabled(False)
             self.radioMSEED.setChecked(True)
-            self.radioSAC.setEnabled(False)
+            #self.radioSAC.setEnabled(False)
 
     def Onchannellist_selectionchange(self):
         count=self.channel_list.count()
@@ -279,80 +282,165 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
             self.allchannel_checkbox.setChecked(True)
         else:
             self.allchannel_checkbox.setChecked(False)
+    def Onbtncancel(self):
+        self.close()
+    def Export2mseed(self):
+        self.allnum = len(self.File_list.selectedItems())
+        self.currnum = 0
+        if self.allnum == 1:
+            self.allnum = len(self.channel_list.selectedItems()) * 3
+            exstream = obspy.core.Stream()
+            append = exstream.append
+            for item in self.channel_list.selectedItems():
+                for channel in item.parent.channels:
+                    append(channel.tr)
+                    step = self.currnum * 100 / self.allnum
+                    self.pgb.setValue(int(step))
+                    self.currnum = self.currnum + 1
+            file = self.File_list.selectedItems()[0].parent
+            filesave = self.expath + "/" + str(file.ename) + ".mseed"
+            '''
+            single channel
+            '''
+            if self.single_channel_checkbox == True:
+                if self.dir.exists(file.ename) == False:
+                    self.dir.mkdir(file.ename)
+                filesave = self.expath + "/" + file.ename + "/"
+                for tr in exstream:
+                    tr.write(filesave + str(tr.id) + ".mseed", format='MSEED')
+            else:
+                exstream.write(filesave, format='MSEED', reclen=256)
+        else:
+            '''
+            single channel
+            '''
+            if self.single_channel_checkbox.isChecked()== True:
+                for item in self.File_list.selectedItems():
+                    self.allnum = self.allnum + len(item.parent.stations.stations) * 3
+                for item in self.File_list.selectedItems():
+                    file = item.parent
+                    if self.dir.exists(file.ename) == False:
+                        self.dir.mkdir(file.ename)
+                    filesave = self.expath + "/" + str(file.ename) + "/"
+                    for tr in file.stream:
+                        tr.write(filesave + str(tr.id) + ".mseed", format='MSEED')
+                        self.currnum = self.currnum + 1
+                        step = self.currnum * 100 / self.allnum
+                        self.pgb.setValue(int(step))
+            else:
+                for item in self.File_list.selectedItems():
+                    file = item.parent
+                    filesave = self.expath + "/" + str(file.ename) + ".mseed"
+                    file.stream.write(filesave, format='MSEED', reclen=256)
+                    self.currnum = self.currnum + 1
+                    step = self.currnum * 100 / self.allnum
+                    self.pgb.setValue(int(step))
+    def Export2Ascii(self):
+        self.allnum = len(self.File_list.selectedItems())
+        self.currnum = 0
+        if self.allnum == 1:
+            self.allnum = len(self.channel_list.selectedItems()) * 3
+            exstream = obspy.core.Stream()
+            append = exstream.append
+            for item in self.channel_list.selectedItems():
+                for channel in item.parent.channels:
+                    append(channel.tr)
+                    self.currnum = self.currnum + 1
+                    step = self.currnum * 100 / self.allnum
+                    self.pgb.setValue(int(step))
+            file = self.File_list.selectedItems()[0].parent
+            filesave = self.expath + "/" + str(file.ename) + ".ascii"
+            '''
+            single channel
+            '''
+            if self.single_channel_checkbox.isChecked()== True:
+                if self.dir.exists(file.ename) == False:
+                    self.dir.mkdir(file.ename)
+                filesave = self.expath + "/" + file.ename + "/"
+                for tr in exstream:
+                    tr.write(filesave + str(tr.id) + ".ascii", format='SLIST')
+            else:
+                exstream.write(filesave, format='SLIST')
+        else:
+            '''
+            single channel
+            '''
+            if self.single_channel_checkbox.isChecked()== True:
+                for item in self.File_list.selectedItems():
+                    self.allnum = self.allnum + len(item.parent.stations.stations) * 3
+                for item in self.File_list.selectedItems():
+                    file = item.parent
+                    if self.dir.exists(file.ename) == False:
+                        self.dir.mkdir(file.ename)
+                    filesave = self.expath + "/" + str(file.ename) + "/"
+                    for tr in file.stream:
+                        tr.write(filesave + str(tr.id) + ".ascii", format='SLIST')
+                        self.currnum = self.currnum + 1
+                        step = self.currnum * 100 / self.allnum
+                        self.pgb.setValue(int(step))
+            else:
+                for item in self.File_list.selectedItems():
+                    file = item.parent
+                    filesave = self.expath + "/" + str(file.ename) + ".ascii"
+                    file.stream.write(filesave, format='SLIST')
+                    self.currnum = self.currnum + 1
+                    step = self.currnum * 100 / self.allnum
+                    self.pgb.setValue(int(step))
+    def Export2sac(self):
+        self.allnum = len(self.File_list.selectedItems())
+        self.currnum = 0
+        if self.allnum == 1:
+            self.allnum = len(self.channel_list.selectedItems()) * 3
+            exstream = obspy.core.Stream()
+            append = exstream.append
+            for item in self.channel_list.selectedItems():
+                for channel in item.parent.channels:
+                    append(channel.tr)
+                    self.currnum = self.currnum + 1
+                    step = self.currnum * 100 / self.allnum
+                    self.pgb.setValue(int(step))
+            file = self.File_list.selectedItems()[0].parent
+            if self.dir.exists(file.ename) == False:
+                self.dir.mkdir(file.ename)
+            for tr in exstream:
+                filesave = self.expath + "/"+file.ename+"/" + str(tr.id) + ".SAC"
+                tr.write(filesave, format='SAC')
+        else:
+            self.allnum = 0
+            for item in self.File_list.selectedItems():
+                self.allnum = self.allnum + len(item.parent.stations.stations) * 3
+            for item in self.File_list.selectedItems():
+                if self.dir.exists(item.parent.ename) == False:
+                    self.dir.mkdir(item.parent.ename)
+                filedir = self.expath + "/" + item.parent.ename + "/"
+                for tr in item.parent.stream:
+                    filesave = filedir + tr.id + ".SAC"
+                    tr.write(filesave, format='SAC')
+                    self.currnum = self.currnum + 1
+                    step = self.currnum * 100 / self.allnum
+                    self.pgb.setValue(int(step))
     def Onbtnok(self):
         if self.expath=="":
             QMessageBox.about(self,"tips","please set export folder")
 
         elif len(self.File_list.selectedItems())==0:
             QMessageBox.about(self, "tips", "please set export files")
-
         else:
+            self.dir=QDir()
+            self.dir.cd(self.expath)
+            self.pgb = QProgressBar(self)
+            self.pgb.setWindowTitle("Exporting")
+            self.pgb.setGeometry(160, 380, 200, 25)
+            self.pgb.show()
             if self.radioMSEED.isChecked():
-                self.pgb = QProgressBar(self)
-                self.pgb.setWindowTitle("Exporting")
-                self.pgb.setGeometry(160, 380, 200, 25)
-                self.pgb.show()
-                step=0
-                allnum=len(self.File_list.selectedItems())
-                currnum=0
-                if allnum==1:
-                    allnum = len(self.channel_list.selectedItems()) * 3
-                    exstream = obspy.core.Stream()
-                    append = exstream.append
-                    for item in self.channel_list.selectedItems():
-                        for channel in item.parent.channels:
-                            append(channel.tr)
-                            currnum = currnum + 1
-                            step = currnum * 100 / allnum
-                            self.pgb.setValue(int(step))
-                    file = self.File_list.selectedItems()[0].parent
-                    filesave = self.expath + "/" + str(file.ename) + ".mseed"
-                    exstream.write(filesave, format='MSEED',reclen=256)
-
-                else:
-                    for item in self.File_list.selectedItems():
-                        file=item.parent
-                        filesave=self.expath+"/"+str(file.ename)+".mseed"
-                        file.stream.write(filesave,format='MSEED',reclen=256)
-                        currnum=currnum+1
-                        step=currnum*100/allnum
-                        self.pgb.setValue(int(step))
-                self.pgb.close()
-                QMessageBox.about(self,"tips","finished")
+                self.Export2mseed()
             if self.radioASCII.isChecked():
-                self.pgb = QProgressBar(self)
-                self.pgb.setWindowTitle("Exporting")
-                self.pgb.setGeometry(160, 380, 200, 25)
-                self.pgb.show()
-                step = 0
-                allnum = len(self.File_list.selectedItems())
-                currnum = 0
-                if allnum==1:
-                    allnum=len(self.channel_list.selectedItems())*3
-                    exstream=obspy.core.Stream()
-                    append=exstream.append
-                    for item in self.channel_list.selectedItems():
-                        for channel in item.parent.channels:
-                            append(channel.tr)
-                            currnum=currnum+1
-                            step=currnum*100/allnum
-                            self.pgb.setValue(int(step))
-                    file=self.File_list.selectedItems()[0].parent
-                    filesave = self.expath + "/" + str(file.ename) + ".ascii"
-                    exstream.write(filesave,format='SLIST')
-                else:
-                    for item in self.File_list.selectedItems():
-                        file = item.parent
-                        filesave = self.expath + "/" + str(file.ename) + ".ascii"
-                        file.stream.write(filesave, format='SLIST')
-                        currnum = currnum + 1
-                        step = currnum * 100 / allnum
-                        self.pgb.setValue(int(step))
-                self.pgb.close()
-                QMessageBox.about(self, "tips", "finished")
+                self.Export2Ascii()
+            if self.radioSAC.isChecked():
+                self.Export2sac()
+            self.pgb.close()
+            QMessageBox.about(self, "tips", "finished")
 
-    def Onbtncancel(self):
-        self.close()
 
 
 

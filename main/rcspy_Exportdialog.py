@@ -74,6 +74,9 @@ class Ui_Dialog(object):
         self.btn_Cancel = QtWidgets.QPushButton(Dialog)
         self.btn_Cancel.setGeometry(QtCore.QRect(300, 450, 75, 23))
         self.btn_Cancel.setObjectName("btn_Cancel")
+        self.single_channel_checkbox = QtWidgets.QCheckBox(Dialog)
+        self.single_channel_checkbox.setGeometry(QtCore.QRect(260, 380, 121, 16))
+        self.single_channel_checkbox.setObjectName("single_channel_checkbox")
         self.groupBox.raise_()
         self.File_list.raise_()
         self.channel_list.raise_()
@@ -85,6 +88,7 @@ class Ui_Dialog(object):
         self.Exfolder_edit.raise_()
         self.btnOK.raise_()
         self.btn_Cancel.raise_()
+        self.single_channel_checkbox.raise_()
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -106,4 +110,5 @@ class Ui_Dialog(object):
         self.btn_set_folder.setText(_translate("Dialog", "选择文件夹"))
         self.btnOK.setText(_translate("Dialog", "导出"))
         self.btn_Cancel.setText(_translate("Dialog", "取消"))
+        self.single_channel_checkbox.setText(_translate("Dialog", "一个通道一个文件"))
 
