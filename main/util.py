@@ -63,6 +63,7 @@ class MplCanvas(FigureCanvas):
         :param VisibleChn:
         :return:
         """
+        print len(stations)
         self.ondrawchn=[]
         self.fig.clear()
         axes=[]
@@ -85,13 +86,12 @@ class MplCanvas(FigureCanvas):
         cauculate the drawnumber to create axes
         """
         drawnumber=len(stations)*visnum
-
         height=self.signalheight*drawnumber
+        drawnummax=int((65536/self.signalheight)/visnum)
         self.parent.setFixedHeight(height)
         width=self.parent.geometry().width()
         self.resize(width,height)
         self.fig.clear()
-
 
         """
         setting label offset
@@ -107,7 +107,10 @@ class MplCanvas(FigureCanvas):
         tappend=t.append
         sappend=s.append
         ondrawchnappend=self.ondrawchn.append
+
         for i in range(drawnumber):
+            string = "ready axes "+str(i)+" of "+str(drawnumber)
+            self.Rcs.statusbar.showMessage(string)
             if i == 0:
                 ax = self.fig.add_subplot(drawnumber, 1, 1)
             else:
@@ -119,6 +122,7 @@ class MplCanvas(FigureCanvas):
             high performance
             """
             axappend(ax)
+        currentnum=0
         for station in stations:
             if(VisibleChn.ZVisible==True):
                 tappend(station.getchannelbyNZE('Z').tr.times().copy())
@@ -132,6 +136,9 @@ class MplCanvas(FigureCanvas):
                 tappend(station.getchannelbyNZE('E').tr.times().copy())
                 sappend(station.getchannelbyNZE('E').tr.data.copy())
                 ondrawchnappend(station.getchannelbyNZE('E'))
+            string = "ready station" + str(currentnum) + " of " + str(drawnumber)
+            self.Rcs.statusbar.showMessage(string)
+
         for i in range(len(self.axes)):
             self.axes[i].cla()
             self.axes[i].plot(self.tt[i], self.ss[i], 'g')
@@ -154,16 +161,10 @@ class MplCanvas(FigureCanvas):
             else:
                 ymax = ymax + (2 * mean - ymax - ymin)
             self.axes[i].set_ylim(ymin, ymax)
+            string = "setting" + str(currentnum) + " of " + str(drawnumber)
+            self.Rcs.statusbar.showMessage(string)
 
-
-
-
-
-
-
-
-
-
+        self.Rcs.statusbar.showMessage("drawing")
         self.drawIds()          #draw label
         self.fig.subplots_adjust(bottom=0.001, hspace=0.000, right=0.999, top=0.999, left=0.001)
         self.draw()

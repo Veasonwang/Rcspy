@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2f68cfe7-8842-4cf6-b4e0-d652ea0747ff" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/Rcspy.py" afterPath="$PROJECT_DIR$/main/Rcspy.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/rcsui_Mainwindow.py" afterPath="$PROJECT_DIR$/main/rcsui_Mainwindow.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/rcsui_Mainwindow.ui" afterPath="$PROJECT_DIR$/main/rcsui_Mainwindow.ui" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main/util.py" afterPath="$PROJECT_DIR$/main/util.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,8 +29,8 @@
       <file leaf-file-name="Rcspy.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main/Rcspy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1060">
-              <caret line="406" column="50" lean-forward="true" selection-start-line="406" selection-start-column="50" selection-end-line="406" selection-end-column="50" />
+            <state relative-caret-position="918">
+              <caret line="189" column="23" lean-forward="false" selection-start-line="185" selection-start-column="12" selection-end-line="189" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -62,8 +59,8 @@
       <file leaf-file-name="util.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/util.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="25" column="20" lean-forward="false" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="20" />
+            <state relative-caret-position="930">
+              <caret line="89" column="56" lean-forward="false" selection-start-line="89" selection-start-column="56" selection-end-line="89" selection-end-column="56" />
               <folding>
                 <element signature="e#52#103#0" expanded="true" />
               </folding>
@@ -74,8 +71,8 @@
       <file leaf-file-name="UI_Container.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/UI_Container.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3834">
-              <caret line="341" column="61" lean-forward="false" selection-start-line="341" selection-start-column="48" selection-end-line="341" selection-end-column="61" />
+            <state relative-caret-position="559">
+              <caret line="68" column="27" lean-forward="true" selection-start-line="68" selection-start-column="27" selection-end-line="68" selection-end-column="27" />
               <folding>
                 <element signature="e#45#70#0" expanded="true" />
                 <element signature="e#681#1174#0" expanded="false" />
@@ -302,7 +299,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297062" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297062" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6694045" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.6692392" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297062" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -415,20 +412,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/UI_Container.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3834">
-          <caret line="341" column="61" lean-forward="false" selection-start-line="341" selection-start-column="48" selection-end-line="341" selection-end-column="61" />
-          <folding>
-            <element signature="e#45#70#0" expanded="true" />
-            <element signature="e#681#1174#0" expanded="false" />
-            <element signature="e#2437#4157#0" expanded="false" />
-            <element signature="e#4185#6231#0" expanded="false" />
-            <element signature="e#15394#17018#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main/rcspy_Exportdialog.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1062">
@@ -447,18 +430,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main/util.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="25" column="20" lean-forward="false" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="20" />
+        <state relative-caret-position="930">
+          <caret line="89" column="56" lean-forward="false" selection-start-line="89" selection-start-column="56" selection-end-line="89" selection-end-column="56" />
           <folding>
             <element signature="e#52#103#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/main/UI_Container.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="559">
+          <caret line="68" column="27" lean-forward="true" selection-start-line="68" selection-start-column="27" selection-end-line="68" selection-end-column="27" />
+          <folding>
+            <element signature="e#45#70#0" expanded="true" />
+            <element signature="e#681#1174#0" expanded="false" />
+            <element signature="e#2437#4157#0" expanded="false" />
+            <element signature="e#4185#6231#0" expanded="false" />
+            <element signature="e#15394#17018#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main/Rcspy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1060">
-          <caret line="406" column="50" lean-forward="true" selection-start-line="406" selection-start-column="50" selection-end-line="406" selection-end-column="50" />
+        <state relative-caret-position="918">
+          <caret line="189" column="23" lean-forward="false" selection-start-line="185" selection-start-column="12" selection-end-line="189" selection-end-column="23" />
           <folding />
         </state>
       </provider>

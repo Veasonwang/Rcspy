@@ -111,7 +111,13 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         else:
             pass
     def draw(self):
-
+        #if len(self.ondrawstations)>36:
+        #    QMessageBox.about(self,"toomany","toomany stations draw,no more than 36")
+        #    for station in self.ondrawstations:
+        #        station.setVisible(False)
+        #    self.ondrawstations=[]
+        height=self.scrollArea.geometry().height()
+        self.qml.signalheight = height / int(self.drawnumber_combobox.currentText())
         self.qml.drawAxes(self.ondrawstations,self.VisibleChannel)
         self.statusbar.showMessage("Ready")
     def update_ondraw_stations(self):
@@ -119,6 +125,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         To update the stations for self.qml.draw()
         :return:
         """
+
         self.statusbar.showMessage("drawing")
         self.ondrawstations=[]
         for file in self.Files.files:
@@ -172,11 +179,15 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.update_ondraw_stations()
         self.draw()
     def Set_selected_Visible(self,selectedList):
-        for item in selectedList:
-            if isinstance(item.parent,Station)==True:
-                item.parent.setVisible(True)
         self.update_ondraw_stations()
-        self.draw()
+        if len(self.ondrawstations)+len(selectedList)>36:
+            QMessageBox.about(self,"toomany","toomanystations,no more than 36")
+        else:
+            for item in selectedList:
+                if isinstance(item.parent,Station)==True:
+                    item.parent.setVisible(True)
+            self.update_ondraw_stations()
+            self.draw()
     def _initVistblebtn(self):
         self.VisibleChannel=ChannelVisible(self)
     def _changeStationVisibility(self):
@@ -186,6 +197,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         ###performance update)###
 
         '''
+
         #for file in self.Files.files:
         #    for station in file.stations:
         #        if station.QStationItem.isSelected():
@@ -251,9 +263,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         width=QRectevent.size().width()
         self.qml.resize(width,height)
     def onscrollareasizechangeed(self,QRectevent):
-        height = QRectevent.size().height()
-        width = QRectevent.size().width()
-        self.qml.signalheight = height / int(self.drawnumber_combobox.currentText())
         self.draw()
     def onclick(self, event):
         print(event.button, event.x, event.y, event.xdata, event.ydata)
