@@ -4,7 +4,7 @@ from obspy import *
 # -*- coding: ascii -*-
 from PyQt5 import QtCore
 from PyQt5 import QtGui
-from PyQt5.QtCore import QObject
+from PyQt5.QtCore import QObject,QSize
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QAbstractItemView, QSizePolicy, QMessageBox, QWidget,QFileDialog
 from util import *
 from obspy import  UTCDateTime
@@ -17,14 +17,17 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         app = QApplication(sys.argv)
         super(Rcspy,self).__init__()
         self.setupUi(self)
-        self.menuconncect()
+        self.Eventconncect()
         self._initStationTree()
         self._initVistblebtn()
+        self.scrollArea.setRcs(self)
         self.qmlcanvas.setRcs(self)
         self.qml = MplCanvas(self.qmlcanvas,dpi=100)
+        self.qml.setRcs(self)
         self.fig=self.qml.fig
         self.statusbar.showMessage("Done")
         self.Files=Files(self)
+        self.xlimratio=1
         self.ondrawstations=[]
         self.dragydata=0
         self.dragxdata=0
@@ -35,11 +38,15 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.setstaus()
         self.show()
         app.exec_()
-    def menuconncect(self):
+    def Eventconncect(self):
         self.actionRseed.triggered.connect(self.onRseed)
         self.actionRminiseed.triggered.connect(self.onRminiseed)
         self.actionexit.triggered.connect(self.onexit)
         self.actionexport.triggered.connect(self.Export)
+        self.globalChenckBox.stateChanged['int'].connect(self._OnglobalCheckbox_state_change)
+        self.X_press.clicked.connect(self._OnbtnX_press_clicked)
+        self.X_stretch.clicked.connect(self._OnbtnX_stretch_clicked)
+        self.drawnumber_combobox.currentTextChanged.connect(self._Ondrawnumber_combobox_change)
     def onRseed(self):
         filenames, _ = QFileDialog.getOpenFileNames(self, 'Open file', './','*.seed')
 
@@ -59,7 +66,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 self.statusbar.showMessage("drawing")
                 self.initdrawstation()
                 self.update_ondraw_stations()
-                self.draw()
+                self._changeSelectedChannel()
                 self.connectevent()
                 self._changebtn_cursor()
             except:
@@ -104,6 +111,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         else:
             pass
     def draw(self):
+
         self.qml.drawAxes(self.ondrawstations,self.VisibleChannel)
         self.statusbar.showMessage("Ready")
     def update_ondraw_stations(self):
@@ -234,7 +242,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.qml.mpl_connect('motion_notify_event', self.__mpl_motionNotifyEvent)
         self.qml.mpl_connect('axes_enter_event', self.enter_axes)
         self.qml.mpl_connect('axes_leave_event', self.leave_axes)
-        self.qml.mpl_connect('scroll_event',self.onmouse_scroll)
+        #self.qml.mpl_connect('scroll_event',self.onmouse_scroll)
         self.qml.mpl_connect('figure_leave_event',self.leave_figure)
         self.qml.mpl_connect('figure_enter_event', self.enter_figure)
 
@@ -242,6 +250,11 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         height=QRectevent.size().height()
         width=QRectevent.size().width()
         self.qml.resize(width,height)
+    def onscrollareasizechangeed(self,QRectevent):
+        height = QRectevent.size().height()
+        width = QRectevent.size().width()
+        self.qml.signalheight = height / int(self.drawnumber_combobox.currentText())
+        self.draw()
     def onclick(self, event):
         print(event.button, event.x, event.y, event.xdata, event.ydata)
         if event.button==3:
@@ -355,20 +368,45 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             xmax = xmax - (abs(xmax - xmin)) * 0.15 * upratio
         event.inaxes.set_xlim(xmin, xmax)
     def _Ampup(self):
-        self.qml.limratio=self.qml.limratio*0.75
+        self.qml.ylimratio=self.qml.ylimratio*0.75
         self.update_ondraw_stations()
         self.draw()
     def _Ampdown(self):
-        self.qml.limratio = self.qml.limratio *1.25
+        self.qml.ylimratio = self.qml.ylimratio *1.25
         self.update_ondraw_stations()
         self.draw()
     def _AmpReset(self):
-        print 1
-        self.qml.limratio=1
+        self.qml.ylimratio=1
+        self.xlimratio=1
+        width=self.scrollArea.geometry().width()
+        self.qmlcanvas.setFixedWidth(width)
         self.update_ondraw_stations()
         self.draw()
-        print 2
         pass
+    def _OnglobalCheckbox_state_change(self):
+
+        pass
+    def _OnbtnX_press_clicked(self):
+        if self.xlimratio >0.5:
+            self.xlimratio=self.xlimratio*0.75
+            if self.xlimratio<0.5:
+                self.xlimratio=0.5
+            width=self.scrollArea.geometry().width()
+            self.qmlcanvas.setFixedWidth(width*self.xlimratio)
+        pass
+    def _OnbtnX_stretch_clicked(self):
+        if self.xlimratio<7:
+            if self.xlimratio>7:
+                self.xlimratio=7
+            self.xlimratio = self.xlimratio * 1.1
+            width = self.scrollArea.geometry().width()
+            self.qmlcanvas.setFixedWidth(width*self.xlimratio)
+        pass
+
+    def _Ondrawnumber_combobox_change(self):
+        height=self.scrollArea.geometry().height()
+        self.qml.signalheight=height/int(self.drawnumber_combobox.currentText())
+        self.draw()
 if __name__ == '__main__':
     Rcspy()
 
