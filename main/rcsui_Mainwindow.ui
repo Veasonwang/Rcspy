@@ -11,57 +11,17 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Rcspy</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="15">
+      <item row="0" column="14">
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>单屏道数</string>
         </property>
-       </widget>
-      </item>
-      <item row="0" column="18">
-       <widget class="QComboBox" name="timelength_combobox">
-        <property name="maximumSize">
-         <size>
-          <width>60</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <item>
-         <property name="text">
-          <string>Atuo</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>60</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>240</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>960</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>1800</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>3600</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item row="0" column="5">
@@ -99,13 +59,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="globalChenckBox">
-        <property name="text">
-         <string>全局拖动</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="8">
        <widget class="QPushButton" name="Ampdown">
         <property name="sizePolicy">
@@ -132,48 +85,11 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>500</width>
+          <width>550</width>
           <height>20</height>
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="0" column="12">
-       <widget class="QLabel" name="name_label">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>100</width>
-          <height>20</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="mouseTracking">
-         <bool>false</bool>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Box</enum>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-        <property name="scaledContents">
-         <bool>false</bool>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
       </item>
       <item row="0" column="4">
        <widget class="QCheckBox" name="NCheckBox">
@@ -223,7 +139,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="19">
+      <item row="0" column="16">
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -258,7 +174,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="13">
+      <item row="0" column="12">
        <widget class="QLineEdit" name="current_time">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -286,7 +202,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="14">
+      <item row="0" column="13">
        <widget class="QLineEdit" name="Amp_display">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -331,10 +247,12 @@
         <property name="font">
          <font>
           <pointsize>9</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="text">
-         <string>◄ ►</string>
+         <string>&lt;  &gt;</string>
         </property>
        </widget>
       </item>
@@ -349,21 +267,16 @@
         <property name="font">
          <font>
           <pointsize>9</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="text">
-         <string>► ◄</string>
+         <string>&gt;  &lt;</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="17">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>显示时长</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="16">
+      <item row="0" column="15">
        <widget class="QComboBox" name="drawnumber_combobox">
         <property name="maximumSize">
          <size>
@@ -396,6 +309,13 @@
           <string>24</string>
          </property>
         </item>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="zoomswitch">
+        <property name="text">
+         <string>滚轮缩放</string>
+        </property>
        </widget>
       </item>
      </layout>
@@ -493,7 +413,15 @@
     <addaction name="actionexport"/>
     <addaction name="actionexit"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>预处理</string>
+    </property>
+    <addaction name="actionfiltering"/>
+    <addaction name="actionRInstrument_response"/>
+   </widget>
    <addaction name="menuopen"/>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionexit">
@@ -536,12 +464,22 @@
     <string>导出</string>
    </property>
   </action>
+  <action name="actionfiltering">
+   <property name="text">
+    <string>滤波</string>
+   </property>
+  </action>
+  <action name="actionRInstrument_response">
+   <property name="text">
+    <string>去仪器响应</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>Qcwidget</class>
    <extends>QWidget</extends>
-   <header>qcwidget.h</header>
+   <header>util</header>
    <container>1</container>
   </customwidget>
   <customwidget>

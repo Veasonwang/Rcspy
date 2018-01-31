@@ -20,17 +20,14 @@ class Qcwidget(QWidget):
 class QcScrollArea(QSLA):
     def __init__(self,parent):
         QSLA.__init__(self,parent)
-    def resizeEvent(self, QResizeEvent):
-        self.Rcs.onscrollareasizechangeed(QResizeEvent)
     def setRcs(self,Rcs):
         self.Rcs=Rcs
+        self.installEventFilter(self.Rcs)
 
 class QListWidgetItem(QLWI):
     def __init__(self,parent):
         QLWI.__init__(self)
         self.parent=parent
-
-
 class QTreeWidgetItem(QTWI):
     def __init__(self,parent):
         QTWI.__init__(self)
@@ -72,6 +69,8 @@ class MplCanvas(FigureCanvas):
         self.ss=s
         self.tt=t
         for i in range(len(self.axes)):
+            string = "clearing axes " + str(i) + " of " + str(len(self.axes))
+            self.Rcs.statusbar.showMessage(string)
             self.axes[i].cla()
         self.axes=axes
         visnum=0
@@ -87,7 +86,6 @@ class MplCanvas(FigureCanvas):
         """
         drawnumber=len(stations)*visnum
         height=self.signalheight*drawnumber
-        drawnummax=int((65536/self.signalheight)/visnum)
         self.parent.setFixedHeight(height)
         width=self.parent.geometry().width()
         self.resize(width,height)
@@ -136,9 +134,10 @@ class MplCanvas(FigureCanvas):
                 tappend(station.getchannelbyNZE('E').tr.times().copy())
                 sappend(station.getchannelbyNZE('E').tr.data.copy())
                 ondrawchnappend(station.getchannelbyNZE('E'))
+            currentnum=currentnum+1
             string = "ready station" + str(currentnum) + " of " + str(drawnumber)
             self.Rcs.statusbar.showMessage(string)
-
+        currentnum=0
         for i in range(len(self.axes)):
             self.axes[i].cla()
             self.axes[i].plot(self.tt[i], self.ss[i], 'g')
@@ -163,7 +162,7 @@ class MplCanvas(FigureCanvas):
             self.axes[i].set_ylim(ymin, ymax)
             string = "setting" + str(currentnum) + " of " + str(drawnumber)
             self.Rcs.statusbar.showMessage(string)
-
+            currentnum=currentnum+1
         self.Rcs.statusbar.showMessage("drawing")
         self.drawIds()          #draw label
         self.fig.subplots_adjust(bottom=0.001, hspace=0.000, right=0.999, top=0.999, left=0.001)

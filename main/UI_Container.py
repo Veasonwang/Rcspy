@@ -21,7 +21,6 @@ class ChannelVisible:
         self.ZVisible=True
         self.NVisible=False
         self.EVisible=False
-
 class Files:
     """
     File() container object
@@ -39,7 +38,6 @@ class Files:
         stations=File.stations.stations
         stations.sort(key=attrgetter('stats.network','stats.station'))
         File.rebuildTreeview()
-
 class File:
     """
     Represents a single file and hold the Stations()
@@ -74,8 +72,6 @@ class File:
             self.QStationItem.removeChild(station.QStationItem)
         for station in self.stations.stations:
             self.QStationItem.addChild(station.QStationItem)
-
-
 class Stations:
     '''
     Station() container object
@@ -216,8 +212,6 @@ class Channel(object):
                                    self.tr.stats.endtime))
         self.station.QStationItem.addChild(self.QChannelItem)
         self.datamean=self.tr.data.mean()
-
-
 class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
     def __init__(self,parent):
         super(Exportdialog, self).__init__(parent)
@@ -275,7 +269,6 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
             self.allchannel_checkbox.setEnabled(False)
             self.radioMSEED.setChecked(True)
             #self.radioSAC.setEnabled(False)
-
     def Onchannellist_selectionchange(self):
         count=self.channel_list.count()
         if len(self.channel_list.selectedItems())==count:
@@ -284,6 +277,27 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
             self.allchannel_checkbox.setChecked(False)
     def Onbtncancel(self):
         self.close()
+    def Onbtnok(self):
+        if self.expath=="":
+            QMessageBox.about(self,"tips","please set export folder")
+
+        elif len(self.File_list.selectedItems())==0:
+            QMessageBox.about(self, "tips", "please set export files")
+        else:
+            self.dir=QDir()
+            self.dir.cd(self.expath)
+            self.pgb = QProgressBar(self)
+            self.pgb.setWindowTitle("Exporting")
+            self.pgb.setGeometry(160, 380, 200, 25)
+            self.pgb.show()
+            if self.radioMSEED.isChecked():
+                self.Export2mseed()
+            if self.radioASCII.isChecked():
+                self.Export2Ascii()
+            if self.radioSAC.isChecked():
+                self.Export2sac()
+            self.pgb.close()
+            QMessageBox.about(self, "tips", "finished")
     def Export2mseed(self):
         self.allnum = len(self.File_list.selectedItems())
         self.currnum = 0
@@ -419,28 +433,6 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
                     self.currnum = self.currnum + 1
                     step = self.currnum * 100 / self.allnum
                     self.pgb.setValue(int(step))
-    def Onbtnok(self):
-        if self.expath=="":
-            QMessageBox.about(self,"tips","please set export folder")
-
-        elif len(self.File_list.selectedItems())==0:
-            QMessageBox.about(self, "tips", "please set export files")
-        else:
-            self.dir=QDir()
-            self.dir.cd(self.expath)
-            self.pgb = QProgressBar(self)
-            self.pgb.setWindowTitle("Exporting")
-            self.pgb.setGeometry(160, 380, 200, 25)
-            self.pgb.show()
-            if self.radioMSEED.isChecked():
-                self.Export2mseed()
-            if self.radioASCII.isChecked():
-                self.Export2Ascii()
-            if self.radioSAC.isChecked():
-                self.Export2sac()
-            self.pgb.close()
-            QMessageBox.about(self, "tips", "finished")
-
 
 
 
