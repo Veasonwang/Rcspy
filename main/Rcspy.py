@@ -52,6 +52,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.actionRminiseed.triggered.connect(self.onRminiseed)
         self.actionexit.triggered.connect(self.onexit)
         self.actionexport.triggered.connect(self.Export)
+        self.actiondetrend.triggered.connect(self.detrend)
         self.X_press.clicked.connect(self._OnbtnX_press_clicked)
         self.X_stretch.clicked.connect(self._OnbtnX_stretch_clicked)
         self.drawnumber_combobox.currentTextChanged.connect(self._Ondrawnumber_combobox_change)
@@ -127,6 +128,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 ASI.triggered.connect(lambda :self.Files.setstationsinvisible(self.stationTree.selectedItems()))
                 Sortbyname=Menu.addAction('Sort by Name')
                 Sortbyname.triggered.connect(lambda:self.Files.SortByName(self.stationTree.selectedItems()))
+                rmfile=Menu.addAction('remove file')
+                rmfile.triggered.connect(lambda:self.Files.removeselectedfile(self.stationTree.selectedItems()))
                 Menu.exec_(QtGui.QCursor.pos())
 
             elif isinstance(self.stationTree.selectedItems()[-1].parent,Station)==True:
@@ -189,6 +192,10 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def onqmlclick(self, event):
         if event.button==3:
             self.popqmlmenu()
+        if event.button==1:
+            print event
+            event.inaxes.axvline(event.xdata,ymin=0,ymax=1)
+            event.canvas.draw()
     def popqmlmenu(self):
         Menu=QMenu()
         ac=Menu.addAction('Function')
@@ -359,6 +366,12 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 pass
         else:
             pass
+    def detrend(self):
+        for file in self.Files.files:
+            for station in file.stations.stations:
+                station.detrend()
+        self.update_ondraw_stations()
+        self.draw()
     '''Top operation bar response function'''
     def _changeSelectedChannel(self):
         '''

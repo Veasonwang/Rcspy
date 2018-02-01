@@ -13,8 +13,6 @@ from operator import attrgetter
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QAbstractItemView,QFileDialog
 import obspy.core
-import multiprocessing
-from numpy import mean
 class ChannelVisible:
     def __init__(self,parent=None):
         self.parent=parent
@@ -46,6 +44,18 @@ class Files:
                 file.rebuildTreeview()
             else:
                 pass
+
+    def removeselectedfile(self,selecteditems):
+        for item in selecteditems:
+            if isinstance(item.parent,File):
+                file=item.parent
+                self.parent.stationTree.takeTopLevelItem(
+                                                        self.parent.stationTree.indexOfTopLevelItem(
+                                                        file.QStationItem))
+                self.removefile(file)
+
+    def removefile(self,file):
+        self.files.remove(file)
 class File:
     """
     Represents a single file and hold the Stations()
@@ -194,6 +204,9 @@ class Station(object):
         for chann in self.channels:
             if chann.channel[-1]==direction:
                 return chann.tr
+    def detrend(self):
+        for tr in self.channels:
+            tr.tr=tr.tr.detrend('constant')
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace
@@ -324,12 +337,16 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
             '''
             single channel
             '''
-            if self.single_channel_checkbox == True:
+            if self.single_channel_checkbox.isChecked() == True:
+                self.currnum=0
                 if self.dir.exists(file.ename) == False:
                     self.dir.mkdir(file.ename)
                 filesave = self.expath + "/" + file.ename + "/"
                 for tr in exstream:
                     tr.write(filesave + str(tr.id) + ".mseed", format='MSEED')
+                    step = self.currnum * 100 / self.allnum
+                    self.pgb.setValue(int(step))
+                    self.currnum = self.currnum + 1
             else:
                 exstream.write(filesave, format='MSEED', reclen=256)
         else:

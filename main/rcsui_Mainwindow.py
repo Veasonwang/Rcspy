@@ -220,6 +220,8 @@ class Ui_MainWindow(object):
         self.actionfiltering.setObjectName("actionfiltering")
         self.actionRInstrument_response = QtWidgets.QAction(MainWindow)
         self.actionRInstrument_response.setObjectName("actionRInstrument_response")
+        self.actiondetrend = QtWidgets.QAction(MainWindow)
+        self.actiondetrend.setObjectName("actiondetrend")
         self.menu_2.addAction(self.actionRseed)
         self.menu_2.addAction(self.actionRminiseed)
         self.menu_2.addAction(self.actionRsac)
@@ -228,6 +230,7 @@ class Ui_MainWindow(object):
         self.menufile.addAction(self.actionexit)
         self.menu.addAction(self.actionfiltering)
         self.menu.addAction(self.actionRInstrument_response)
+        self.menu.addAction(self.actiondetrend)
         self.menubar.addAction(self.menufile.menuAction())
         self.menubar.addAction(self.menu.menuAction())
 
@@ -278,5 +281,6 @@ class Ui_MainWindow(object):
         self.actionexport.setText(_translate("MainWindow", "导出"))
         self.actionfiltering.setText(_translate("MainWindow", "滤波"))
         self.actionRInstrument_response.setText(_translate("MainWindow", "去仪器响应"))
+        self.actiondetrend.setText(_translate("MainWindow", "去倾"))
 
 from util import QcScrollArea, Qcwidget

@@ -433,6 +433,7 @@
     </property>
     <addaction name="actionfiltering"/>
     <addaction name="actionRInstrument_response"/>
+    <addaction name="actiondetrend"/>
    </widget>
    <addaction name="menufile"/>
    <addaction name="menu"/>
@@ -490,6 +491,11 @@
   <action name="actionRInstrument_response">
    <property name="text">
     <string>去仪器响应</string>
+   </property>
+  </action>
+  <action name="actiondetrend">
+   <property name="text">
+    <string>去倾</string>
    </property>
   </action>
  </widget>
