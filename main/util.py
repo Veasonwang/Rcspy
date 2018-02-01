@@ -22,8 +22,12 @@ class QcScrollArea(QSLA):
         QSLA.__init__(self,parent)
     def setRcs(self,Rcs):
         self.Rcs=Rcs
-        self.installEventFilter(self.Rcs)
-
+    def wheelEvent(self,event):
+        if self.Rcs.zoomswi==True:
+            pass
+        else:
+            QSLA.wheelEvent(self, event)
+        pass
 class QListWidgetItem(QLWI):
     def __init__(self,parent):
         QLWI.__init__(self)

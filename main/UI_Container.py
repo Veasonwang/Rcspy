@@ -30,14 +30,22 @@ class Files:
         self.parent=parent
     def addfile(self,file):
         self.files.append(file)
-    def setstationsinvisible(self,File):
-        File.setinvisible()
-        self.parent.update_ondraw_stations()
-        self.parent.draw()
-    def SortByName(self,File):
-        stations=File.stations.stations
-        stations.sort(key=attrgetter('stats.network','stats.station'))
-        File.rebuildTreeview()
+    def setstationsinvisible(self,selecteditems):
+        for item in selecteditems:
+            if isinstance(item.parent,File):
+                file = item.parent
+                file.setinvisible()
+                self.parent.update_ondraw_stations()
+                self.parent.draw()
+    def SortByName(self,selecteditems):
+        for item in selecteditems:
+            if isinstance(item.parent,File):
+                file=item.parent
+                stations=file.stations.stations
+                stations.sort(key=attrgetter('stats.network','stats.station'))
+                file.rebuildTreeview()
+            else:
+                pass
 class File:
     """
     Represents a single file and hold the Stations()
@@ -288,7 +296,7 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
             self.dir.cd(self.expath)
             self.pgb = QProgressBar(self)
             self.pgb.setWindowTitle("Exporting")
-            self.pgb.setGeometry(160, 380, 200, 25)
+            self.pgb.setGeometry(140, 380, 260, 25)
             self.pgb.show()
             if self.radioMSEED.isChecked():
                 self.Export2mseed()

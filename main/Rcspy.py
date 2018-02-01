@@ -1,7 +1,7 @@
+# -*- coding: utf-8 -*-
 import matplotlib
 matplotlib.use("Qt5Agg")
 from obspy import *
-# -*- coding: ascii -*-
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5.QtGui import QWheelEvent
@@ -41,6 +41,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.mousetime = ""
         self.mousestarttime = ""
         self.mouseydata = ""
+        self.qmldragswi=False
         self.setstaus()
     def Eventconncect(self):
         """
@@ -55,16 +56,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.X_stretch.clicked.connect(self._OnbtnX_stretch_clicked)
         self.drawnumber_combobox.currentTextChanged.connect(self._Ondrawnumber_combobox_change)
         self.zoomswitch.stateChanged['int'].connect(self._Onzoomswitchchange)
-       # self.scrollArea.installEventFilter(self)
-    def eventFilter(self,source,event):
-        if self.zoomswi==True:
-            if source==self.scrollArea and isinstance(event,QWheelEvent):
-                event.setAccepted(False)
-                return 0
-            else:
-                return False
-        else:
-            return QMainWindow.eventFilter(self,source,event)
+        self.dragenable_switch.stateChanged.connect(self._Ondragenabeswitchchange)
     '''Drawing correlation function'''
     def initdrawstation(self):
         if len(self.ondrawstations) == 0:
@@ -104,6 +96,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                     self.statusbar.showMessage("updating station   "+str(currentnum))
                     currentnum=currentnum+1
                     self.ondrawstations.append(station)
+        string="显示台站数："+str(len(self.ondrawstations))
+        self.label_stationdrawnumber.setText(string)
     def onqwidghtsizechangeed(self,QRectevent):
         height=QRectevent.size().height()
         width=QRectevent.size().width()
@@ -130,9 +124,9 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             if isinstance(self.stationTree.selectedItems()[-1].parent,File)==True:
                 Menu = QMenu()
                 ASI = Menu.addAction('All Stations Invisible')
-                ASI.triggered.connect(lambda :self.Files.setstationsinvisible(self.stationTree.selectedItems()[-1].parent))
+                ASI.triggered.connect(lambda :self.Files.setstationsinvisible(self.stationTree.selectedItems()))
                 Sortbyname=Menu.addAction('Sort by Name')
-                Sortbyname.triggered.connect(lambda:self.Files.SortByName(self.stationTree.selectedItems()[-1].parent))
+                Sortbyname.triggered.connect(lambda:self.Files.SortByName(self.stationTree.selectedItems()))
                 Menu.exec_(QtGui.QCursor.pos())
 
             elif isinstance(self.stationTree.selectedItems()[-1].parent,Station)==True:
@@ -190,11 +184,9 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.qml.mpl_connect('motion_notify_event', self.__mpl_motionNotifyEvent)
         self.qml.mpl_connect('axes_enter_event', self.enter_axes)
         self.qml.mpl_connect('axes_leave_event', self.leave_axes)
-        #self.qml.mpl_connect('scroll_event',self.onmouse_scroll)
         self.qml.mpl_connect('figure_leave_event',self.leave_figure)
         self.qml.mpl_connect('figure_enter_event', self.enter_figure)
     def onqmlclick(self, event):
-        print(event.button, event.x, event.y, event.xdata, event.ydata)
         if event.button==3:
             self.popqmlmenu()
     def popqmlmenu(self):
@@ -202,25 +194,27 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         ac=Menu.addAction('Function')
         Menu.exec_(QtGui.QCursor.pos())
     def __mpl_mouseButtonReleaseEvent(self,event):
-        try:
-            xmin, xmax = event.inaxes.get_xlim()
-            xmin = (self.dragxdata - event.xdata) + xmin
-            xmax = (self.dragxdata - event.xdata) + xmax
-            self.dragxdata = event.xdata
-            self.dragydata = event.ydata
-            event.inaxes.set_xlim(xmin, xmax)
-
-            event.canvas.draw()
-        except:
+        if self.qmldragswi==True:
+            try:
+                xmin, xmax = event.inaxes.get_xlim()
+                xmin = (self.dragxdata - event.xdata) + xmin
+                xmax = (self.dragxdata - event.xdata) + xmax
+                self.dragxdata = event.xdata
+                self.dragydata = event.ydata
+                event.inaxes.set_xlim(xmin, xmax)
+                event.canvas.draw()
+            except:
+                pass
+        else:
             pass
     def __mpl_mouseButtonPressEvent(self,event):
-        try:
-            Qrect=self.qmlcanvas.geometry()
-            print Qrect.height()
-            print Qrect.width()
-            self.dragxdata = event.xdata
-            self.dragydata = event.ydata
-        except:
+        if self.qmldragswi == True:
+            try:
+                self.dragxdata = event.xdata
+                self.dragydata = event.ydata
+            except:
+                pass
+        else:
             pass
     def __mpl_motionNotifyEvent(self,event):
         """
@@ -263,9 +257,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             self.statusbar.showMessage(string)
             self.qmlcanvas.setToolTip(string)
             self.current_time.setText(str(mousetime)[0:-1])
-    """
-    three functions for Mouse scrolling zoom,Now it not be used
-    
+
+    '''three functions for Mouse scrolling zoom'''
     def onmouse_scroll(self,event):
         self.resetYlim(event)
         self.resetXlim(event)
@@ -310,7 +303,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             xmin = xmin + (abs(xmax - xmin)) * 0.15 * downratio
             xmax = xmax - (abs(xmax - xmin)) * 0.15 * upratio
         event.inaxes.set_xlim(xmin, xmax)
-    """
     '''Menu bar response function'''
     def onRseed(self):
         filenames, _ = QFileDialog.getOpenFileNames(self, 'Open file', './', '*.seed')
@@ -443,9 +435,47 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.qml.signalheight=height/int(self.drawnumber_combobox.currentText())
         self.draw()
     def _Onzoomswitchchange(self):
-        self.zoomswi =self.zoomswitch.isChecked()
+        if self.zoomswitch.isChecked():
+            self.zoomswi =True
+            self.m_scroll_cid=self.qml.mpl_connect('scroll_event',self.onmouse_scroll)
+        else:
+            self.qml.mpl_disconnect(self.m_scroll_cid)
+            self.zoomswi = False
+    def _Ondragenabeswitchchange(self):
+        if self.dragenable_switch.isChecked():
+            if len(self.ondrawstations) > 12:
+                QMessageBox.about(self, "会影响性能", "当前显示台站过多,开启拖动可能会影响性能")
+                self.qmldragswi=True
+            else:
+                self.qmldragswi=True
+        else:
+            self.qmldragswi = False
+            pass
 if __name__ == '__main__':
     Rcspy()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
