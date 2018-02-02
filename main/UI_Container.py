@@ -3,6 +3,7 @@ To handle gui events and draw cruve
 '''
 
 import rcspy_Exportdialog
+import rcspy_Preprocessdialog
 import os
 from PyQt5.QtWidgets import QMenu,QMessageBox,QProgressBar
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -204,9 +205,6 @@ class Station(object):
         for chann in self.channels:
             if chann.channel[-1]==direction:
                 return chann.tr
-    def detrend(self):
-        for tr in self.channels:
-            tr.tr=tr.tr.detrend('constant')
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace
@@ -458,16 +456,123 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
                     self.currnum = self.currnum + 1
                     step = self.currnum * 100 / self.allnum
                     self.pgb.setValue(int(step))
-
-
-
-
-
-
-
-
-
-
+class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
+    def __init__(self,parent):
+        super(Preprocessdialog, self).__init__(parent)
+        self.Rcs=parent
+        self.setupUi(self)
+        self.File_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.channel_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.connectevent()
+    def getFiles(self,Files):
+        self.Files=Files
+        for file in self.Files.files:
+            listitem=QListWidgetItem(file)
+            listitem.setText(file.name)
+            self.File_list.addItem(listitem)
+    def connectevent(self):
+        self.File_list.itemSelectionChanged.connect(self.OnFilelist_selectionchange)
+        self.channel_list.itemSelectionChanged.connect(self.Onchannellist_selectionchange)
+        self.allchannel_checkbox.stateChanged.connect(self.Onallchannel_change)
+        self.fminSlider.valueChanged.connect(self.OnfminSlider_valueChanged)
+        self.fmaxSlider.valueChanged.connect(self.OnfmaxSlider_valueChanged)
+        self.fminspin.valueChanged.connect(self.Onfminspin_valueChange)
+        self.fmaxspin.valueChanged.connect(self.Onfmaxspin_valueChange)
+        self.btnOK.clicked.connect(self.Onbtnok)
+        self.btn_Cancel.clicked.connect(self.Onbtncancel)
+    def OnFilelist_selectionchange(self):
+        self.channel_list.clear()
+        if len(self.File_list.selectedItems())==1:
+            self.channel_list.setEnabled(True)
+            self.allchannel_checkbox.setEnabled(True)
+            stations=self.File_list.selectedItems()[0].parent.stations
+            for station in stations.stations:
+                listitem=QListWidgetItem(station)
+                listitem.setText(station.name)
+                self.channel_list.addItem(listitem)
+        if len(self.File_list.selectedItems())>1:
+            for item in self.File_list.selectedItems():
+                stations = item.parent.stations
+                for station in stations.stations:
+                    listitem = QListWidgetItem(station)
+                    listitem.setText(station.name)
+                    self.channel_list.addItem(listitem)
+            self.channel_list.setEnabled(False)
+            self.allchannel_checkbox.setChecked(True)
+            self.allchannel_checkbox.setEnabled(False)
+    def Onchannellist_selectionchange(self):
+        count=self.channel_list.count()
+        if len(self.channel_list.selectedItems())==count:
+            self.allchannel_checkbox.setChecked(True)
+        else:
+            self.allchannel_checkbox.setChecked(False)
+    def Onallchannel_change(self):
+        if self.allchannel_checkbox.isChecked()==True:
+            self.channel_list.selectAll()
+        else:
+            self.channel_list.clearSelection()
+    """
+    No use!!!!
+    
+    def Ondetrendswitch_change(self):
+        if self.detrend_switch.isChecked():
+            self.radioConstant.setEnabled(True)
+            self.radioLinear.setEnabled(True)
+        else:
+            self.radioLinear.setEnabled(False)
+            self.radioConstant.setEnabled(False)
+    def Onremove_response_switch_change(self):
+        if self.remove_respose_switch.isChecked():
+            self.water_level_spin.setEnabled(True)
+            self.pre_filt_switch.setEnabled(True)
+            self.f1_spin.setEnabled(True)
+            self.f2_spin.setEnabled(True)
+            self.f3_spin.setEnabled(True)
+            self.f4_spin.setEnabled(True)
+            self.btn_setInv.setEnabled(True)
+            self.apply_all_Inv_switch.setEnabled(True)
+        else:
+            self.water_level_spin.setEnabled(False)
+            self.pre_filt_switch.setEnabled(False)
+            self.f1_spin.setEnabled(False)
+            self.f2_spin.setEnabled(False)
+            self.f3_spin.setEnabled(False)
+            self.f4_spin.setEnabled(False)
+            self.btn_setInv.setEnabled(False)
+            self.apply_all_Inv_switch.setEnabled(False)
+    def Onbandpass_switch_change(self):
+        if self.bandpass_switch.isChecked():
+            self.fminspin.setEnabled(True)
+            self.fmaxspin.setEnabled(True)
+            self.fminSlider.setEnabled(True)
+            self.fmaxSlider.setEnabled(True)
+            self.corners_spin.setEnabled(True)
+        else:
+            self.fminspin.setEnabled(False)
+            self.fmaxspin.setEnabled(False)
+            self.fminSlider.setEnabled(False)
+            self.fmaxSlider.setEnabled(False)
+            self.corners_spin.setEnabled(False)
+    """
+    def OnfminSlider_valueChanged(self):
+        self.fminspin.setValue(float(self.fminSlider.value())/10.0)
+        if self.fminSlider.value()>self.fmaxSlider.value():
+            self.fmaxSlider.setValue(self.fminSlider.value())
+    def OnfmaxSlider_valueChanged(self):
+        self.fmaxspin.setValue(float(self.fmaxSlider.value()) / 10.0)
+        if self.fminSlider.value()>self.fmaxSlider.value():
+            self.fminSlider.setValue(self.fmaxSlider.value())
+    def Onfminspin_valueChange(self):
+        self.fminSlider.setValue(self.fminspin.value()*10)
+    def Onfmaxspin_valueChange(self):
+        self.fmaxSlider.setValue(self.fmaxspin.value() * 10)
+    def Onbtnok(self):
+        self.pgb = QProgressBar(self)
+        self.pgb.setWindowTitle("Working")
+        self.pgb.setGeometry(10, 5, 540, 20)
+        self.pgb.show()
+    def Onbtncancel(self):
+        pass
 
 
 

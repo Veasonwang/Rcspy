@@ -427,16 +427,14 @@
     <addaction name="actionexport"/>
     <addaction name="actionexit"/>
    </widget>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="menupreprocess">
     <property name="title">
      <string>预处理</string>
     </property>
-    <addaction name="actionfiltering"/>
-    <addaction name="actionRInstrument_response"/>
-    <addaction name="actiondetrend"/>
+    <addaction name="actionpreprocess"/>
    </widget>
    <addaction name="menufile"/>
-   <addaction name="menu"/>
+   <addaction name="menupreprocess"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="sizeGripEnabled">
@@ -446,21 +444,6 @@
   <action name="actionexit">
    <property name="text">
     <string>退出</string>
-   </property>
-  </action>
-  <action name="actionEmseed">
-   <property name="text">
-    <string>.mseed</string>
-   </property>
-  </action>
-  <action name="actionEsac">
-   <property name="text">
-    <string>.sac</string>
-   </property>
-  </action>
-  <action name="actionEseed">
-   <property name="text">
-    <string>.seed</string>
    </property>
   </action>
   <action name="actionRseed">
@@ -483,19 +466,9 @@
     <string>导出</string>
    </property>
   </action>
-  <action name="actionfiltering">
+  <action name="actionpreprocess">
    <property name="text">
-    <string>滤波</string>
-   </property>
-  </action>
-  <action name="actionRInstrument_response">
-   <property name="text">
-    <string>去仪器响应</string>
-   </property>
-  </action>
-  <action name="actiondetrend">
-   <property name="text">
-    <string>去倾</string>
+    <string>预处理</string>
    </property>
   </action>
  </widget>

@@ -52,7 +52,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.actionRminiseed.triggered.connect(self.onRminiseed)
         self.actionexit.triggered.connect(self.onexit)
         self.actionexport.triggered.connect(self.Export)
-        self.actiondetrend.triggered.connect(self.detrend)
+        self.actionpreprocess.triggered.connect(self.Preprocess)
         self.X_press.clicked.connect(self._OnbtnX_press_clicked)
         self.X_stretch.clicked.connect(self._OnbtnX_stretch_clicked)
         self.drawnumber_combobox.currentTextChanged.connect(self._Ondrawnumber_combobox_change)
@@ -366,12 +366,11 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 pass
         else:
             pass
-    def detrend(self):
-        for file in self.Files.files:
-            for station in file.stations.stations:
-                station.detrend()
-        self.update_ondraw_stations()
-        self.draw()
+    def Preprocess(self):
+        self.preprocessdialog=Preprocessdialog(self)
+        self.preprocessdialog.getFiles(self.Files)
+        self.preprocessdialog.exec_()
+        pass
     '''Top operation bar response function'''
     def _changeSelectedChannel(self):
         '''
