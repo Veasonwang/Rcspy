@@ -66,6 +66,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <widget class="QRadioButton" name="radioLinear">
     <property name="geometry">
      <rect>
@@ -110,6 +113,9 @@
    </property>
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
    </property>
    <widget class="QSlider" name="fminSlider">
     <property name="geometry">
@@ -349,6 +355,9 @@
    </property>
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
    </property>
    <widget class="QLabel" name="label_6">
     <property name="geometry">

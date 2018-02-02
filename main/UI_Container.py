@@ -56,7 +56,9 @@ class Files:
                 self.removefile(file)
 
     def removefile(self,file):
-        self.files.remove(file)
+        self.parent.Files.files.remove(file)
+
+
 class File:
     """
     Represents a single file and hold the Stations()
@@ -217,8 +219,14 @@ class Station(object):
         for channel in self.channels:
             if type == 'constant':
                 channel.tr = channel.tr.detrend(type='constant')
+                channel.origintr=channel.tr.copy()
             if type == 'linear':
                 channel.tr = channel.tr.detrend(type='linear')
+                channel.origintr = channel.tr.copy()
+
+    def bandpass(self,type,**kwargs):
+        for channel in self.channels:
+            channel.tr=channel.origintr.copy().filter(type=type,**kwargs)
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace
@@ -582,6 +590,7 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
     def Onfmaxspin_valueChange(self):
         self.fmaxSlider.setValue(self.fmaxspin.value() * 10)
     def Onbtnok(self):
+        self.errorcontrol=True
         if len(self.File_list.selectedItems())==0:
             QMessageBox.about(self, "tips", "please set export files")
         else:
@@ -596,7 +605,10 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
             if self.remove_response_switch.isChecked():
                 self.remove_response()
             self.pgb.close()
-            QMessageBox.about(self, "tips", "finished")
+            if self.errorcontrol==True:
+                QMessageBox.about(self, "tips", "finished")
+                self.Rcs.update_ondraw_stations()
+                self.Rcs.draw()
     def Onbtnback(self):
         self.close()
         pass
@@ -623,6 +635,33 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
                     file.detrend(type='linear')
                 self.pgb.setValue(float(currnum*100)/float(allnum))
                 currnum = currnum + 1
+    def bandpass(self):
+        currnum = 0
+        try:
+            if len(self.File_list.selectedItems()) == 1:
+                for item in self.channel_list.selectedItems():
+                    allnum = len(self.channel_list.selectedItems())
+                    station = item.parent
+                    station.bandpass('bandpass',
+                                     freqmin=float(self.fminspin.text()[0:-2]),
+                                     freqmax=float(self.fmaxspin.text()[0:-2]),)
+                    self.pgb.setValue(float(currnum * 100) / float(allnum))
+                    currnum = currnum + 1
+                pass
+            else:
+                for item in self.File_list.selectedItems():
+                    allnum = len(self.File_list.selectedItems())
+                    file = item.parent
+                    for station in file.stations.stations:
+                        station.bandpass('bandpass',
+                                         freqmin=float(self.fminspin.text()[0:-2]),
+                                         freqmax=float(self.fmaxspin.text()[0:-2]),)
+                    self.pgb.setValue(float(currnum * 100) / float(allnum))
+                    currnum = currnum + 1
+        except Exception,e:
+            self.errorcontrol = False
+            QMessageBox.about(self,"Error",str(e))
+        pass
     def remove_response(self):
         pass
 

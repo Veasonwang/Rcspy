@@ -66,7 +66,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 self.ondrawstations.append(station)
                 station.setVisible(True)
                 break
-
     def draw(self):
         #if len(self.ondrawstations)>36:
         #    QMessageBox.about(self,"toomany","toomany stations draw,no more than 36")
