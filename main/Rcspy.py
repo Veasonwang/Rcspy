@@ -61,12 +61,12 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     '''Drawing correlation function'''
     def initdrawstation(self):
         if len(self.ondrawstations) == 0:
-            for file in self.Files.files:
-                for station in file.stations.stations:
-                    self.ondrawstations.append(station)
-                    station.setVisible(True)
-                    break
+            file =self.Files.files[0]
+            for station in file.stations.stations:
+                self.ondrawstations.append(station)
+                station.setVisible(True)
                 break
+
     def draw(self):
         #if len(self.ondrawstations)>36:
         #    QMessageBox.about(self,"toomany","toomany stations draw,no more than 36")
@@ -313,7 +313,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     '''Menu bar response function'''
     def onRseed(self):
         filenames, _ = QFileDialog.getOpenFileNames(self, 'Open file', './', '*.seed')
-
         if len(filenames) != 0:
             try:
                 currentfile = 1
@@ -327,12 +326,13 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                     self.Files.addfile(file)
                     stations = Stations(stream, file)
                     file.appointstations(stations)
-                self.statusbar.showMessage("drawing")
-                self.initdrawstation()
-                self.update_ondraw_stations()
-                self._changeSelectedChannel()
                 self.connectevent()
-                self._changebtn_cursor()
+                self.statusbar.showMessage("drawing")
+                if len(self.ondrawstations)==0:
+                    self.initdrawstation()
+                    self.update_ondraw_stations()
+                    self._changeSelectedChannel()
+                    self._changebtn_cursor()
             except:
                 pass
     def onRminiseed(self):
@@ -368,9 +368,14 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             pass
     def Preprocess(self):
         self.preprocessdialog=Preprocessdialog(self)
+        self.preprocessdialog.destroyed.connect(self.onpreprocessdialogclose)
+        self.preprocessdialog.btn_Cancel.clicked.connect(self.onpreprocessdialogclose)
         self.preprocessdialog.getFiles(self.Files)
         self.preprocessdialog.exec_()
         pass
+    def onpreprocessdialogclose(self):
+        self.update_ondraw_stations()
+        self.draw()
     '''Top operation bar response function'''
     def _changeSelectedChannel(self):
         '''

@@ -83,6 +83,7 @@ class File:
         """
         self.stations=stations
         self.stream=self.stations.stream
+        self.originst=self.stream.copy()
     def setinvisible(self):
         for station in self.stations.stations:
             station.setVisible(False)
@@ -91,6 +92,13 @@ class File:
             self.QStationItem.removeChild(station.QStationItem)
         for station in self.stations.stations:
             self.QStationItem.addChild(station.QStationItem)
+    def detrend(self,type):
+        for station in self.stations.stations:
+            for channel in station.channels:
+                if type=='constant':
+                    channel.tr=channel.tr.detrend(type='constant')
+                if type=='linear':
+                    channel.tr=channel.tr.detrend(type='linear')
 class Stations:
     '''
     Station() container object
@@ -205,6 +213,12 @@ class Station(object):
         for chann in self.channels:
             if chann.channel[-1]==direction:
                 return chann.tr
+    def detrend(self,type):
+        for channel in self.channels:
+            if type == 'constant':
+                channel.tr = channel.tr.detrend(type='constant')
+            if type == 'linear':
+                channel.tr = channel.tr.detrend(type='linear')
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace
@@ -218,6 +232,7 @@ class Channel(object):
         :param station: Station()
         '''
         self.tr = tr
+        self.origintr=tr.copy()
         self.station = station
         self.channel = tr.stats.channel
         self.starttime=tr.stats.starttime
@@ -479,7 +494,7 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
         self.fminspin.valueChanged.connect(self.Onfminspin_valueChange)
         self.fmaxspin.valueChanged.connect(self.Onfmaxspin_valueChange)
         self.btnOK.clicked.connect(self.Onbtnok)
-        self.btn_Cancel.clicked.connect(self.Onbtncancel)
+        self.btn_Cancel.clicked.connect(self.Onbtnback)
     def OnFilelist_selectionchange(self):
         self.channel_list.clear()
         if len(self.File_list.selectedItems())==1:
@@ -567,13 +582,49 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
     def Onfmaxspin_valueChange(self):
         self.fmaxSlider.setValue(self.fmaxspin.value() * 10)
     def Onbtnok(self):
-        self.pgb = QProgressBar(self)
-        self.pgb.setWindowTitle("Working")
-        self.pgb.setGeometry(10, 5, 540, 20)
-        self.pgb.show()
-    def Onbtncancel(self):
+        if len(self.File_list.selectedItems())==0:
+            QMessageBox.about(self, "tips", "please set export files")
+        else:
+            self.pgb = QProgressBar(self)
+            self.pgb.setWindowTitle("Working")
+            self.pgb.setGeometry(10, 5, 540, 20)
+            self.pgb.show()
+            if self.detrend_switch.isChecked():
+                self.detrend()
+            if self.bandpass_switch.isChecked():
+                self.bandpass()
+            if self.remove_response_switch.isChecked():
+                self.remove_response()
+            self.pgb.close()
+            QMessageBox.about(self, "tips", "finished")
+    def Onbtnback(self):
+        self.close()
         pass
-
+    def detrend(self):
+        currnum=0
+        if len(self.File_list.selectedItems())==1:
+            for item in self.channel_list.selectedItems():
+                allnum=len(self.channel_list.selectedItems())
+                station=item.parent
+                if self.radioConstant.isChecked():
+                    station.detrend(type='constant')
+                if self.radioLinear.isChecked():
+                    station.detrend(type='linear')
+                self.pgb.setValue(float(currnum * 100) / float(allnum))
+                currnum=currnum+1
+            pass
+        else:
+            for item in self.File_list.selectedItems():
+                allnum=len(self.File_list.selectedItems())
+                file=item.parent
+                if self.radioConstant.isChecked():
+                    file.detrend(type='constant')
+                if self.radioLinear.isChecked():
+                    file.detrend(type='linear')
+                self.pgb.setValue(float(currnum*100)/float(allnum))
+                currnum = currnum + 1
+    def remove_response(self):
+        pass
 
 
 

@@ -319,7 +319,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>应用</string>
+    <string>确认</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btn_Cancel">
@@ -332,7 +332,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>完成</string>
+    <string>返回</string>
    </property>
   </widget>
   <widget class="QGroupBox" name="remove_response_switch">
