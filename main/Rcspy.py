@@ -10,6 +10,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QAbstractItemView,
 from util import *
 from obspy import  UTCDateTime
 from matplotlib.widgets import MultiCursor
+from matplotlib.widgets import Cursor
 import rcsui_Mainwindow
 import sys
 from UI_Container import *
@@ -62,7 +63,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def initdrawstation(self):
         if len(self.ondrawstations) == 0:
             file =self.Files.files[0]
-            for station in file.stations.stations:
+            for station in file.stations:
                 self.ondrawstations.append(station)
                 station.setVisible(True)
                 break
@@ -191,10 +192,12 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def onqmlclick(self, event):
         if event.button==3:
             self.popqmlmenu()
+        """
         if event.button==1:
             print event
             event.inaxes.axvline(event.xdata,ymin=0,ymax=1)
             event.canvas.draw()
+        """
     def popqmlmenu(self):
         Menu=QMenu()
         ac=Menu.addAction('Function')
@@ -232,6 +235,13 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             x=int(event.xdata*100)
             self.mousetime = UTCDateTime(self.mousestarttime.timestamp+event.xdata)
             self.mouseydata = self.currentchn.tr.data[x]
+            ampvalue=self.currentchn.tr.data[x]
+            if abs(ampvalue) < 10:
+                ampvalue=ampvalue*1000000
+
+            else:
+                ampvalue=0
+            self.Amp_display.setText(str(round(ampvalue,4))+" μm/s")
         except:
             pass
         self.setstaus(self.trname,self.mousetime,self.mouseydata)
@@ -261,7 +271,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             #string = trname +"  time: "+str(mousetime.day)+"D"+str(mousetime.hour)+"h"+str(mousetime.minute)+"m"+str(mousetime.second)+"s"+" , Y:"+str(mouseydata)
             string=trname +"  UTCTime: "+str(mousetime)[0:-1]+"        Y:"+str(mouseydata)
             self.statusbar.showMessage(string)
-            self.qmlcanvas.setToolTip(string)
+            #self.qmlcanvas.setToolTip(string)
             self.current_time.setText(str(mousetime)[0:-1])
 
     '''three functions for Mouse scrolling zoom'''
@@ -320,11 +330,9 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                     string = "Reading " + str(currentfile) + "  of" + str(allfile)
                     self.statusbar.showMessage(string)
                     currentfile = currentfile + 1
-                    file = File(filename, parent=self, format='seed')
                     stream = read(filename)
+                    file = File(filename,stream,parent=self, fformat='SEED')
                     self.Files.addfile(file)
-                    stations = Stations(stream, file)
-                    file.appointstations(stations)
                 self.connectevent()
                 self.statusbar.showMessage("drawing")
                 if len(self.ondrawstations)==0:
@@ -332,25 +340,32 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                     self.update_ondraw_stations()
                     self._changeSelectedChannel()
                     self._changebtn_cursor()
-            except:
+            except Exception,e:
+                QMessageBox.about(self,"Error",str(e))
                 pass
     def onRminiseed(self):
-        filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './', 'file(*.mseed *.miniseed)')
-        if filename != "":
+        filenames, _ = QFileDialog.getOpenFileNames(self, 'Open file', './', 'file(*.mseed *.miniseed)')
+        if len(filenames) != 0:
             try:
-                file = File(filename, parent=self, format='mseed')
-                stream = read(filename)
-                self.Files.addfile(file)
-                stations = Stations(stream, file)
-                file.appointstations(stations)
-                self.initdrawstation()
-                self.update_ondraw_stations()
-                self.draw()
+                currentfile = 1
+                allfile = len(filenames)
+                for filename in filenames:
+                    string = "Reading " + str(currentfile) + "  of" + str(allfile)
+                    self.statusbar.showMessage(string)
+                    currentfile = currentfile + 1
+                    stream = read(filename,format='MSEED')
+                    file = File(filename, stream, parent=self, fformat='MSEED')
+                    self.Files.addfile(file)
                 self.connectevent()
-                self._changebtn_cursor()
-            except:
+                self.statusbar.showMessage("drawing")
+                if len(self.ondrawstations)==0:
+                    self.initdrawstation()
+                    self.update_ondraw_stations()
+                    self._changeSelectedChannel()
+                    self._changebtn_cursor()
+            except Exception,e:
+                QMessageBox.about(self,"Error",str(e))
                 pass
-        pass
     def Export(self):
         self.exdialog = Exportdialog(self)
         self.exdialog.getFiles(self.Files)
@@ -367,9 +382,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             pass
     def Preprocess(self):
         self.preprocessdialog=Preprocessdialog(self)
-        self.preprocessdialog.destroyed.connect(self.onpreprocessdialogclose)
-        self.preprocessdialog.btn_Cancel.clicked.connect(self.onpreprocessdialogclose)
-        self.preprocessdialog.getFiles(self.Files)
         self.preprocessdialog.exec_()
         pass
     def onpreprocessdialogclose(self):
@@ -397,19 +409,23 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.draw()
     def _changebtn_cursor(self):
         if self.cursor_switch.isChecked():
-            self.set_MultiCursor()
+            try:
+                self.set_MultiCursor()
+            except Exception,e:
+                print e
+                pass
         else:
             try:
                 self.del_MultiCursor()
             except:
                 pass
-            pass
     def set_MultiCursor(self):
         try:
             self.multi = MultiCursor(self.qml.fig.canvas, self.qml.axes, color='r', lw=0.5, horizOn=False,
                                  vertOn=True,useblit=True)
             self.qml.fig.canvas.draw()
-        except:
+        except Exception,e:
+            print str(e)
             pass
     def del_MultiCursor(self):
         del (self.multi)

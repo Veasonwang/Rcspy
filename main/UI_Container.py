@@ -14,6 +14,7 @@ from operator import attrgetter
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QAbstractItemView,QFileDialog
 import obspy.core
+from obspy import *
 class ChannelVisible:
     def __init__(self,parent=None):
         self.parent=parent
@@ -40,7 +41,7 @@ class Files:
         for item in selecteditems:
             if isinstance(item.parent,File):
                 file=item.parent
-                stations=file.stations.stations
+                stations=file.stations
                 stations.sort(key=attrgetter('stats.network','stats.station'))
                 file.rebuildTreeview()
             else:
@@ -57,50 +58,73 @@ class Files:
 
     def removefile(self,file):
         self.parent.Files.files.remove(file)
-
-
 class File:
     """
     Represents a single file and hold the Stations()
     """
-    def __init__(self,path,parent,format=''):
+    def __init__(self,path,st,parent,fformat=''):
         self.path=path
         self.parent=parent
         self.stations=[]
+        self.stream = st
+        self.format=fformat
+        self.setstationTree()
+        self.setname()
+        for stat in set([tr.stats.station for tr in st]):
+            self.addStation(st=st.select(station=stat))
+    def setstationTree(self):
         self.QStationItem = QTreeWidgetItem(self)
         self.QStationItem.setText(1, '%s' %
                                   (self.path.split('/')[-1]))
-        self.QStationItem.setToolTip(1,self.path)
+        self.QStationItem.setToolTip(1, self.path)
         self.QStationItem.setToolTip(2, self.path)
-        self.name=self.path.split('/')[-1]
-        self.ename=""
+        self.parent.stationTree.addTopLevelItem(self.QStationItem)
+    def setname(self):
+        self.name = self.path.split('/')[-1]
+        self.ename = ""
         for n in self.name.split('.')[0:-1]:
             self.ename=self.ename+n
-        self.parent.stationTree.addTopLevelItem(self.QStationItem)
-    def appointstations(self,stations):
-        """
-        add childstations
-        :param stations:
-        :return:
-        """
-        self.stations=stations
-        self.stream=self.stations.stream
-        self.originst=self.stream.copy()
+    def addStation(self, st):
+        '''
+        Adds a station from
+        :param st: obspy stream
+        '''
+        self.stations.append(Station(stream=st, parent=self))
+        self.QStationItem.addChild(self.stations[-1].QStationItem)
     def setinvisible(self):
-        for station in self.stations.stations:
+        for station in self.stations:
             station.setVisible(False)
+    def setInv(self):
+        self.Inv=read_inventory(self.path)
     def rebuildTreeview(self):
-        for station in self.stations.stations:
+        for station in self.stations:
             self.QStationItem.removeChild(station.QStationItem)
-        for station in self.stations.stations:
+        for station in self.stations:
             self.QStationItem.addChild(station.QStationItem)
     def detrend(self,type):
-        for station in self.stations.stations:
+        for station in self.stations:
             for channel in station.channels:
                 if type=='constant':
                     channel.tr=channel.tr.detrend(type='constant')
                 if type=='linear':
                     channel.tr=channel.tr.detrend(type='linear')
+    def visibleStations(self):
+        '''
+        Returns a list of all visible stations
+        :return: list of Station()
+        '''
+        return [station for station in self.stations
+                if station.visible]
+    def __iter__(self):
+        return iter(self.stations)
+
+    def __getitem__(self, index):
+        return self.stations[index]
+
+    def __len__(self):
+        return len(self.stations)
+"""
+It don't used now, including in class File
 class Stations:
     '''
     Station() container object
@@ -116,15 +140,12 @@ class Stations:
         self.stations = []
         for stat in set([tr.stats.station for tr in st]):
             self.addStation(st=st.select(station=stat))
-        self.sorted_by = None
     def addStation(self, st):
         '''
         Adds a station from
         :param st: obspy stream
         '''
         self.stations.append(Station(stream=st, parent=self))
-        #self.parent.stationTree.addTopLevelItem(
-        #    self.stations[-1].QStationItem)
         self.parent.QStationItem.addChild(self.stations[-1].QStationItem)
     def visibleStations(self):
         '''
@@ -133,23 +154,6 @@ class Stations:
         '''
         return [station for station in self.stations
                 if station.visible]
-    def showQMenu(self):
-        '''
-        Sort Menu for the QTreeWidget
-        '''
-        T_menu = QMenu()
-        T_menu.setFont(QFont('', 9))
-        allinvi = T_menu.addAction('Sort by attribute')
-        allinvi.setEnabled(False)
-        allinvi.setFont(QFont('', 8, QFont.Bold))
-    def sortByAttrib(self, key):
-        '''
-        Sort station by attribute key
-        '''
-        from operator import attrgetter
-        self.stations = sorted(self.stations, key=attrgetter('stats.%s' % key))
-        self.sorted_by = key
-        self._sortStationsOnGUI()
     def __iter__(self):
         return iter(self.stations)
 
@@ -158,6 +162,7 @@ class Stations:
 
     def __len__(self):
         return len(self.stations)
+"""
 class Station(object):
     '''
     Represents a single Station and hold the channel
@@ -169,29 +174,20 @@ class Station(object):
         :stream: obspy.core.Stream()
         '''
         self.parent = parent
-        self.plotItem = None
-
         self.st = stream.merge()
         self.stats = self.st[0].stats.copy()
         self.stats.channel = None
-        self.channel_components = set([tr.stats.channel for tr in self.st])
-
+        self.name=self.stats.network+"."+self.stats.station
+        self.channels = []
+        self.setstationTree()
+        for tr in self.st:
+            self.channels.append(Channel(tr, station=self))
+        self.setVisible(False)
+    def setstationTree(self):
         self.QStationItem = QTreeWidgetItem(self)
         self.QStationItem.setText(1, '%s.%s' %
                                   (self.stats.network,
                                    self.stats.station))
-        self.name=self.stats.network+"."+self.stats.station
-        #self.QStationItem.setText(2, '%.3f N, %.3f E' %
-        #                              (self.getCoordinates()[0],
-        #                               self.getCoordinates()[1]))
-
-        self.picks = []
-        self.station_events = []
-
-        self.channels = []
-        for tr in self.st:
-            self.channels.append(Channel(tr, station=self))
-        self.setVisible(False)
     def setVisible(self, visible=True):
         '''
         Sets wheather the station is visible in the plot view
@@ -223,10 +219,21 @@ class Station(object):
             if type == 'linear':
                 channel.tr = channel.tr.detrend(type='linear')
                 channel.origintr = channel.tr.copy()
-
+            channel.datamean=channel.tr.data.mean()
     def bandpass(self,type,**kwargs):
         for channel in self.channels:
             channel.tr=channel.origintr.copy().filter(type=type,**kwargs)
+            channel.datamean = channel.tr.data.mean()
+    def remove_response(self,inventory=None,water_level=60,pre_filt=None):
+        for channel in self.channels:
+            channel.tr_VEL=channel.tr.copy().remove_response(inventory=inventory,output='VEL',water_level=water_level,
+                                                      pre_filt=pre_filt)
+            channel.tr_DISP = channel.tr.copy().remove_response(inventory=inventory, output='DISP', water_level=water_level,
+                                                        pre_filt=pre_filt)
+            channel.tr_ACC = channel.tr.copy().remove_response(inventory=inventory, output='ACC', water_level=water_level,
+                                                        pre_filt=pre_filt)
+            channel.tr=channel.tr_VEL.copy()
+            channel.datamean = channel.tr.data.mean()
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace
@@ -245,15 +252,17 @@ class Channel(object):
         self.channel = tr.stats.channel
         self.starttime=tr.stats.starttime
         self.edntime=tr.stats.endtime
+        self.setstationTree()
+        self.datamean=self.tr.data.mean()
+    def setstationTree(self):
         self.QChannelItem = QTreeWidgetItem(self)
         self.QChannelItem.setText(1, '%s @ %d Hz' %
                                   (self.tr.stats.channel,
-                                   1./self.tr.stats.delta))
+                                   1. / self.tr.stats.delta))
         self.QChannelItem.setText(2, '%s\n%s' %
                                   (self.tr.stats.starttime,
                                    self.tr.stats.endtime))
         self.station.QStationItem.addChild(self.QChannelItem)
-        self.datamean=self.tr.data.mean()
 class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
     def __init__(self,parent):
         super(Exportdialog, self).__init__(parent)
@@ -294,15 +303,15 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
             self.channel_list.setEnabled(True)
             self.allchannel_checkbox.setEnabled(True)
             #self.radioSAC.setEnabled(True)
-            stations=self.File_list.selectedItems()[0].parent.stations
-            for station in stations.stations:
+            file=self.File_list.selectedItems()[0].parent
+            for station in file.stations:
                 listitem=QListWidgetItem(station)
                 listitem.setText(station.name)
                 self.channel_list.addItem(listitem)
         if len(self.File_list.selectedItems())>1:
             for item in self.File_list.selectedItems():
-                stations = item.parent.stations
-                for station in stations.stations:
+                file = item.parent
+                for station in file.stations:
                     listitem = QListWidgetItem(station)
                     listitem.setText(station.name)
                     self.channel_list.addItem(listitem)
@@ -369,7 +378,7 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
                     self.pgb.setValue(int(step))
                     self.currnum = self.currnum + 1
             else:
-                exstream.write(filesave, format='MSEED', reclen=256)
+                exstream.write(filesave, format='MSEED')
         else:
             '''
             single channel
@@ -391,7 +400,7 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
                 for item in self.File_list.selectedItems():
                     file = item.parent
                     filesave = self.expath + "/" + str(file.ename) + ".mseed"
-                    file.stream.write(filesave, format='MSEED', reclen=256)
+                    file.stream.write(filesave, format='MSEED')
                     self.currnum = self.currnum + 1
                     step = self.currnum * 100 / self.allnum
                     self.pgb.setValue(int(step))
@@ -427,7 +436,7 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
             '''
             if self.single_channel_checkbox.isChecked()== True:
                 for item in self.File_list.selectedItems():
-                    self.allnum = self.allnum + len(item.parent.stations.stations) * 3
+                    self.allnum = self.allnum + len(item.parent.stations) * 3
                 for item in self.File_list.selectedItems():
                     file = item.parent
                     if self.dir.exists(file.ename) == False:
@@ -468,7 +477,7 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
         else:
             self.allnum = 0
             for item in self.File_list.selectedItems():
-                self.allnum = self.allnum + len(item.parent.stations.stations) * 3
+                self.allnum = self.allnum + len(item.parent.stations) * 3
             for item in self.File_list.selectedItems():
                 if self.dir.exists(item.parent.ename) == False:
                     self.dir.mkdir(item.parent.ename)
@@ -482,13 +491,22 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog,QtWidgets.QDialog):
 class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
     def __init__(self,parent):
         super(Preprocessdialog, self).__init__(parent)
-        self.Rcs=parent
         self.setupUi(self)
+        self.Rcs = parent
+        self.initList()
+        self.Inv_test()
         self.File_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.channel_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.connectevent()
-    def getFiles(self,Files):
-        self.Files=Files
+    def Inv_test(self):
+        current=0
+        for file in self.Files.files:
+            if file.format!='SEED':
+                current=current+1
+        if current!=0:
+            QMessageBox.about(self,"warning",str(current)+"File(s) not set Inventory")
+    def initList(self):
+        self.Files=self.Rcs.Files
         for file in self.Files.files:
             listitem=QListWidgetItem(file)
             listitem.setText(file.name)
@@ -508,15 +526,15 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
         if len(self.File_list.selectedItems())==1:
             self.channel_list.setEnabled(True)
             self.allchannel_checkbox.setEnabled(True)
-            stations=self.File_list.selectedItems()[0].parent.stations
-            for station in stations.stations:
+            file=self.File_list.selectedItems()[0].parent
+            for station in file.stations:
                 listitem=QListWidgetItem(station)
                 listitem.setText(station.name)
                 self.channel_list.addItem(listitem)
         if len(self.File_list.selectedItems())>1:
             for item in self.File_list.selectedItems():
-                stations = item.parent.stations
-                for station in stations.stations:
+                file = item.parent
+                for station in file.stations:
                     listitem = QListWidgetItem(station)
                     listitem.setText(station.name)
                     self.channel_list.addItem(listitem)
@@ -600,10 +618,10 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
             self.pgb.show()
             if self.detrend_switch.isChecked():
                 self.detrend()
-            if self.bandpass_switch.isChecked():
-                self.bandpass()
             if self.remove_response_switch.isChecked():
                 self.remove_response()
+            if self.bandpass_switch.isChecked():
+                self.bandpass()
             self.pgb.close()
             if self.errorcontrol==True:
                 QMessageBox.about(self, "tips", "finished")
@@ -652,7 +670,7 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
                 for item in self.File_list.selectedItems():
                     allnum = len(self.File_list.selectedItems())
                     file = item.parent
-                    for station in file.stations.stations:
+                    for station in file.stations:
                         station.bandpass('bandpass',
                                          freqmin=float(self.fminspin.text()[0:-2]),
                                          freqmax=float(self.fmaxspin.text()[0:-2]),)
@@ -663,6 +681,42 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
             QMessageBox.about(self,"Error",str(e))
         pass
     def remove_response(self):
+        currnum = 0
+        try:
+            error_str="mismatch station:"
+            allnum = len(self.File_list.selectedItems())
+            for item in self.File_list.selectedItems():
+                file=item.parent
+                file.setInv()
+                self.pgb.setValue(float(currnum * 100) / float(allnum))
+                currnum = currnum + 1
+            currnum=0
+            error=True
+            if len(self.File_list.selectedItems()) == 1:
+                for item in self.channel_list.selectedItems():
+                    allnum = len(self.channel_list.selectedItems())
+                    station = item.parent
+                    try:
+                        station.remove_response(inventory=station.parent.Inv)
+                    except Exception,e:
+                        error=False
+                        error_str=error_str+str(station.name)+"\n"
+                    self.pgb.setValue(float(currnum * 100) / float(allnum))
+                    currnum = currnum + 1
+                if error==False:
+                    QMessageBox.about(self,"error",error_str)
+            else:
+                for item in self.File_list.selectedItems():
+                    allnum = len(self.File_list.selectedItems())
+                    file = item.parent
+                    for station in file.stations.stations:
+                        station.remove_response(inventory=station.parent.Inv)
+                    self.pgb.setValue(float(currnum * 100) / float(allnum))
+                    currnum = currnum + 1
+        except Exception, e:
+            self.errorcontrol = False
+            QMessageBox.about(self, "Error", str(e))
+        pass
         pass
 
 
