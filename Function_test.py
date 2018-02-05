@@ -1,16 +1,20 @@
 #coding=utf-8
 from obspy import *
 from obspy.core import Stream
-a=read("/home/veason/Desktop/data_for_debug/YN.201506152046.0002.seed")
+import time
+a=read("/home/v/YN.201506152046.0002.seed")
 n=a[2].copy()
-inv=read_inventory("/home/veason/Desktop/data_for_debug/YN.201506152046.0002.seed")
-
+inv=read_inventory("/home/v/YN.201506152046.0002.seed")
+tr=a[0]
 #.remove_response(inventory=inv)
-n=n.detrend(type='constant')
-c=n.remove_response(inventory=inv,plot=True,output="ACC")
-st=Stream()
-st.append(a[2])
-st.append(c)
-st.plot()
+time_start=time.time()
+tr.attach_response(inv)
+tr.remove_response()
+time_end1=time.time()
+n.remove_response(inv)
+time_end2=time.time()
+print time_start
+print time_end1
+print time_end2
 
 

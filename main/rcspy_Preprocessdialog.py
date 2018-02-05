@@ -171,6 +171,10 @@ class Ui_Dialog(object):
         self.label_10 = QtWidgets.QLabel(self.remove_response_switch)
         self.label_10.setGeometry(QtCore.QRect(110, 100, 16, 21))
         self.label_10.setObjectName("label_10")
+        self.current_process = QtWidgets.QLabel(Dialog)
+        self.current_process.setGeometry(QtCore.QRect(460, 30, 91, 17))
+        self.current_process.setText("")
+        self.current_process.setObjectName("current_process")
         self.detrend_switch.raise_()
         self.File_list.raise_()
         self.channel_list.raise_()
@@ -181,6 +185,7 @@ class Ui_Dialog(object):
         self.btnOK.raise_()
         self.btn_Cancel.raise_()
         self.remove_response_switch.raise_()
+        self.current_process.raise_()
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)

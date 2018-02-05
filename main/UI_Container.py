@@ -637,12 +637,16 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
             self.pgb.setGeometry(10, 5, 540, 20)
             self.pgb.show()
             if self.detrend_switch.isChecked():
+                self.current_process.setText("detrend")
                 self.detrend()
             if self.remove_response_switch.isChecked():
+                self.current_process.setText("rm_response")
                 self.remove_response()
             if self.bandpass_switch.isChecked():
+                self.current_process.setText("bp_filter")
                 self.bandpass()
             self.pgb.close()
+            self.current_process.setText(" ")
             if self.errorcontrol==True:
                 QMessageBox.about(self, "tips", "finished")
                 self.Rcs.update_ondraw_stations()
@@ -687,15 +691,17 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
                     currnum = currnum + 1
                 pass
             else:
+                '''calculate allnum'''
                 for item in self.File_list.selectedItems():
-                    allnum = len(self.File_list.selectedItems())
+                    allnum = len(item.parent.stations)
+                for item in self.File_list.selectedItems():
                     file = item.parent
                     for station in file.stations:
                         station.bandpass('bandpass',
                                          freqmin=float(self.fminspin.text()[0:-2]),
                                          freqmax=float(self.fmaxspin.text()[0:-2]),)
-                    self.pgb.setValue(float(currnum * 100) / float(allnum))
-                    currnum = currnum + 1
+                        self.pgb.setValue(float(currnum * 100) / float(allnum))
+                        currnum = currnum + 1
         except Exception,e:
             self.errorcontrol = False
             QMessageBox.about(self,"Error",str(e))
@@ -735,70 +741,24 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
                     currnum = currnum + 1
 
             else:
+                '''calculate allnum'''
                 for item in self.File_list.selectedItems():
-                    allnum = len(self.File_list.selectedItems())
+                    allnum = len(item.parent.stations)
+                for item in self.File_list.selectedItems():
                     file = item.parent
                     for station in file.stations:
                         try:
                             station.remove_response(inventory=station.parent.Inv,
                                                     water_level=float(self.water_level_spin.text()),
                                                     pre_filt=pre_filt)
+
                         except:
                             error = False
                             error_str = error_str + str(station.name) + "\n"
-                    self.pgb.setValue(float(currnum * 100) / float(allnum))
-                    currnum = currnum + 1
+                        self.pgb.setValue(float(currnum * 100) / float(allnum))
+                        currnum = currnum + 1
             if error == False:
                 QMessageBox.about(self, "error", error_str)
         except Exception, e:
             self.errorcontrol = False
             QMessageBox.about(self, "Error", str(e))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
