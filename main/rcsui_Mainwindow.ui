@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1117</width>
+    <width>1178</width>
     <height>868</height>
    </rect>
   </property>
@@ -52,7 +52,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="18">
+      <item row="0" column="19">
        <spacer name="horizontalSpacer_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -119,7 +119,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="15">
+      <item row="0" column="16">
        <widget class="QLabel" name="label_2">
         <property name="text">
          <string>单屏道数</string>
@@ -235,6 +235,41 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="17">
+       <widget class="QComboBox" name="drawnumber_combobox">
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <item>
+         <property name="text">
+          <string>3</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>6</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>9</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>12</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>24</string>
+         </property>
+        </item>
+       </widget>
+      </item>
       <item row="0" column="9">
        <widget class="QPushButton" name="Ampdown">
         <property name="sizePolicy">
@@ -270,41 +305,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="16">
-       <widget class="QComboBox" name="drawnumber_combobox">
-        <property name="maximumSize">
-         <size>
-          <width>40</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <item>
-         <property name="text">
-          <string>3</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>6</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>9</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>12</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>24</string>
-         </property>
-        </item>
-       </widget>
-      </item>
       <item row="0" column="0">
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -318,7 +318,7 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="17">
+      <item row="0" column="18">
        <widget class="QLabel" name="label_stationdrawnumber">
         <property name="text">
          <string>显示台站数：0</string>
@@ -330,6 +330,25 @@
         <property name="text">
          <string>左右拖动</string>
         </property>
+       </widget>
+      </item>
+      <item row="0" column="15">
+       <widget class="QComboBox" name="Ampselect_comboBox">
+        <item>
+         <property name="text">
+          <string>μm/S</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>μm</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>μm/S²</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
@@ -386,8 +405,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>755</width>
-          <height>755</height>
+          <width>819</width>
+          <height>743</height>
          </rect>
         </property>
         <property name="sizePolicy">
@@ -407,8 +426,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1117</width>
-     <height>23</height>
+     <width>1178</width>
+     <height>31</height>
     </rect>
    </property>
    <widget class="QMenu" name="menufile">

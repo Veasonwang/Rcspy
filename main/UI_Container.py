@@ -55,9 +55,28 @@ class Files:
                                                         self.parent.stationTree.indexOfTopLevelItem(
                                                         file.QStationItem))
                 self.removefile(file)
-
+        lenth=len(self.parent.ondrawstations)
+        self.parent.update_ondraw_stations()
+        if lenth!=len(self.parent.ondrawstations):
+            self.parent.draw()
     def removefile(self,file):
         self.parent.Files.files.remove(file)
+    def removeselectedstation(self,items):
+        update=False
+        for item in items:
+            if isinstance(item.parent,Station):
+                station=item.parent
+                file=station.parent
+                st=file.stream.select(station=station.stats.station)
+                for tr in st:
+                    file.stream.remove(tr)
+                file.stations.remove(station)
+                if station.visible==True:
+                    update=True
+                file.removestationTree(station.QStationItem)
+        if update==True:
+            self.parent.update_ondraw_stations()
+            self.parent.draw()
 class File:
     """
     Represents a single file and hold the Stations()
@@ -115,6 +134,9 @@ class File:
         '''
         return [station for station in self.stations
                 if station.visible]
+    def removestationTree(self,TreeItem):
+        self.QStationItem.removeChild(TreeItem)
+        del(TreeItem)
     def __iter__(self):
         return iter(self.stations)
 
@@ -215,14 +237,12 @@ class Station(object):
         for channel in self.channels:
             if type == 'constant':
                 channel.tr = channel.tr.detrend(type='constant')
-                channel.origintr=channel.tr.copy()
             if type == 'linear':
                 channel.tr = channel.tr.detrend(type='linear')
-                channel.origintr = channel.tr.copy()
             channel.datamean=channel.tr.data.mean()
     def bandpass(self,type,**kwargs):
         for channel in self.channels:
-            channel.tr=channel.origintr.copy().filter(type=type,**kwargs)
+            channel.tr=channel.tr.copy().filter(type=type,**kwargs)
             channel.datamean = channel.tr.data.mean()
     def remove_response(self,inventory=None,water_level=60,pre_filt=None):
         for channel in self.channels:
@@ -683,7 +703,7 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
     def remove_response(self):
         currnum = 0
         try:
-            error_str="mismatch station:"
+            error_str="mismatch station:\n"
             allnum = len(self.File_list.selectedItems())
             for item in self.File_list.selectedItems():
                 file=item.parent
@@ -692,32 +712,47 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
                 currnum = currnum + 1
             currnum=0
             error=True
+            if self.pre_filt_switch.isCheckable():
+                pre_filt = [self.f1_spin.value(),
+                            self.f2_spin.value(),
+                            self.f3_spin.value(),
+                            self.f4_spin.value()]
+            else:
+                pre_filt=None
             if len(self.File_list.selectedItems()) == 1:
                 for item in self.channel_list.selectedItems():
                     allnum = len(self.channel_list.selectedItems())
                     station = item.parent
                     try:
-                        station.remove_response(inventory=station.parent.Inv)
-                    except Exception,e:
+                        station.remove_response(inventory=station.parent.Inv,
+                                                water_level=float(self.water_level_spin.text()),
+                                                pre_filt=pre_filt)
+
+                    except :
                         error=False
                         error_str=error_str+str(station.name)+"\n"
                     self.pgb.setValue(float(currnum * 100) / float(allnum))
                     currnum = currnum + 1
-                if error==False:
-                    QMessageBox.about(self,"error",error_str)
+
             else:
                 for item in self.File_list.selectedItems():
                     allnum = len(self.File_list.selectedItems())
                     file = item.parent
-                    for station in file.stations.stations:
-                        station.remove_response(inventory=station.parent.Inv)
+                    for station in file.stations:
+                        try:
+                            station.remove_response(inventory=station.parent.Inv,
+                                                    water_level=float(self.water_level_spin.text()),
+                                                    pre_filt=pre_filt)
+                        except:
+                            error = False
+                            error_str = error_str + str(station.name) + "\n"
                     self.pgb.setValue(float(currnum * 100) / float(allnum))
                     currnum = currnum + 1
+            if error == False:
+                QMessageBox.about(self, "error", error_str)
         except Exception, e:
             self.errorcontrol = False
             QMessageBox.about(self, "Error", str(e))
-        pass
-        pass
 
 
 

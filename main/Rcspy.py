@@ -140,6 +140,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 VIS=Menu.addAction('Set Visible')
                 VIS.triggered.connect(lambda: self.Set_selected_Visible
                                                         (self.stationTree.selectedItems()))
+                rmstation=Menu.addAction('Remove Station')
+                rmstation.triggered.connect(lambda:self.Files.removeselectedstation(self.stationTree.selectedItems()))
                 Menu.exec_(QtGui.QCursor.pos())
     def _Onstationtreeselectedchange(self):
         selectednumber=len(self.stationTree.selectedItems())
@@ -235,13 +237,23 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             x=int(event.xdata*100)
             self.mousetime = UTCDateTime(self.mousestarttime.timestamp+event.xdata)
             self.mouseydata = self.currentchn.tr.data[x]
-            ampvalue=self.currentchn.tr.data[x]
+            try:
+                if self.Ampselect_comboBox.currentIndex() == 0:
+                    ampvalue=self.currentchn.tr_VEL.data[x]
+                    self.mouseydata=self.currentchn.tr_VEL.data[x]
+                if self.Ampselect_comboBox.currentIndex() == 1:
+                    ampvalue=self.currentchn.tr_DISP.data[x]
+                    self.mouseydata=self.currentchn.tr_DISP.data[x]
+                if self.Ampselect_comboBox.currentIndex() == 2:
+                    ampvalue=self.currentchn.tr_ACC.data[x]
+                    self.mouseydata=self.currentchn.tr_ACC.data[x]
+            except:
+                ampvalue=0
             if abs(ampvalue) < 10:
                 ampvalue=ampvalue*1000000
-
             else:
                 ampvalue=0
-            self.Amp_display.setText(str(round(ampvalue,4))+" μm/s")
+            self.Amp_display.setText(str(round(ampvalue,6)))
         except:
             pass
         self.setstaus(self.trname,self.mousetime,self.mouseydata)
@@ -382,7 +394,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             pass
     def Preprocess(self):
         self.preprocessdialog=Preprocessdialog(self)
-        self.preprocessdialog.exec_()
+        self.preprocessdialog.show()
         pass
     def onpreprocessdialogclose(self):
         self.update_ondraw_stations()
@@ -431,11 +443,11 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         del (self.multi)
         self.qml.fig.canvas.draw()
     def _Ampup(self):
-        self.qml.ylimratio=self.qml.ylimratio*0.75
+        self.qml.ylimratio=self.qml.ylimratio*0.70
         self.update_ondraw_stations()
         self.draw()
     def _Ampdown(self):
-        self.qml.ylimratio = self.qml.ylimratio *1.25
+        self.qml.ylimratio = self.qml.ylimratio *1.3
         self.update_ondraw_stations()
         self.draw()
     def _AmpReset(self):
@@ -447,18 +459,18 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.draw()
         pass
     def _OnbtnX_press_clicked(self):
-        if self.xlimratio >0.5:
-            self.xlimratio=self.xlimratio*0.75
-            if self.xlimratio<0.5:
-                self.xlimratio=0.5
+        if self.xlimratio >0.4:
+            self.xlimratio=self.xlimratio*0.70
+            if self.xlimratio<0.4:
+                self.xlimratio=0.4
             width=self.scrollArea.geometry().width()
             self.qmlcanvas.setFixedWidth(width*self.xlimratio)
         pass
     def _OnbtnX_stretch_clicked(self):
-        if self.xlimratio<7:
-            if self.xlimratio>7:
-                self.xlimratio=7
-            self.xlimratio = self.xlimratio * 1.1
+        if self.xlimratio<10:
+            if self.xlimratio>10:
+                self.xlimratio=10
+            self.xlimratio = self.xlimratio * 1.25
             width = self.scrollArea.geometry().width()
             self.qmlcanvas.setFixedWidth(width*self.xlimratio)
         pass
