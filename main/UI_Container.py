@@ -48,35 +48,45 @@ class Files:
                 pass
 
     def removeselectedfile(self,selecteditems):
-        for item in selecteditems:
-            if isinstance(item.parent,File):
-                file=item.parent
-                self.parent.stationTree.takeTopLevelItem(
-                                                        self.parent.stationTree.indexOfTopLevelItem(
-                                                        file.QStationItem))
-                self.removefile(file)
-        lenth=len(self.parent.ondrawstations)
-        self.parent.update_ondraw_stations()
-        if lenth!=len(self.parent.ondrawstations):
-            self.parent.draw()
+        reply = QMessageBox.question(self.parent, 'Message', 'You sure to remove?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            for item in selecteditems:
+                if isinstance(item.parent,File):
+                    file=item.parent
+                    self.parent.stationTree.takeTopLevelItem(
+                                                            self.parent.stationTree.indexOfTopLevelItem(
+                                                            file.QStationItem))
+                    self.removefile(file)
+            lenth=len(self.parent.ondrawstations)
+            self.parent.update_ondraw_stations()
+            if lenth!=len(self.parent.ondrawstations):
+                self.parent.draw()
+        else:
+            pass
     def removefile(self,file):
         self.parent.Files.files.remove(file)
     def removeselectedstation(self,items):
-        update=False
-        for item in items:
-            if isinstance(item.parent,Station):
-                station=item.parent
-                file=station.parent
-                st=file.stream.select(station=station.stats.station)
-                for tr in st:
-                    file.stream.remove(tr)
-                file.stations.remove(station)
-                if station.visible==True:
-                    update=True
-                file.removestationTree(station.QStationItem)
-        if update==True:
-            self.parent.update_ondraw_stations()
-            self.parent.draw()
+        reply = QMessageBox.question(self.parent, 'Message', 'You sure to remove?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            update=False
+            for item in items:
+                if isinstance(item.parent,Station):
+                    station=item.parent
+                    file=station.parent
+                    st=file.stream.select(station=station.stats.station)
+                    for tr in st:
+                        file.stream.remove(tr)
+                    file.stations.remove(station)
+                    if station.visible==True:
+                        update=True
+                    file.removestationTree(station.QStationItem)
+            if update==True:
+                self.parent.update_ondraw_stations()
+                self.parent.draw()
+        else:
+            pass
 class File:
     """
     Represents a single file and hold the Stations()
@@ -247,13 +257,14 @@ class Station(object):
     def remove_response(self,inventory=None,water_level=60,pre_filt=None):
         for channel in self.channels:
             channel.tr_VEL=channel.tr.copy().remove_response(inventory=inventory,output='VEL',water_level=water_level,
-                                                      pre_filt=pre_filt)
+                                                        pre_filt=pre_filt)
             channel.tr_DISP = channel.tr.copy().remove_response(inventory=inventory, output='DISP', water_level=water_level,
                                                         pre_filt=pre_filt)
             channel.tr_ACC = channel.tr.copy().remove_response(inventory=inventory, output='ACC', water_level=water_level,
                                                         pre_filt=pre_filt)
-            channel.tr=channel.tr_VEL.copy()
-            channel.datamean = channel.tr.data.mean()
+            if isinstance(channel.tr_VEL,Trace):
+                channel.tr=channel.tr_VEL.copy()
+                channel.datamean = channel.tr.data.mean()
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace
@@ -718,7 +729,7 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
                 currnum = currnum + 1
             currnum=0
             error=True
-            if self.pre_filt_switch.isCheckable():
+            if self.pre_filt_switch.isChecked():
                 pre_filt = [self.f1_spin.value(),
                             self.f2_spin.value(),
                             self.f3_spin.value(),

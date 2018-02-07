@@ -154,6 +154,8 @@ class MplCanvas(FigureCanvas):
                 ymin=ymin-(ymax+ymin-2*mean)
             else:
                 ymax=ymax+(2*mean-ymax-ymin)
+            print ymin
+            print ymax
             self.axes[i].set_ylim(ymin,ymax)
             '''set Xlimratio'''
             xmin, xmax = self.axes[i].get_xlim()
