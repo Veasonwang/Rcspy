@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 '''
 To handle gui events and draw cruve
 '''
-
+from obspy.core.event.base import *
+from obspy.core.event.origin import Pick
 import rcspy_Exportdialog
 import rcspy_Preprocessdialog
 import os
@@ -156,7 +158,7 @@ class File:
     def __len__(self):
         return len(self.stations)
 """
-It don't used now, including in class File
+It don't used now, All functions are included in class <File>
 class Stations:
     '''
     Station() container object
@@ -278,6 +280,7 @@ class Channel(object):
         :param station: Station()
         '''
         self.tr = tr
+        self.stats=tr.stats
         self.origintr=tr.copy()
         self.station = station
         self.channel = tr.stats.channel
@@ -285,6 +288,23 @@ class Channel(object):
         self.edntime=tr.stats.endtime
         self.setstationTree()
         self.datamean=self.tr.data.mean()
+        self._initpicks()
+    def _initpicks(self):
+        self.pickP=None
+        self.pickS=None
+    def getpick(self,time,phase):
+        if phase=='P':
+            stream_ID=WaveformStreamID(network_code=self.stats.network,
+                                       station_code=self.stats.station,
+                                       location_code=self.stats.location,
+                                       channel_code=self.stats.channel)
+            self.pickP=Pick(time=time,waveform_id=stream_ID,phase_hint='P')
+        if phase=='S':
+            stream_ID=WaveformStreamID(network_code=self.stats.network,
+                                       station_code=self.stats.station,
+                                       location_code=self.stats.location,
+                                       channel_code=self.stats.channel)
+            self.pickS=Pick(time=time,waveform_id=stream_ID,phase_hint='S')
     def setstationTree(self):
         self.QChannelItem = QTreeWidgetItem(self)
         self.QChannelItem.setText(1, '%s @ %d Hz' %

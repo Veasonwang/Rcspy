@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 class Inheriting from Pyqt5 and Matplotlib
 """
@@ -171,6 +172,7 @@ class MplCanvas(FigureCanvas):
             currentnum=currentnum+1
         self.Rcs.statusbar.showMessage("drawing")
         self.drawIds()          #draw label
+        self.drawPicks()
         self.fig.subplots_adjust(bottom=0.001, hspace=0.000, right=0.999, top=0.999, left=0.001)
         self.draw()
     def get_drawchnarray(self,index):
@@ -190,5 +192,15 @@ class MplCanvas(FigureCanvas):
         for ax, tr in zip(self.axes, self.ondrawchn):
             ax.text(x, y, tr.tr.id, color="k", transform=ax.transAxes,
                     bbox=bbox, **kwargs)
-
-
+    def drawPicks(self):
+        for ax,chn in zip(self.axes,self.ondrawchn):
+            if chn.pickP !=None:
+                realtime=chn.pickP.time-chn.starttime
+                x=realtime
+                ax.axvline(x,0,1,color='Y')
+                print realtime
+            if chn.pickS !=None:
+                realtime=chn.pickS.time-chn.starttime
+                x=realtime
+                ax.axvline(x,0,1,color='R')
+                print realtime

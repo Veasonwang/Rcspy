@@ -43,6 +43,10 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.mousestarttime = ""
         self.mouseydata = ""
         self.qmldragswi=False
+        self.pvline=None
+        self.svline=None
+        self.axvline=None
+        self.button_pressed=False
         self.setstaus()
     def Eventconncect(self):
         """
@@ -97,12 +101,34 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                     self.statusbar.showMessage("updating station   "+str(currentnum))
                     currentnum=currentnum+1
                     self.ondrawstations.append(station)
-        string="显示台站数："+str(len(self.ondrawstations))
+        string="Stations: "+str(len(self.ondrawstations))
         self.label_stationdrawnumber.setText(string)
     def onqwidghtsizechangeed(self,QRectevent):
         height=QRectevent.size().height()
         width=QRectevent.size().width()
         self.qml.resize(width,height)
+    '''pick function '''
+    def pickP(self,event):
+        '''
+        :param event: the mousebutton press event
+        :return:
+        '''
+        channel=self.getchnbyaxes(event.inaxes)
+        UTCDT=UTCDateTime(self.mousestarttime.timestamp+event.xdata)
+        channel.getpick(time=UTCDT,phase='P')
+        if self.pvline !=None:
+            try:
+                self.pvline.axes.lines.remove(self.pvline)
+            except:
+                pass
+        self.pvline=event.inaxes.axvline(event.xdata, 0, 1, color='Y')
+        event.canvas.draw()
+    def pickS(self,event):
+        channel = self.getchnbyaxes(event.inaxes)
+        UTCDT = UTCDateTime(self.mousestarttime.timestamp + event.xdata)
+        channel.getpick(time=UTCDT, phase='S')
+        event.inaxes.axvline(event.xdata, 0, 1, color='R')
+        event.canvas.draw()
     '''correlation functions of StationTree'''
     def _initStationTree(self):
         '''
@@ -183,7 +209,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.draw()
     '''Canvas response function and support'''
     def connectevent(self):
-        self.cid = self.fig.canvas.mpl_connect('button_press_event',self.onqmlclick)
+        self.cids=[]
         self.qml.mpl_connect('button_release_event', self.__mpl_mouseButtonReleaseEvent)
         self.qml.mpl_connect('button_press_event', self.__mpl_mouseButtonPressEvent)
         self.qml.mpl_connect('motion_notify_event', self.__mpl_motionNotifyEvent)
@@ -191,18 +217,23 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.qml.mpl_connect('axes_leave_event', self.leave_axes)
         self.qml.mpl_connect('figure_leave_event',self.leave_figure)
         self.qml.mpl_connect('figure_enter_event', self.enter_figure)
+    """
+    NOT BE USED ANYMORE
+    
     def onqmlclick(self, event):
         if event.button==3:
             self.popqmlmenu()
-        """
         if event.button==1:
             print event
             event.inaxes.axvline(event.xdata,ymin=0,ymax=1)
             event.canvas.draw()
-        """
-    def popqmlmenu(self):
+    """
+    def popqmlmenu(self,event):
         Menu=QMenu()
-        ac=Menu.addAction('Function')
+        P=Menu.addAction('PICK P')
+        S = Menu.addAction('PICK S')
+        P.triggered.connect(lambda:self.pickP(event))
+        S.triggered.connect(lambda:self.pickS(event))
         Menu.exec_(QtGui.QCursor.pos())
     def __mpl_mouseButtonReleaseEvent(self,event):
         if self.qmldragswi==True:
@@ -218,15 +249,32 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 pass
         else:
             pass
+        if event.button==1:
+            self.button_pressed = False
     def __mpl_mouseButtonPressEvent(self,event):
-        if self.qmldragswi == True:
-            try:
-                self.dragxdata = event.xdata
-                self.dragydata = event.ydata
-            except:
+        if event.button==1:
+            if self.qmldragswi == True:
+                try:
+                    self.dragxdata = event.xdata
+                    self.dragydata = event.ydata
+                except:
+                    pass
+            else:
                 pass
-        else:
-            pass
+            """
+            NOT BEST
+            '''drawaxvline'''
+            self.button_pressed=True
+            if self.axvline != None:
+                try:
+                    event.inaxes.lines.remove(self.axvline)
+                except:
+                    pass
+            self.axvline = event.inaxes.axvline(event.xdata, 0, 1, color='r')
+            event.canvas.draw()
+            """
+        elif event.button==3:
+            self.popqmlmenu(event)
     def __mpl_motionNotifyEvent(self,event):
         """
         bas performance
@@ -257,7 +305,18 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         except:
             pass
         self.setstaus(self.trname,self.mousetime,self.mouseydata)
+        """ NOT BEST 
+        '''drawaxvline'''
+        if self.button_pressed==True:
+            if self.axvline!=None:
+                try:
+                    event.inaxes.lines.remove(self.axvline)
+                except:
+                    pass
+            self.axvline=event.inaxes.axvline(event.xdata,0,1,color='r')
+            event.canvas.draw()
         pass
+        """
     def enter_axes(self,event):
         chn=self.getchnbyaxes(event.inaxes)
         self.currentchn=chn
@@ -266,6 +325,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def leave_axes(self,event):
         self.mousetime=""
         self.trname=""
+
     def enter_figure(self,event):
         self._changebtn_cursor()
     def leave_figure(self,event):
@@ -285,7 +345,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             self.statusbar.showMessage(string)
             #self.qmlcanvas.setToolTip(string)
             self.current_time.setText(str(mousetime)[0:-1])
-
     '''three functions for Mouse scrolling zoom'''
     def onmouse_scroll(self,event):
         self.resetYlim(event)
