@@ -2,18 +2,18 @@
 '''
 To handle gui events and draw cruve
 '''
+from obspy.signal.trigger import ar_pick
 from obspy.core.event.base import *
 from obspy.core.event.origin import Pick
 import rcspy_Exportdialog
 import rcspy_Preprocessdialog
 import os
-from PyQt5.QtWidgets import QMenu,QMessageBox,QProgressBar
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QFont,QIcon
+from PyQt5.QtWidgets import QMessageBox,QProgressBar
+from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QDir
 from util import QTreeWidgetItem,QListWidgetItem
 from operator import attrgetter
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import  QtWidgets
 from PyQt5.QtWidgets import QAbstractItemView,QFileDialog
 import obspy.core
 from obspy import *
@@ -267,6 +267,18 @@ class Station(object):
             if isinstance(channel.tr_VEL,Trace):
                 channel.tr=channel.tr_VEL.copy()
                 channel.datamean = channel.tr.data.mean()
+    def Ar_pick(self):
+        Z=self.getchannelbyNZE('Z')
+        N=self.getchannelbyNZE('N')
+        E=self.getchannelbyNZE('E')
+        df=self.stats.sampling_rate
+        p_pick,s_pick=ar_pick(Z.tr.data, N.tr.data, E.tr.data, df,1.0, 20.0, 1.0, 0.1, 4.0, 1.0, 2, 8, 0.1, 0.2)
+        starttime=self.stats.starttime
+        p_time=starttime+p_pick
+        s_time=starttime+s_pick
+        for chn in self.channels:
+            chn.getpick(p_time,'P')
+            chn.getpick(s_time,'S')
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace

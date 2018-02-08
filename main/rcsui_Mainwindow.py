@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1178, 868)
+        MainWindow.resize(1225, 868)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -182,7 +182,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.qmlcanvas = Qcwidget()
-        self.qmlcanvas.setGeometry(QtCore.QRect(0, 0, 819, 743))
+        self.qmlcanvas.setGeometry(QtCore.QRect(0, 0, 866, 743))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -193,7 +193,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.splitter)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1178, 31))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1225, 31))
         self.menubar.setObjectName("menubar")
         self.menufile = QtWidgets.QMenu(self.menubar)
         self.menufile.setObjectName("menufile")
@@ -218,6 +218,8 @@ class Ui_MainWindow(object):
         self.actionexport.setObjectName("actionexport")
         self.actionpreprocess = QtWidgets.QAction(MainWindow)
         self.actionpreprocess.setObjectName("actionpreprocess")
+        self.actionAr_pick = QtWidgets.QAction(MainWindow)
+        self.actionAr_pick.setObjectName("actionAr_pick")
         self.menu_2.addAction(self.actionRseed)
         self.menu_2.addAction(self.actionRminiseed)
         self.menu_2.addAction(self.actionRsac)
@@ -225,6 +227,7 @@ class Ui_MainWindow(object):
         self.menufile.addAction(self.actionexport)
         self.menufile.addAction(self.actionexit)
         self.menupreprocess.addAction(self.actionpreprocess)
+        self.menupreprocess.addAction(self.actionAr_pick)
         self.menubar.addAction(self.menufile.menuAction())
         self.menubar.addAction(self.menupreprocess.menuAction())
 
@@ -274,5 +277,6 @@ class Ui_MainWindow(object):
         self.actionRsac.setText(_translate("MainWindow", "sac"))
         self.actionexport.setText(_translate("MainWindow", "导出"))
         self.actionpreprocess.setText(_translate("MainWindow", "预处理"))
+        self.actionAr_pick.setText(_translate("MainWindow", "震相拾取"))
 
 from util import QcScrollArea, Qcwidget

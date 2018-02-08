@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
 import matplotlib
 matplotlib.use("Qt5Agg")
-from obspy import *
 from PyQt5 import QtCore
 from PyQt5 import QtGui
-from PyQt5.QtGui import QWheelEvent
-from PyQt5.QtCore import QObject,QSize
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QAbstractItemView, QSizePolicy, QMessageBox, QWidget,QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu
 from util import *
-from obspy import  UTCDateTime
 from matplotlib.widgets import MultiCursor
-from matplotlib.widgets import Cursor
 import rcsui_Mainwindow
 import sys
 from UI_Container import *
@@ -58,6 +53,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.actionexit.triggered.connect(self.onexit)
         self.actionexport.triggered.connect(self.Export)
         self.actionpreprocess.triggered.connect(self.Preprocess)
+        self.actionAr_pick.triggered.connect(self.Ar_pick)
         self.X_press.clicked.connect(self._OnbtnX_press_clicked)
         self.X_stretch.clicked.connect(self._OnbtnX_stretch_clicked)
         self.drawnumber_combobox.currentTextChanged.connect(self._Ondrawnumber_combobox_change)
@@ -116,19 +112,19 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         channel=self.getchnbyaxes(event.inaxes)
         UTCDT=UTCDateTime(self.mousestarttime.timestamp+event.xdata)
         channel.getpick(time=UTCDT,phase='P')
-        if self.pvline !=None:
-            try:
-                self.pvline.axes.lines.remove(self.pvline)
-            except:
-                pass
-        self.pvline=event.inaxes.axvline(event.xdata, 0, 1, color='Y')
+        self.qml.updateaxes(event.inaxes)
         event.canvas.draw()
     def pickS(self,event):
         channel = self.getchnbyaxes(event.inaxes)
         UTCDT = UTCDateTime(self.mousestarttime.timestamp + event.xdata)
         channel.getpick(time=UTCDT, phase='S')
-        event.inaxes.axvline(event.xdata, 0, 1, color='R')
+        self.qml.updateaxes(event.inaxes)
         event.canvas.draw()
+    def Ar_pick(self):
+        for file in self.Files.files:
+            for station in file.stations:
+                station.Ar_pick()
+        self.draw()
     '''correlation functions of StationTree'''
     def _initStationTree(self):
         '''
@@ -262,12 +258,13 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             else:
                 pass
             """
-            NOT BEST
+            BAD PERFORMANCE
+            
             '''drawaxvline'''
             self.button_pressed=True
             if self.axvline != None:
                 try:
-                    event.inaxes.lines.remove(self.axvline)
+                    self.axvline.axes.lines.remove(self.axvline)
                 except:
                     pass
             self.axvline = event.inaxes.axvline(event.xdata, 0, 1, color='r')
@@ -305,12 +302,14 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         except:
             pass
         self.setstaus(self.trname,self.mousetime,self.mouseydata)
-        """ NOT BEST 
+        """
+        BAD PERFORMANCE
+        
         '''drawaxvline'''
         if self.button_pressed==True:
             if self.axvline!=None:
                 try:
-                    event.inaxes.lines.remove(self.axvline)
+                    self.axvline.axes.lines.remove(self.axvline)
                 except:
                     pass
             self.axvline=event.inaxes.axvline(event.xdata,0,1,color='r')
@@ -325,7 +324,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def leave_axes(self,event):
         self.mousetime=""
         self.trname=""
-
     def enter_figure(self,event):
         self._changebtn_cursor()
     def leave_figure(self,event):

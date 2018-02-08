@@ -7,8 +7,8 @@ from PyQt5.QtWidgets import QListWidgetItem as QLWI
 from  PyQt5.QtWidgets import QTreeWidgetItem as QTWI
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from PyQt5.QtWidgets import  QMenu, QSizePolicy,QWidget
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import   QSizePolicy,QWidget
+from PyQt5 import  QtWidgets
 from PyQt5.QtWidgets import QScrollArea as QSLA
 import math
 class Qcwidget(QWidget):
@@ -65,7 +65,6 @@ class MplCanvas(FigureCanvas):
         :param VisibleChn:
         :return:
         """
-        print len(stations)
         self.ondrawchn=[]
         self.fig.clear()
         axes=[]
@@ -155,18 +154,16 @@ class MplCanvas(FigureCanvas):
                 ymin=ymin-(ymax+ymin-2*mean)
             else:
                 ymax=ymax+(2*mean-ymax-ymin)
-            print ymin
-            print ymax
             self.axes[i].set_ylim(ymin,ymax)
             '''set Xlimratio'''
-            xmin, xmax = self.axes[i].get_xlim()
-            xmin = xmin * self.xlimratio
-            xmax = xmax * self.xlimratio
-            if (ymax - mean) > (mean - ymin):
-                ymin = ymin - (ymax + ymin - 2 * mean)
-            else:
-                ymax = ymax + (2 * mean - ymax - ymin)
-            self.axes[i].set_ylim(ymin, ymax)
+            #xmin, xmax = self.axes[i].get_xlim()
+            #xmin = xmin * self.xlimratio
+            #xmax = xmax * self.xlimratio
+            #if (ymax - mean) > (mean - ymin):
+            #    ymin = ymin - (ymax + ymin - 2 * mean)
+            #else:
+            #    ymax = ymax + (2 * mean - ymax - ymin)
+            #self.axes[i].set_ylim(ymin, ymax)
             string = "setting" + str(currentnum) + " of " + str(drawnumber)
             self.Rcs.statusbar.showMessage(string)
             currentnum=currentnum+1
@@ -204,3 +201,33 @@ class MplCanvas(FigureCanvas):
                 x=realtime
                 ax.axvline(x,0,1,color='R')
                 print realtime
+    def updateaxes(self,axes):
+        i=self.axes.index(axes)
+        ymin, ymax = self.axes[i].get_ylim()
+        xmin, xmax = self.axes[i].get_xlim()
+        axes.cla()
+        axes.plot(self.tt[i], self.ss[i], 'g')
+        '''REset limratio'''
+        '''not used
+        ymin = ymin * self.ylimratio
+        ymax = ymax * self.ylimratio
+        if (ymax - mean) > (mean - ymin):
+            ymin = ymin - (ymax + ymin - 2 * mean)
+        else:
+            ymax = ymax + (2 * mean - ymax - ymin)
+        '''
+        self.axes[i].set_ylim(ymin, ymax)
+        self.axes[i].set_xlim(xmin,xmax)
+        '''draw picks'''
+        chn=self.ondrawchn[i]
+        if chn.pickP != None:
+            realtime = chn.pickP.time - chn.starttime
+            x = realtime
+            axes.axvline(x, 0, 1, color='Y')
+        if chn.pickS != None:
+            realtime = chn.pickS.time - chn.starttime
+            x = realtime
+            axes.axvline(x, 0, 1, color='R')
+        '''draw Ids'''
+        self.drawIds()
+        self.fig.canvas.draw()
