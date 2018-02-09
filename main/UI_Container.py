@@ -7,6 +7,7 @@ from obspy.core.event.base import *
 from obspy.core.event.origin import Pick
 import rcspy_Exportdialog
 import rcspy_Preprocessdialog
+import rcspy_Autopickdialog
 import os
 from PyQt5.QtWidgets import QMessageBox,QProgressBar
 from PyQt5.QtGui import QIcon
@@ -834,3 +835,60 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog,QtWidgets.QDialog):
         except Exception, e:
             self.errorcontrol = False
             QMessageBox.about(self, "Error", str(e))
+class Autopickdialog(rcspy_Autopickdialog.Ui_Dialog,QtWidgets.QDialog):
+    def __init__(self,parent):
+        super(Autopickdialog, self).__init__(parent)
+        self.setupUi(self)
+        self.Rcs = parent
+        self.initList()
+        #self.File_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.channel_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.connectevent()
+    def initList(self):
+        self.Files=self.Rcs.Files
+        for file in self.Files.files:
+            listitem=QListWidgetItem(file)
+            listitem.setText(file.name)
+            self.File_list.addItem(listitem)
+    def connectevent(self):
+        self.File_list.itemSelectionChanged.connect(self.OnFilelist_selectionchange)
+        self.channel_list.itemSelectionChanged.connect(self.Onchannellist_selectionchange)
+        self.allchannel_checkbox.stateChanged.connect(self.Onallchannel_change)
+        self.btnOK.clicked.connect(self.Onbtnok)
+        self.btn_Cancel.clicked.connect(self.Onbtnback)
+        pass
+    def OnFilelist_selectionchange(self):
+        self.channel_list.clear()
+        if len(self.File_list.selectedItems())==1:
+            self.channel_list.setEnabled(True)
+            self.allchannel_checkbox.setEnabled(True)
+            file=self.File_list.selectedItems()[0].parent
+            for station in file.stations:
+                listitem=QListWidgetItem(station)
+                listitem.setText(station.name)
+                self.channel_list.addItem(listitem)
+        if len(self.File_list.selectedItems())>1:
+            for item in self.File_list.selectedItems():
+                file = item.parent
+                for station in file.stations:
+                    listitem = QListWidgetItem(station)
+                    listitem.setText(station.name)
+                    self.channel_list.addItem(listitem)
+            self.channel_list.setEnabled(False)
+            self.allchannel_checkbox.setChecked(True)
+            self.allchannel_checkbox.setEnabled(False)
+    def Onchannellist_selectionchange(self):
+        count=self.channel_list.count()
+        if len(self.channel_list.selectedItems())==count:
+            self.allchannel_checkbox.setChecked(True)
+        else:
+            self.allchannel_checkbox.setChecked(False)
+    def Onallchannel_change(self):
+        if self.allchannel_checkbox.isChecked()==True:
+            self.channel_list.selectAll()
+        else:
+            self.channel_list.clearSelection()
+    def Onbtnok(self):
+        pass
+    def Onbtnback(self):
+        pass

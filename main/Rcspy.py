@@ -162,11 +162,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 self.qml.updateaxes(axes)
         event.canvas.draw()
     """
-    def Ar_pick(self):
-        for file in self.Files.files:
-            for station in file.stations:
-                station.Ar_pick()
-        self.draw()
     '''correlation functions of StationTree'''
     def _initStationTree(self):
         '''
@@ -513,6 +508,9 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def onpreprocessdialogclose(self):
         self.update_ondraw_stations()
         self.draw()
+    def Ar_pick(self):
+        self.ar_pickdialog = Autopickdialog(self)
+        self.ar_pickdialog.show()
     '''Top operation bar response function'''
     def _changeSelectedChannel(self):
         '''
