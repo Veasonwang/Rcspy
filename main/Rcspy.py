@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import matplotlib
-matplotlib.use("Qt5Agg")
+'''
+main class
+'''
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu
@@ -8,7 +9,6 @@ from util import *
 from matplotlib.widgets import MultiCursor
 import rcsui_Mainwindow
 import sys
-from data_manager import *
 from Sub_windows_support import *
 class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def __init__(self,parent=None):
@@ -247,19 +247,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                     pass
             else:
                 pass
-            """
-            BAD PERFORMANCE
-            
-            '''drawaxvline'''
-            self.button_pressed=True
-            if self.axvline != None:
-                try:
-                    self.axvline.axes.lines.remove(self.axvline)
-                except:
-                    pass
-            self.axvline = event.inaxes.axvline(event.xdata, 0, 1, color='r')
-            event.canvas.draw()
-            """
         elif event.button==3:
             self.popqmlmenu(event)
     def __mpl_motionNotifyEvent(self,event):
@@ -292,20 +279,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         except:
             pass
         self.setstaus(self.trname,self.mousetime,self.mouseydata)
-        """
-        BAD PERFORMANCE
-        
-        '''drawaxvline'''
-        if self.button_pressed==True:
-            if self.axvline!=None:
-                try:
-                    self.axvline.axes.lines.remove(self.axvline)
-                except:
-                    pass
-            self.axvline=event.inaxes.axvline(event.xdata,0,1,color='r')
-            event.canvas.draw()
-        pass
-        """
     def enter_axes(self,event):
         chn=self.getchnbyaxes(event.inaxes)
         self.currentchn=chn
@@ -335,10 +308,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         if (trname,mousetime,mouseydata)==("","",""):
             self.statusbar.showMessage("Ready")
         else:
-            #string = trname +"  time: "+str(mousetime.day)+"D"+str(mousetime.hour)+"h"+str(mousetime.minute)+"m"+str(mousetime.second)+"s"+" , Y:"+str(mouseydata)
             string=trname +"  UTCTime: "+str(mousetime)[0:-1]+"        Y:"+str(mouseydata)
             self.statusbar.showMessage(string)
-            #self.qmlcanvas.setToolTip(string)
             self.current_time.setText(str(mousetime)[0:-1])
     '''three functions for Mouse scrolling zoom'''
     def onmouse_scroll(self,event):

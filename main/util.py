@@ -116,9 +116,7 @@ class MplCanvas(FigureCanvas):
                 ax = self.fig.add_subplot(drawnumber, 1, 1)
             else:
                 ax = self.fig.add_subplot(drawnumber, 1, i + 1)
-                #ax.xaxis.set_ticks_position("top")
 
-            #self.axes.append(ax)
             """
             high performance
             """
