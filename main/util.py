@@ -39,7 +39,6 @@ class QTreeWidgetItem(QTWI):
         self.parent=parent
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=23, height=28, dpi=72):
-
         fig = Figure(figsize=(width, height), dpi=72,linewidth=1)
         self.axes = []
         self.fig=fig
@@ -156,14 +155,6 @@ class MplCanvas(FigureCanvas):
                 ymax=ymax+(2*mean-ymax-ymin)
             self.axes[i].set_ylim(ymin,ymax)
             '''set Xlimratio'''
-            #xmin, xmax = self.axes[i].get_xlim()
-            #xmin = xmin * self.xlimratio
-            #xmax = xmax * self.xlimratio
-            #if (ymax - mean) > (mean - ymin):
-            #    ymin = ymin - (ymax + ymin - 2 * mean)
-            #else:
-            #    ymax = ymax + (2 * mean - ymax - ymin)
-            #self.axes[i].set_ylim(ymin, ymax)
             string = "setting" + str(currentnum) + " of " + str(drawnumber)
             self.Rcs.statusbar.showMessage(string)
             currentnum=currentnum+1
@@ -183,15 +174,12 @@ class MplCanvas(FigureCanvas):
         x = 0.01
         y = 0.9
         bbox = dict(boxstyle="round,pad=0.4", fc="w", ec="k", lw=1.2, alpha=1.0)
-
         # labeloffset to adjust the size of the label in case of too large plotted number
-
         kwargs = dict(va="top", ha="left", fontsize=16*self.labeloffset, family='monospace',
                       zorder=10000)
         for axes, tr in zip(self.axes, self.ondrawchn):
             axes.text(x, y, tr.tr.id, color="k", transform=axes.transAxes,
                     bbox=bbox, **kwargs)
-
     def drawPicks(self):
         for axes,chn in zip(self.axes,self.ondrawchn):
             for pick in chn.picks:

@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2f68cfe7-8842-4cf6-b4e0-d652ea0747ff" name="Default" comment="" />
+    <list default="true" id="673b2df4-6ed3-4054-a7b3-53539d965f96" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/main/Sub_windows_support.py" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/main/data_manager.py" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/main/Rcspy.py" afterPath="$PROJECT_DIR$/main/Rcspy.py" />
+      <change beforePath="$PROJECT_DIR$/main/UI_Container.py" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/main/icons/2.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/main/icons/3.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/main/util.py" afterPath="$PROJECT_DIR$/main/util.py" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -10,50 +19,28 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file leaf-file-name="Function_test.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Function_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-              <folding>
-                <element signature="e#14#33#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rcsui_Mainwindow.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/rcsui_Mainwindow.py">
+      <file leaf-file-name="Rcspy.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main/Rcspy.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="23" lean-forward="false" selection-start-line="0" selection-start-column="23" selection-end-line="0" selection-end-column="23" />
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rcspy_Preprocessdialog.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/rcspy_Preprocessdialog.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1533">
-              <caret line="73" column="45" lean-forward="false" selection-start-line="73" selection-start-column="45" selection-end-line="73" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rcspy_Exportdialog.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/rcspy_Exportdialog.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1239">
-              <caret line="59" column="39" lean-forward="false" selection-start-line="59" selection-start-column="39" selection-end-line="59" selection-end-column="39" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="rcspy_Autopickdialog.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="rcspy_Autopickdialog.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main/rcspy_Autopickdialog.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
@@ -63,203 +50,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="util.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/util.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2520">
-              <caret line="143" column="20" lean-forward="true" selection-start-line="143" selection-start-column="20" selection-end-line="143" selection-end-column="20" />
-              <folding>
-                <element signature="e#76#127#0" expanded="true" />
-                <element signature="e#467#668#0" expanded="false" />
-                <element signature="e#699#959#0" expanded="false" />
-                <element signature="e#993#1074#0" expanded="false" />
-                <element signature="e#1108#1189#0" expanded="false" />
-                <element signature="e#1939#1951#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UI_Container.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/UI_Container.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="705">
-              <caret line="244" column="85" lean-forward="false" selection-start-line="244" selection-start-column="85" selection-end-line="244" selection-end-column="85" />
-              <folding>
-                <element signature="e#68#108#0" expanded="true" />
-                <element signature="e#625#766#0" expanded="false" />
-                <element signature="e#784#3506#0" expanded="false" />
-                <element signature="e#3971#4287#0" expanded="false" />
-                <element signature="e#4319#4460#0" expanded="false" />
-                <element signature="e#4740#4807#0" expanded="false" />
-                <element signature="e#4912#5104#0" expanded="false" />
-                <element signature="e#5141#5419#0" expanded="false" />
-                <element signature="e#5459#5645#0" expanded="false" />
-                <element signature="e#5790#5816#0" expanded="false" />
-                <element signature="e#5860#5887#0" expanded="false" />
-                <element signature="e#5920#5945#0" expanded="false" />
-                <element signature="e#5946#7064#1" expanded="false" />
-                <element signature="e#7205#7715#0" expanded="false" />
-                <element signature="e#7754#7953#0" expanded="false" />
-                <element signature="e#8992#9093#0" expanded="false" />
-                <element signature="e#9138#9242#0" expanded="false" />
-                <element signature="e#9279#9556#0" expanded="false" />
-                <element signature="e#9603#9754#0" expanded="false" />
-                <element signature="e#9838#10615#0" expanded="false" />
-                <element signature="e#10693#11349#0" expanded="false" />
-                <element signature="e#11377#14819#0" expanded="false" />
-                <element signature="e#14377#14819#0" expanded="false" />
-                <element signature="e#14892#25507#0" expanded="false" />
-                <element signature="e#14927#15286#0" expanded="false" />
-                <element signature="e#15325#15507#0" expanded="false" />
-                <element signature="e#15544#15961#0" expanded="false" />
-                <element signature="e#15998#16175#0" expanded="false" />
-                <element signature="e#16219#16426#0" expanded="false" />
-                <element signature="e#16477#17544#0" expanded="false" />
-                <element signature="e#17598#17810#0" expanded="false" />
-                <element signature="e#17846#17858#0" expanded="false" />
-                <element signature="e#17890#18675#0" expanded="false" />
-                <element signature="e#18712#21367#0" expanded="false" />
-                <element signature="e#21404#23857#0" expanded="false" />
-                <element signature="e#23892#25507#0" expanded="false" />
-                <element signature="e#25588#37115#0" expanded="false" />
-                <element signature="e#25623#25955#0" expanded="false" />
-                <element signature="e#25988#26215#0" expanded="false" />
-                <element signature="e#26248#26439#0" expanded="false" />
-                <element signature="e#26476#27126#0" expanded="false" />
-                <element signature="e#27177#28110#0" expanded="false" />
-                <element signature="e#28164#28376#0" expanded="false" />
-                <element signature="e#28420#28569#0" expanded="false" />
-                <element signature="e#28574#30299#1" expanded="false" />
-                <element signature="e#30349#30530#0" expanded="false" />
-                <element signature="e#30580#30763#0" expanded="false" />
-                <element signature="e#30810#30860#0" expanded="false" />
-                <element signature="e#30907#30959#0" expanded="false" />
-                <element signature="e#30991#32001#0" expanded="false" />
-                <element signature="e#32035#32060#0" expanded="false" />
-                <element signature="e#32092#33102#0" expanded="false" />
-                <element signature="e#33135#34537#0" expanded="false" />
-                <element signature="e#34577#37115#0" expanded="false" />
-                <element signature="e#34614#36995#0" expanded="false" />
-                <element signature="e#38211#39144#0" expanded="false" />
-                <element signature="e#39198#39410#0" expanded="false" />
-                <element signature="e#39454#39603#0" expanded="false" />
-                <element signature="e#39635#41090#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Rcspy.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/main/Rcspy.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="362">
-              <caret line="521" column="24" lean-forward="true" selection-start-line="521" selection-start-column="24" selection-end-line="521" selection-end-column="24" />
-              <folding>
-                <element signature="e#2519#2747#0" expanded="false" />
-                <element signature="e#2776#3397#0" expanded="false" />
-                <element signature="e#4110#4221#0" expanded="false" />
-                <element signature="e#4287#4827#0" expanded="false" />
-                <element signature="e#4832#6338#1" expanded="false" />
-                <element signature="e#6426#7221#0" expanded="false" />
-                <element signature="e#7257#8751#0" expanded="false" />
-                <element signature="e#8804#8930#0" expanded="false" />
-                <element signature="e#8990#9173#0" expanded="false" />
-                <element signature="e#9231#9765#0" expanded="false" />
-                <element signature="e#9805#9845#0" expanded="false" />
-                <element signature="e#9894#10442#0" expanded="false" />
-                <element signature="e#10526#11065#0" expanded="false" />
-                <element signature="e#11070#11345#1" expanded="false" />
-                <element signature="e#11386#11828#0" expanded="false" />
-                <element signature="e#11888#12421#0" expanded="false" />
-                <element signature="e#12479#13232#0" expanded="false" />
-                <element signature="e#12758#13167#1" expanded="false" />
-                <element signature="e#13286#14883#0" expanded="false" />
-                <element signature="e#14483#14883#1" expanded="false" />
-                <element signature="e#14924#15170#0" expanded="false" />
-                <element signature="e#15211#15251#0" expanded="false" />
-                <element signature="e#15294#15318#0" expanded="false" />
-                <element signature="e#15361#15461#0" expanded="false" />
-                <element signature="e#15599#15759#0" expanded="false" />
-                <element signature="e#15829#16345#0" expanded="false" />
-                <element signature="e#16441#16534#0" expanded="false" />
-                <element signature="e#16574#17461#0" expanded="false" />
-                <element signature="e#17501#18398#0" expanded="false" />
-                <element signature="e#18467#19498#0" expanded="false" />
-                <element signature="e#19534#20601#0" expanded="false" />
-                <element signature="e#20632#21900#0" expanded="false" />
-                <element signature="e#21931#22038#0" expanded="false" />
-                <element signature="e#22069#22376#0" expanded="false" />
-                <element signature="e#22411#22505#0" expanded="false" />
-                <element signature="e#22553#22602#0" expanded="false" />
-                <element signature="e#22634#22709#0" expanded="false" />
-                <element signature="e#22802#23314#0" expanded="false" />
-                <element signature="e#23356#23634#0" expanded="false" />
-                <element signature="e#23674#23953#0" expanded="false" />
-                <element signature="e#23993#24044#0" expanded="false" />
-                <element signature="e#24075#24175#0" expanded="false" />
-                <element signature="e#24208#24310#0" expanded="false" />
-                <element signature="e#24344#24553#0" expanded="false" />
-                <element signature="e#24599#24868#0" expanded="false" />
-                <element signature="e#24916#25187#0" expanded="false" />
-                <element signature="e#25241#25384#0" expanded="false" />
-                <element signature="e#25428#25679#0" expanded="false" />
-                <element signature="e#25728#26044#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>self.stream</find>
-      <find>export2meed</find>
-    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/verson0.11/n_rcsui.py" />
-        <option value="$PROJECT_DIR$/verson0.11/UI_Container.py" />
-        <option value="$PROJECT_DIR$/verson0.11/Rcspy.py" />
-        <option value="$PROJECT_DIR$/verson0.13/UI_Container.py" />
-        <option value="$PROJECT_DIR$/verson0.13/Rcspy.py" />
-        <option value="$PROJECT_DIR$/verson0.13/rcsui.py" />
-        <option value="$PROJECT_DIR$/verson0.1.4/Rcspy.py" />
-        <option value="$PROJECT_DIR$/verson0.1.4/util.py" />
-        <option value="$PROJECT_DIR$/verson0.1.4/UI_Container.py" />
-        <option value="$PROJECT_DIR$/version" />
-        <option value="$PROJECT_DIR$/main/rcsui.py" />
-        <option value="$PROJECT_DIR$/main/rcspy_Exportdialog.py" />
-        <option value="$PROJECT_DIR$/main/rcsui_Mainwindow.py" />
-        <option value="$PROJECT_DIR$/main/rcspy_Preprocessdialog.py" />
-        <option value="$PROJECT_DIR$/Function_test.py" />
-        <option value="$PROJECT_DIR$/main/util.py" />
-        <option value="$PROJECT_DIR$/main/Rcspy.py" />
-        <option value="$PROJECT_DIR$/main/UI_Container.py" />
-      </list>
-    </option>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="15" />
     <option name="y" value="39" />
     <option name="width" value="1076" />
     <option name="height" value="978" />
   </component>
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -272,11 +75,26 @@
       <manualOrder />
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
-  </component>
-  <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Rcspy" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Rcspy" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Rcspy" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Rcspy" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -290,114 +108,6 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.Rcspy (3)">
-    <configuration name="Function_test" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Rcspy" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Function_test.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="Rcspy (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/verson0.13" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Rcspy" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/verson0.13/Rcspy.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="Rcspy (2)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/verson0.1.4" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Rcspy" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/verson0.1.4/Rcspy.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="Rcspy (3)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/main" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Rcspy" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main/Rcspy.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="Rcspy" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/verson0.11" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Rcspy" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/verson0.11/Rcspy.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.Rcspy" />
-      <item index="1" class="java.lang.String" itemvalue="Python.Rcspy (1)" />
-      <item index="2" class="java.lang.String" itemvalue="Python.Function_test" />
-      <item index="3" class="java.lang.String" itemvalue="Python.Rcspy (2)" />
-      <item index="4" class="java.lang.String" itemvalue="Python.Rcspy (3)" />
-    </list>
-    <recent_temporary>
-      <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.Rcspy (3)" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Function_test" />
-        <item index="2" class="java.lang.String" itemvalue="Python.Rcspy (2)" />
-        <item index="3" class="java.lang.String" itemvalue="Python.Rcspy (1)" />
-        <item index="4" class="java.lang.String" itemvalue="Python.Rcspy" />
-      </list>
-    </recent_temporary>
-  </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
@@ -406,163 +116,57 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="2f68cfe7-8842-4cf6-b4e0-d652ea0747ff" name="Default" comment="" />
-      <created>1514341935502</created>
+      <changelist id="673b2df4-6ed3-4054-a7b3-53539d965f96" name="Default" comment="" />
+      <created>1518172853024</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1514341935502</updated>
+      <updated>1518172853024</updated>
     </task>
     <servers />
   </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-  </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-6" width="1920" height="1086" extended-state="7" />
+    <frame x="15" y="39" width="1922" height="1092" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32962963" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32776618" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32776618" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.66597074" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24960506" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297062" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39770356" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
-    <layout-to-restore>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297062" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32340863" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297062" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297062" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297062" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1734375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39934713" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <default-breakpoints>
-        <breakpoint type="python-exception">
-          <properties notifyOnTerminate="true" exception="BaseException">
-            <option name="notifyOnTerminate" value="true" />
-          </properties>
-        </breakpoint>
-      </default-breakpoints>
-      <option name="time" value="38" />
-    </breakpoint-manager>
+    <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/verson0.11/rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/n_rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/n_rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/n_rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/n_rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/n_rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/n_rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/rcsui.py" />
-    <entry file="file://$USER_HOME$/embedding_in_qt5.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/n_rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/rcsui.py" />
-    <entry file="file://$USER_HOME$/embedding_in_qt5.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py" />
-    <entry file="file://C:/Anaconda2_4.3/Lib/site-packages/matplotlib/backends/backend_qt5agg.py" />
-    <entry file="file://C:/Anaconda2_4.3/Lib/site-packages/matplotlib/backends/backend_qt5.py" />
-    <entry file="file://$USER_HOME$/embedding_in_qt5.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/n_rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/UI_Container.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.11/Rcspy.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.13/UI_Container.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.13/rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.13/Rcspy.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.1.4/n_rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.1.4/rcsui.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.1.4/util.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.1.4/Rcspy.py" />
-    <entry file="file://$PROJECT_DIR$/verson0.1.4/UI_Container.py" />
-    <entry file="file://$PROJECT_DIR$/version" />
-    <entry file="file://$PROJECT_DIR$/main/rcsui.py" />
-    <entry file="file://$USER_HOME$/anaconda2/lib/python2.7/site-packages/obspy/io/sac/core.py">
+    <entry file="file://$PROJECT_DIR$/main/Rcspy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="439" column="0" lean-forward="false" selection-start-line="439" selection-start-column="0" selection-end-line="439" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Function_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding>
-            <element signature="e#14#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/rcsui_Mainwindow.py">
-      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="23" lean-forward="false" selection-start-line="0" selection-start-column="23" selection-end-line="0" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/rcspy_Preprocessdialog.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1533">
-          <caret line="73" column="45" lean-forward="false" selection-start-line="73" selection-start-column="45" selection-end-line="73" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/rcspy_Exportdialog.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1239">
-          <caret line="59" column="39" lean-forward="false" selection-start-line="59" selection-start-column="39" selection-end-line="59" selection-end-column="39" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -572,147 +176,6 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/util.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2520">
-          <caret line="143" column="20" lean-forward="true" selection-start-line="143" selection-start-column="20" selection-end-line="143" selection-end-column="20" />
-          <folding>
-            <element signature="e#76#127#0" expanded="true" />
-            <element signature="e#467#668#0" expanded="false" />
-            <element signature="e#699#959#0" expanded="false" />
-            <element signature="e#993#1074#0" expanded="false" />
-            <element signature="e#1108#1189#0" expanded="false" />
-            <element signature="e#1939#1951#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/UI_Container.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="705">
-          <caret line="244" column="85" lean-forward="false" selection-start-line="244" selection-start-column="85" selection-end-line="244" selection-end-column="85" />
-          <folding>
-            <element signature="e#68#108#0" expanded="true" />
-            <element signature="e#625#766#0" expanded="false" />
-            <element signature="e#784#3506#0" expanded="false" />
-            <element signature="e#3971#4287#0" expanded="false" />
-            <element signature="e#4319#4460#0" expanded="false" />
-            <element signature="e#4740#4807#0" expanded="false" />
-            <element signature="e#4912#5104#0" expanded="false" />
-            <element signature="e#5141#5419#0" expanded="false" />
-            <element signature="e#5459#5645#0" expanded="false" />
-            <element signature="e#5790#5816#0" expanded="false" />
-            <element signature="e#5860#5887#0" expanded="false" />
-            <element signature="e#5920#5945#0" expanded="false" />
-            <element signature="e#5946#7064#1" expanded="false" />
-            <element signature="e#7205#7715#0" expanded="false" />
-            <element signature="e#7754#7953#0" expanded="false" />
-            <element signature="e#8992#9093#0" expanded="false" />
-            <element signature="e#9138#9242#0" expanded="false" />
-            <element signature="e#9279#9556#0" expanded="false" />
-            <element signature="e#9603#9754#0" expanded="false" />
-            <element signature="e#9838#10615#0" expanded="false" />
-            <element signature="e#10693#11349#0" expanded="false" />
-            <element signature="e#11377#14819#0" expanded="false" />
-            <element signature="e#14377#14819#0" expanded="false" />
-            <element signature="e#14892#25507#0" expanded="false" />
-            <element signature="e#14927#15286#0" expanded="false" />
-            <element signature="e#15325#15507#0" expanded="false" />
-            <element signature="e#15544#15961#0" expanded="false" />
-            <element signature="e#15998#16175#0" expanded="false" />
-            <element signature="e#16219#16426#0" expanded="false" />
-            <element signature="e#16477#17544#0" expanded="false" />
-            <element signature="e#17598#17810#0" expanded="false" />
-            <element signature="e#17846#17858#0" expanded="false" />
-            <element signature="e#17890#18675#0" expanded="false" />
-            <element signature="e#18712#21367#0" expanded="false" />
-            <element signature="e#21404#23857#0" expanded="false" />
-            <element signature="e#23892#25507#0" expanded="false" />
-            <element signature="e#25588#37115#0" expanded="false" />
-            <element signature="e#25623#25955#0" expanded="false" />
-            <element signature="e#25988#26215#0" expanded="false" />
-            <element signature="e#26248#26439#0" expanded="false" />
-            <element signature="e#26476#27126#0" expanded="false" />
-            <element signature="e#27177#28110#0" expanded="false" />
-            <element signature="e#28164#28376#0" expanded="false" />
-            <element signature="e#28420#28569#0" expanded="false" />
-            <element signature="e#28574#30299#1" expanded="false" />
-            <element signature="e#30349#30530#0" expanded="false" />
-            <element signature="e#30580#30763#0" expanded="false" />
-            <element signature="e#30810#30860#0" expanded="false" />
-            <element signature="e#30907#30959#0" expanded="false" />
-            <element signature="e#30991#32001#0" expanded="false" />
-            <element signature="e#32035#32060#0" expanded="false" />
-            <element signature="e#32092#33102#0" expanded="false" />
-            <element signature="e#33135#34537#0" expanded="false" />
-            <element signature="e#34577#37115#0" expanded="false" />
-            <element signature="e#34614#36995#0" expanded="false" />
-            <element signature="e#38211#39144#0" expanded="false" />
-            <element signature="e#39198#39410#0" expanded="false" />
-            <element signature="e#39454#39603#0" expanded="false" />
-            <element signature="e#39635#41090#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/Rcspy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="521" column="24" lean-forward="true" selection-start-line="521" selection-start-column="24" selection-end-line="521" selection-end-column="24" />
-          <folding>
-            <element signature="e#2519#2747#0" expanded="false" />
-            <element signature="e#2776#3397#0" expanded="false" />
-            <element signature="e#4110#4221#0" expanded="false" />
-            <element signature="e#4287#4827#0" expanded="false" />
-            <element signature="e#4832#6338#1" expanded="false" />
-            <element signature="e#6426#7221#0" expanded="false" />
-            <element signature="e#7257#8751#0" expanded="false" />
-            <element signature="e#8804#8930#0" expanded="false" />
-            <element signature="e#8990#9173#0" expanded="false" />
-            <element signature="e#9231#9765#0" expanded="false" />
-            <element signature="e#9805#9845#0" expanded="false" />
-            <element signature="e#9894#10442#0" expanded="false" />
-            <element signature="e#10526#11065#0" expanded="false" />
-            <element signature="e#11070#11345#1" expanded="false" />
-            <element signature="e#11386#11828#0" expanded="false" />
-            <element signature="e#11888#12421#0" expanded="false" />
-            <element signature="e#12479#13232#0" expanded="false" />
-            <element signature="e#12758#13167#1" expanded="false" />
-            <element signature="e#13286#14883#0" expanded="false" />
-            <element signature="e#14483#14883#1" expanded="false" />
-            <element signature="e#14924#15170#0" expanded="false" />
-            <element signature="e#15211#15251#0" expanded="false" />
-            <element signature="e#15294#15318#0" expanded="false" />
-            <element signature="e#15361#15461#0" expanded="false" />
-            <element signature="e#15599#15759#0" expanded="false" />
-            <element signature="e#15829#16345#0" expanded="false" />
-            <element signature="e#16441#16534#0" expanded="false" />
-            <element signature="e#16574#17461#0" expanded="false" />
-            <element signature="e#17501#18398#0" expanded="false" />
-            <element signature="e#18467#19498#0" expanded="false" />
-            <element signature="e#19534#20601#0" expanded="false" />
-            <element signature="e#20632#21900#0" expanded="false" />
-            <element signature="e#21931#22038#0" expanded="false" />
-            <element signature="e#22069#22376#0" expanded="false" />
-            <element signature="e#22411#22505#0" expanded="false" />
-            <element signature="e#22553#22602#0" expanded="false" />
-            <element signature="e#22634#22709#0" expanded="false" />
-            <element signature="e#22802#23314#0" expanded="false" />
-            <element signature="e#23356#23634#0" expanded="false" />
-            <element signature="e#23674#23953#0" expanded="false" />
-            <element signature="e#23993#24044#0" expanded="false" />
-            <element signature="e#24075#24175#0" expanded="false" />
-            <element signature="e#24208#24310#0" expanded="false" />
-            <element signature="e#24344#24553#0" expanded="false" />
-            <element signature="e#24599#24868#0" expanded="false" />
-            <element signature="e#24916#25187#0" expanded="false" />
-            <element signature="e#25241#25384#0" expanded="false" />
-            <element signature="e#25428#25679#0" expanded="false" />
-            <element signature="e#25728#26044#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>

@@ -8,7 +8,8 @@ from util import *
 from matplotlib.widgets import MultiCursor
 import rcsui_Mainwindow
 import sys
-from UI_Container import *
+from data_manager import *
+from Sub_windows_support import *
 class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def __init__(self,parent=None):
         app = QApplication(sys.argv)
@@ -18,18 +19,15 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self._initStationTree()
         self._initVistblebtn()
         self._initvariable()
-        font=app.font()
-        font.setPointSize(9)
-        app.setFont(font)
+        self.scrollArea.setRcs(self)
+        self.qmlcanvas.setRcs(self)
+        self.qml.setRcs(self)
+        self.setstaus()
         self.show()
         app.exec_()
     def _initvariable(self):
-        self.scrollArea.setRcs(self)
-        self.qmlcanvas.setRcs(self)
         self.qml = MplCanvas(self.qmlcanvas, dpi=100)
-        self.qml.setRcs(self)
         self.fig = self.qml.fig
-        self.statusbar.showMessage("Done")
         self.zoomswi = self.zoomswitch.isChecked()
         self.Files = Files(self)
         self.xlimratio = 1
@@ -47,7 +45,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.button_pressed=False
         self.sac_files=Files(self)
         self.sacunion=1
-        self.setstaus()
     def Eventconncect(self):
         """
         Connection signal function
@@ -74,13 +71,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 station.setVisible(True)
                 break
     def draw(self):
-        #if len(self.ondrawstations)>36:
-        #    QMessageBox.about(self,"toomany","toomany stations draw,no more than 36")
-        #    for station in self.ondrawstations:
-        #        station.setVisible(False)
-        #    self.ondrawstations=[]
         """
-
         :return:
         """
         ###calculate single channel height
@@ -127,47 +118,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             if axes!=-1:
                 self.qml.updateaxes(axes)
         event.canvas.draw()
-    """ 
-    def pickSg(self,event):
-        channel = self.getchnbyaxes(event.inaxes)
-        UTCDT = UTCDateTime(self.mousestarttime.timestamp + event.xdata)
-        station = channel.station
-        for chn in station.channels:
-            if chn != channel:
-                chn.clearpick('Sg')
-            else:
-                chn.getpick(time=UTCDT, phase='Sg')
-            axes = self.getaxesbychn(chn)
-            if axes != -1:
-                self.qml.updateaxes(axes)
-        event.canvas.draw()
-    def pickPn(self,event):
-        channel = self.getchnbyaxes(event.inaxes)
-        UTCDT = UTCDateTime(self.mousestarttime.timestamp + event.xdata)
-        station = channel.station
-        for chn in station.channels:
-            if chn != channel:
-                chn.clearpick('Pn')
-            else:
-                chn.getpick(time=UTCDT, phase='Pn')
-            axes = self.getaxesbychn(chn)
-            if axes != -1:
-                self.qml.updateaxes(axes)
-        event.canvas.draw()
-    def pickSn(self,event):
-        channel = self.getchnbyaxes(event.inaxes)
-        UTCDT = UTCDateTime(self.mousestarttime.timestamp + event.xdata)
-        station = channel.station
-        for chn in station.channels:
-            if chn != channel:
-                chn.clearpick('Sg')
-            else:
-                chn.getpick(time=UTCDT, phase='Sn')
-            axes = self.getaxesbychn(chn)
-            if axes != -1:
-                self.qml.updateaxes(axes)
-        event.canvas.draw()
-    """
     '''correlation functions of StationTree'''
     def _initStationTree(self):
         '''
@@ -260,17 +210,6 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.qml.mpl_connect('axes_leave_event', self.leave_axes)
         self.qml.mpl_connect('figure_leave_event',self.leave_figure)
         self.qml.mpl_connect('figure_enter_event', self.enter_figure)
-    """
-    NOT BE USED ANYMORE
-    
-    def onqmlclick(self, event):
-        if event.button==3:
-            self.popqmlmenu()
-        if event.button==1:
-            print event
-            event.inaxes.axvline(event.xdata,ymin=0,ymax=1)
-            event.canvas.draw()
-    """
     def popqmlmenu(self,event):
         Menu=QMenu()
         Pg=Menu.addAction('PICK Pg')
