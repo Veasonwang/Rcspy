@@ -228,16 +228,23 @@ class Station(object):
         Sets wheather the station is visible in the plot view
         '''
         basedir = os.path.dirname(__file__)
-
-        self.visible = visible
-        if visible:
-            self.QStationItem.setIcon(0,
-                                      QIcon(os.path.join(basedir,
-                                            'icons/eye-24.png')))
+        if len(self.channels)==3:
+            self.visible = visible
+            if visible:
+                self.QStationItem.setIcon(0,
+                                          QIcon(os.path.join(basedir,
+                                                'icons/eye-24.png')))
+            else:
+                self.QStationItem.setIcon(0,
+                                          QIcon(os.path.join(basedir,
+                                                'icons/eye-hidden-24.png')))
         else:
+            self.visible=False
             self.QStationItem.setIcon(0,
                                       QIcon(os.path.join(basedir,
-                                            'icons/eye-hidden-24.png')))
+                                                         'icons/eye-hidden-24.png')))
+            #QMessageBox.about(self.parent.parent,"error","less 3 channel")
+            pass
     def getchannelbyNZE(self,direction):
         for chann in self.channels:
             if chann.channel[-1]==direction:

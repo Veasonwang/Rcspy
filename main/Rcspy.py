@@ -18,6 +18,9 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self._initStationTree()
         self._initVistblebtn()
         self._initvariable()
+        font=app.font()
+        font.setPointSize(9)
+        app.setFont(font)
         self.show()
         app.exec_()
     def _initvariable(self):
@@ -42,6 +45,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.svline=None
         self.axvline=None
         self.button_pressed=False
+        self.sac_files=Files(self)
+        self.sacunion=1
         self.setstaus()
     def Eventconncect(self):
         """
@@ -50,6 +55,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         """
         self.actionRseed.triggered.connect(self.onRseed)
         self.actionRminiseed.triggered.connect(self.onRminiseed)
+        self.actionRsac.triggered.connect(self.onRsac)
         self.actionexit.triggered.connect(self.onexit)
         self.actionexport.triggered.connect(self.Export)
         self.actionpreprocess.triggered.connect(self.Preprocess)
@@ -487,6 +493,33 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             except Exception,e:
                 QMessageBox.about(self,"Error",str(e))
                 pass
+    def onRsac(self):
+        filenames, _ = QFileDialog.getOpenFileNames(self, 'Open file', './', '*.sac')
+        if len(filenames) != 0:
+                stream=Stream()
+                name="sacSet"+str(self.sacunion)
+                self.sacunion=self.sacunion+1
+                try:
+                    currentfile = 1
+                    allfile = len(filenames)
+                    for filename in filenames:
+                        string = "Reading " + str(currentfile) + "  of" + str(allfile)
+                        self.statusbar.showMessage(string)
+                        currentfile = currentfile + 1
+                        st = read(filename)
+                        stream=stream+st
+                    file = File(name, stream, parent=self, fformat='sac')
+                    self.Files.addfile(file)
+                    self.connectevent()
+                    self.statusbar.showMessage("drawing")
+                    if len(self.ondrawstations) == 0:
+                        self.initdrawstation()
+                        self.update_ondraw_stations()
+                        self._changeSelectedChannel()
+                        self._changebtn_cursor()
+                except Exception, e:
+                    QMessageBox.about(self, "Error", str(e))
+                    pass
     def Export(self):
         self.exdialog = Exportdialog(self)
         self.exdialog.getFiles(self.Files)
