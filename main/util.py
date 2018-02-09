@@ -181,7 +181,7 @@ class MplCanvas(FigureCanvas):
         draws the trace ids plotted as text into each axes.
         """
         x = 0.01
-        y = 0.92
+        y = 0.9
         bbox = dict(boxstyle="round,pad=0.4", fc="w", ec="k", lw=1.2, alpha=1.0)
 
         # labeloffset to adjust the size of the label in case of too large plotted number
@@ -196,80 +196,59 @@ class MplCanvas(FigureCanvas):
         for axes,chn in zip(self.axes,self.ondrawchn):
             for pick in chn.picks:
                 if pick!=None:
-                    realtime=pick.time-chn.starttime
-                    x=realtime
+                    x=pick.time-chn.starttime
                     string=pick.phase_hint+str(pick.time)
                     ymin, ymax = axes.get_ylim()
+                    y=0.5*ymax
+                    '''draw pick_text'''
                     if pick.phase_hint == 'Pg':
-                        y = 0.9 * ymax
-                        color='#FF00FF'
+                        y = 0.85 * ymax
+                        color = '#FF00FF'
                     if pick.phase_hint == 'Sg':
-                        y = 0.8 * ymax
-                        color='#EEB422'
+                        y = 0.75 * ymax
+                        color = '#EEB422'
                     if pick.phase_hint == 'Pn':
-                        y = 0.7 * ymax
-                        color='#00868B'
+                        y = 0.65 * ymax
+                        color = '#00868B'
                     if pick.phase_hint == 'Sn':
-                        y = 0.6 * ymax
-                        color='#27408B'
-                    kwargs = dict(va="top", ha="left", fontsize=9 * self.labeloffset, family='monospace',
-                                  zorder=10000)
+                        y = 0.55 * ymax
+                        color = '#27408B'
                     axes.axvline(x, 0.2, 0.95,color=color)
-                    axes.text(x,y,string,color=color,**kwargs)
-            """
-            if chn.pickPg !=None:
-                realtime=chn.pickP.time-chn.starttime
-                x=realtime
-                ax.axvline(x,0,1,color='Y')
-                print realtime
-            if chn.pickSg !=None:
-                realtime=chn.pickS.time-chn.starttime
-                x=realtime
-                ax.axvline(x,0,1,color='R')
-                print realtime
-            """
+                    axes.text(x,y,string,color=color,fontsize=10)
     def updateaxes(self,axes):
         i=self.axes.index(axes)
         ymin, ymax = self.axes[i].get_ylim()
         xmin, xmax = self.axes[i].get_xlim()
         axes.cla()
         axes.plot(self.tt[i], self.ss[i],'g')
-        '''REset limratio'''
-        '''not used
-        ymin = ymin * self.ylimratio
-        ymax = ymax * self.ylimratio
-        if (ymax - mean) > (mean - ymin):
-            ymin = ymin - (ymax + ymin - 2 * mean)
-        else:
-            ymax = ymax + (2 * mean - ymax - ymin)
-        '''
         self.axes[i].set_ylim(ymin, ymax)
         self.axes[i].set_xlim(xmin,xmax)
         '''draw picks'''
         chn=self.ondrawchn[i]
         for pick in chn.picks:
             if pick != None:
-                realtime = pick.time - chn.starttime
-                x=realtime
-                ymin, ymax = axes.get_ylim()
+                x = pick.time - chn.starttime
+                ymin,ymax = axes.get_ylim()
                 '''draw pick_text'''
                 if pick.phase_hint == 'Pg':
-                    y = 0.9 * ymax
+                    y = 0.85*ymax
                     color = '#FF00FF'
                 if pick.phase_hint == 'Sg':
-                    y = 0.8 * ymax
+                    y = 0.75*ymax
                     color = '#EEB422'
                 if pick.phase_hint == 'Pn':
-                    y = 0.7 * ymax
+                    y = 0.65*ymax
                     color = '#00868B'
                 if pick.phase_hint == 'Sn':
-                    y = 0.6 * ymax
+                    y = 0.55*ymax
                     color = '#27408B'
-                kwargs = dict(va="top", ha="left", fontsize=9 * self.labeloffset, family='monospace',
-                              zorder=10000)
                 string = pick.phase_hint +" "+ str(pick.time)
                 axes.axvline(x, 0.2, 0.95,color=color)
-                axes.text(x, y, string, color=color,  **kwargs)
+                axes.text(x, y, string, color=color,  fontsize=10)
         '''draw Ids'''
-        self.drawIds()
+        bbox = dict(boxstyle="round,pad=0.4", fc="w", ec="k", lw=1.2, alpha=1.0)
+        kwargs = dict(va="top", ha="left", fontsize=16 * self.labeloffset, family='monospace',
+                      zorder=10000)
+        axes.text(0.01,0.9, chn.tr.id, color="k", transform=axes.transAxes,
+                    bbox=bbox, **kwargs)
         self.fig.canvas.draw()

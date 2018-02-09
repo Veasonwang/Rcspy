@@ -268,18 +268,20 @@ class Station(object):
             if isinstance(channel.tr_VEL,Trace):
                 channel.tr=channel.tr_VEL.copy()
                 channel.datamean = channel.tr.data.mean()
-    def Ar_pick(self):
+    def Ar_pick(self,f1,f2,lta_p,sta_p,lta_s,sta_s,m_p,m_s,l_p,l_s):
         Z=self.getchannelbyNZE('Z')
         N=self.getchannelbyNZE('N')
         E=self.getchannelbyNZE('E')
         df=self.stats.sampling_rate
-        p_pick,s_pick=ar_pick(Z.tr.data, N.tr.data, E.tr.data, df,1.0, 20.0, 1.0, 0.1, 4.0, 1.0, 2, 8, 0.1, 0.2)
+        pg_pick,sg_pick=ar_pick(Z.origintr.data, N.origintr.data, E.origintr.data, df,f1,f2,lta_p,sta_p,lta_s,sta_s,m_p,m_s,l_p,l_s,s_pick=True)
+        #pg_pick, sg_pick = ar_pick(Z.tr.data, N.tr.data, E.tr.data, df, 1, 20, 1, 0.1, 4, 1, 2, 8,
+        #                           0.1, 0.2, s_pick=True)
         starttime=self.stats.starttime
-        p_time=starttime+p_pick
-        s_time=starttime+s_pick
+        pg_time=starttime+pg_pick
+        sg_time=starttime+sg_pick
         for chn in self.channels:
-            chn.getpick(p_time,'P')
-            chn.getpick(s_time,'S')
+            chn.getpick(pg_time,'Pg')
+            chn.getpick(sg_time,'Sg')
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace
@@ -889,6 +891,41 @@ class Autopickdialog(rcspy_Autopickdialog.Ui_Dialog,QtWidgets.QDialog):
         else:
             self.channel_list.clearSelection()
     def Onbtnok(self):
+        if len(self.channel_list.selectedItems())==0:
+            pass
+        else:
+            allnum=0
+            self.pgb = QProgressBar(self)
+            self.pgb.setWindowTitle("Working")
+            self.pgb.setGeometry(10, 5, 540, 20)
+            self.pgb.show()
+            for item in self.channel_list.selectedItems():
+                station = item.parent
+                if isinstance(station, Station):
+                    allnum=allnum+1
+            currnum=0
+            for item in self.channel_list.selectedItems():
+                station=item.parent
+                if isinstance(station,Station):
+                    f1=self.low_frq.value()
+                    f2=self.upp_frq.value()
+                    lta_p=self.lta_p.value()
+                    sta_p = self.sta_p.value()
+                    lta_s = self.lta_s.value()
+                    sta_s = self.sta_s.value()
+                    m_p = int(self.m_p.value())
+                    m_s = int(self.m_s.value())
+                    l_p = self.l_p.value()
+                    l_s = self.l_s.value()
+                    station.Ar_pick(f1,f2,lta_p,sta_p,lta_s,sta_s,m_p,m_s,l_p,l_s)
+                    self.pgb.setValue(int(float(currnum)*100/allnum))
+                    currnum=currnum+1
+                    #except Exception,e:
+                    #    print e
+            self.pgb.close()
+            QMessageBox.about(self,"tip","finished!")
+            self.Rcs.draw()
         pass
     def Onbtnback(self):
+        self.close()
         pass

@@ -87,7 +87,7 @@
    <property name="geometry">
     <rect>
      <x>370</x>
-     <y>320</y>
+     <y>300</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -100,7 +100,7 @@
    <property name="geometry">
     <rect>
      <x>490</x>
-     <y>320</y>
+     <y>300</y>
      <width>75</width>
      <height>23</height>
     </rect>
@@ -115,7 +115,7 @@
      <x>340</x>
      <y>10</y>
      <width>251</width>
-     <height>341</height>
+     <height>331</height>
     </rect>
    </property>
    <property name="title">
@@ -365,7 +365,7 @@
      <string>m_s</string>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="m_s">
+   <widget class="QSpinBox" name="m_s">
     <property name="geometry">
      <rect>
       <x>170</x>
@@ -377,14 +377,11 @@
     <property name="toolTip">
      <string>Number of AR coefficients for the S arrival.</string>
     </property>
-    <property name="maximum">
-     <double>3600.000000000000000</double>
-    </property>
     <property name="value">
-     <double>8.000000000000000</double>
+     <number>8</number>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="m_p">
+   <widget class="QSpinBox" name="m_p">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -396,11 +393,8 @@
     <property name="toolTip">
      <string>Number of AR coefficients for the P arrival.</string>
     </property>
-    <property name="maximum">
-     <double>3600.000000000000000</double>
-    </property>
     <property name="value">
-     <double>2.000000000000000</double>
+     <number>2</number>
     </property>
    </widget>
    <widget class="QLabel" name="label_10">
@@ -493,25 +487,6 @@
     </property>
     <property name="value">
      <double>0.200000000000000</double>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="pics_s">
-    <property name="geometry">
-     <rect>
-      <x>6</x>
-      <y>270</y>
-      <width>101</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>If True, also pick the S phase, otherwise only the P phase.</string>
-    </property>
-    <property name="text">
-     <string>PickS</string>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
     </property>
    </widget>
   </widget>

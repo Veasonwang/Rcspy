@@ -399,7 +399,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def onmouse_scroll(self,event):
         self.resetYlim(event)
         self.resetXlim(event)
-        event.canvas.draw()
+        self.qml.updateaxes(event.inaxes)
     def resetYlim(self,event):
         if event.button == 'down':
             ydata = event.ydata
@@ -408,8 +408,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             downoffset = ydata - ymin
             upratio = upoffset / (upoffset + downoffset)
             downratio = downoffset / (upoffset + downoffset)
-            ymin = ymin - (abs(ymax - ymin)) * 0.15 * downratio
-            ymax = ymax + (abs(ymax - ymin)) * 0.15 * upratio
+            ymin = ymin - (abs(ymax - ymin)) * 0.1 * downratio
+            ymax = ymax + (abs(ymax - ymin)) * 0.1 * upratio
         if event.button=='up':
             ydata = event.ydata
             ymin, ymax = event.inaxes.get_ylim()
@@ -417,8 +417,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             downoffset = ydata - ymin
             upratio = upoffset / (upoffset + downoffset)
             downratio = downoffset / (upoffset + downoffset)
-            ymin = ymin  + (abs(ymax-ymin))*0.15 * downratio
-            ymax = ymax  - (abs(ymax-ymin))*0.15 * upratio
+            ymin = ymin  + (abs(ymax-ymin))*0.1 * downratio
+            ymax = ymax  - (abs(ymax-ymin))*0.1 * upratio
         event.inaxes.set_ylim(ymin, ymax)
     def resetXlim(self,event):
         if event.button == 'down':
@@ -428,8 +428,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             downoffset = xdata - xmin
             upratio = upoffset / (upoffset + downoffset)
             downratio = downoffset / (upoffset + downoffset)
-            xmin = xmin - (abs(xmax - xmin)) * 0.15 * downratio
-            xmax = xmax + (abs(xmax - xmin)) * 0.15 * upratio
+            xmin = xmin - (abs(xmax - xmin)) * 0.45 * downratio
+            xmax = xmax + (abs(xmax - xmin)) * 0.45 * upratio
         if event.button=='up':
             xdata = event.xdata
             xmin, xmax = event.inaxes.get_xlim()
@@ -437,8 +437,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             downoffset = xdata - xmin
             upratio = upoffset / (upoffset + downoffset)
             downratio = downoffset / (upoffset + downoffset)
-            xmin = xmin + (abs(xmax - xmin)) * 0.15 * downratio
-            xmax = xmax - (abs(xmax - xmin)) * 0.15 * upratio
+            xmin = xmin + (abs(xmax - xmin)) * 0.45 * downratio
+            xmax = xmax - (abs(xmax - xmin)) * 0.45 * upratio
         event.inaxes.set_xlim(xmin, xmax)
     '''Menu bar response function'''
     def onRseed(self):
