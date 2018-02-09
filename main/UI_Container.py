@@ -302,21 +302,50 @@ class Channel(object):
         self.datamean=self.tr.data.mean()
         self._initpicks()
     def _initpicks(self):
-        self.pickP=None
-        self.pickS=None
+        self.pickPg=None
+        self.pickSg=None
+        self.pickPn = None
+        self.pickSn = None
+        self.picks=[]
+        self.picks.append(self.pickPg)
+        self.picks.append(self.pickSg)
+        self.picks.append(self.pickPn)
+        self.picks.append(self.pickSn)
     def getpick(self,time,phase):
-        if phase=='P':
+        if phase=='Pg':
             stream_ID=WaveformStreamID(network_code=self.stats.network,
                                        station_code=self.stats.station,
                                        location_code=self.stats.location,
                                        channel_code=self.stats.channel)
-            self.pickP=Pick(time=time,waveform_id=stream_ID,phase_hint='P')
-        if phase=='S':
+            self.pickPg=Pick(time=time,waveform_id=stream_ID,phase_hint=phase)
+            self.picks[0]=self.pickPg
+        if phase=='Sg':
             stream_ID=WaveformStreamID(network_code=self.stats.network,
                                        station_code=self.stats.station,
                                        location_code=self.stats.location,
                                        channel_code=self.stats.channel)
-            self.pickS=Pick(time=time,waveform_id=stream_ID,phase_hint='S')
+            self.pickSg=Pick(time=time,waveform_id=stream_ID,phase_hint=phase)
+            self.picks[1] = self.pickSg
+        if phase=='Pn':
+            stream_ID=WaveformStreamID(network_code=self.stats.network,
+                                       station_code=self.stats.station,
+                                       location_code=self.stats.location,
+                                       channel_code=self.stats.channel)
+            self.pickPn=Pick(time=time,waveform_id=stream_ID,phase_hint=phase)
+            self.picks[2] = self.pickPn
+        if phase=='Sn':
+            stream_ID=WaveformStreamID(network_code=self.stats.network,
+                                       station_code=self.stats.station,
+                                       location_code=self.stats.location,
+                                       channel_code=self.stats.channel)
+            self.pickSn=Pick(time=time,waveform_id=stream_ID,phase_hint=phase)
+            self.picks[3] = self.pickSn
+    def clearpick(self,phase):
+        for pick in self.picks:
+            i=self.picks.index(pick)
+            if pick!=None:
+                if pick.phase_hint==phase:
+                    self.picks[i]=None
     def setstationTree(self):
         self.QChannelItem = QTreeWidgetItem(self)
         self.QChannelItem.setText(1, '%s @ %d Hz' %

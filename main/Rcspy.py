@@ -104,22 +104,64 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         width=QRectevent.size().width()
         self.qml.resize(width,height)
     '''pick function '''
-    def pickP(self,event):
+    def pick(self,event,phase):
         '''
         :param event: the mousebutton press event
         :return:
         '''
         channel=self.getchnbyaxes(event.inaxes)
         UTCDT=UTCDateTime(self.mousestarttime.timestamp+event.xdata)
-        channel.getpick(time=UTCDT,phase='P')
-        self.qml.updateaxes(event.inaxes)
+        station=channel.station
+        for chn in station.channels:
+            if chn!=channel:
+                chn.clearpick(phase)
+            else:
+                chn.getpick(time=UTCDT, phase=phase)
+            axes=self.getaxesbychn(chn)
+            if axes!=-1:
+                self.qml.updateaxes(axes)
         event.canvas.draw()
-    def pickS(self,event):
+    """ 
+    def pickSg(self,event):
         channel = self.getchnbyaxes(event.inaxes)
         UTCDT = UTCDateTime(self.mousestarttime.timestamp + event.xdata)
-        channel.getpick(time=UTCDT, phase='S')
-        self.qml.updateaxes(event.inaxes)
+        station = channel.station
+        for chn in station.channels:
+            if chn != channel:
+                chn.clearpick('Sg')
+            else:
+                chn.getpick(time=UTCDT, phase='Sg')
+            axes = self.getaxesbychn(chn)
+            if axes != -1:
+                self.qml.updateaxes(axes)
         event.canvas.draw()
+    def pickPn(self,event):
+        channel = self.getchnbyaxes(event.inaxes)
+        UTCDT = UTCDateTime(self.mousestarttime.timestamp + event.xdata)
+        station = channel.station
+        for chn in station.channels:
+            if chn != channel:
+                chn.clearpick('Pn')
+            else:
+                chn.getpick(time=UTCDT, phase='Pn')
+            axes = self.getaxesbychn(chn)
+            if axes != -1:
+                self.qml.updateaxes(axes)
+        event.canvas.draw()
+    def pickSn(self,event):
+        channel = self.getchnbyaxes(event.inaxes)
+        UTCDT = UTCDateTime(self.mousestarttime.timestamp + event.xdata)
+        station = channel.station
+        for chn in station.channels:
+            if chn != channel:
+                chn.clearpick('Sg')
+            else:
+                chn.getpick(time=UTCDT, phase='Sn')
+            axes = self.getaxesbychn(chn)
+            if axes != -1:
+                self.qml.updateaxes(axes)
+        event.canvas.draw()
+    """
     def Ar_pick(self):
         for file in self.Files.files:
             for station in file.stations:
@@ -176,8 +218,12 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.draw()
     def Set_selected_Visible(self,selectedList):
         self.update_ondraw_stations()
-        if len(self.ondrawstations)+len(selectedList)>36:
-            QMessageBox.about(self,"toomany","toomanystations,no more than 36")
+        num=0
+        for station in self.ondrawstations:
+            if station.QStationItem.isSelected():
+                num = num + 1
+        if len(self.ondrawstations)+len(selectedList)-num>48:
+            QMessageBox.about(self,"toomany","toomanystations,no more than 48")
         else:
             for item in selectedList:
                 if isinstance(item.parent,Station)==True:
@@ -226,10 +272,14 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     """
     def popqmlmenu(self,event):
         Menu=QMenu()
-        P=Menu.addAction('PICK P')
-        S = Menu.addAction('PICK S')
-        P.triggered.connect(lambda:self.pickP(event))
-        S.triggered.connect(lambda:self.pickS(event))
+        Pg=Menu.addAction('PICK Pg')
+        Sg = Menu.addAction('PICK Sg')
+        Pn = Menu.addAction('PICK Pn')
+        Sn = Menu.addAction('PICK Sn')
+        Pg.triggered.connect(lambda:self.pick(event,'Pg'))
+        Sg.triggered.connect(lambda:self.pick(event,'Sg'))
+        Pn.triggered.connect(lambda:self.pick(event,'Pn'))
+        Sn.triggered.connect(lambda:self.pick(event,'Sn'))
         Menu.exec_(QtGui.QCursor.pos())
     def __mpl_mouseButtonReleaseEvent(self,event):
         if self.qmldragswi==True:
@@ -334,6 +384,13 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             pass
     def getchnbyaxes(self,ax):
         return self.qml.get_drawchnarray(self.qml.axes.index(ax))
+    def getaxesbychn(self,chn):
+        try:
+            index=self.qml.ondrawchn.index(chn)
+            axes=self.qml.get_drawaxes(index)
+            return axes
+        except:
+            return -1
     def setstaus(self,trname="",mousetime="",mouseydata=""):
         if (trname,mousetime,mouseydata)==("","",""):
             self.statusbar.showMessage("Ready")
