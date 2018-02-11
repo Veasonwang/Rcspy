@@ -568,7 +568,7 @@ class Autopickdialog(rcspy_Autopickdialog.Ui_Dialog, QtWidgets.QDialog):
             allnum = 0
             self.pgb = QProgressBar(self)
             self.pgb.setWindowTitle("Working")
-            self.pgb.setGeometry(10, 5, 540, 20)
+            self.pgb.setGeometry(10, 5, 550, 28)
             self.pgb.show()
             for item in self.channel_list.selectedItems():
                 station = item.parent
