@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1178</width>
+    <width>1225</width>
     <height>868</height>
    </rect>
   </property>
@@ -205,7 +205,7 @@
          <cursorShape>ArrowCursor</cursorShape>
         </property>
         <property name="text">
-         <string>μm/s</string>
+         <string>0</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -405,7 +405,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>819</width>
+          <width>866</width>
           <height>743</height>
          </rect>
         </property>
@@ -426,7 +426,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1178</width>
+     <width>1225</width>
      <height>31</height>
     </rect>
    </property>
@@ -444,6 +444,7 @@
     </widget>
     <addaction name="menu_2"/>
     <addaction name="actionexport"/>
+    <addaction name="action_export_phase"/>
     <addaction name="actionexit"/>
    </widget>
    <widget class="QMenu" name="menupreprocess">
@@ -451,6 +452,7 @@
      <string>预处理</string>
     </property>
     <addaction name="actionpreprocess"/>
+    <addaction name="actionAr_pick"/>
    </widget>
    <addaction name="menufile"/>
    <addaction name="menupreprocess"/>
@@ -488,6 +490,16 @@
   <action name="actionpreprocess">
    <property name="text">
     <string>预处理</string>
+   </property>
+  </action>
+  <action name="actionAr_pick">
+   <property name="text">
+    <string>震相拾取</string>
+   </property>
+  </action>
+  <action name="action_export_phase">
+   <property name="text">
+    <string>输出震相文件</string>
    </property>
   </action>
  </widget>

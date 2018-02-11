@@ -346,7 +346,10 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog, QtWidgets.QDialog):
                 self.remove_response()
             if self.bandpass_switch.isChecked():
                 self.current_process.setText("bp_filter")
-                self.bandpass()
+                self.bandpass_Filter()
+            if self.lowpass_switch.isChecked():
+                self.current_process.setText("lp_filter")
+                self.lowpass_Filter()
             self.pgb.close()
             self.current_process.setText(" ")
             if self.errorcontrol == True:
@@ -382,14 +385,14 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog, QtWidgets.QDialog):
                 self.pgb.setValue(float(currnum * 100) / float(allnum))
                 currnum = currnum + 1
 
-    def bandpass(self):
+    def bandpass_Filter(self):
         currnum = 0
         try:
             if len(self.File_list.selectedItems()) == 1:
                 for item in self.channel_list.selectedItems():
                     allnum = len(self.channel_list.selectedItems())
                     station = item.parent
-                    station.bandpass('bandpass',
+                    station.Filter('bandpass',
                                      freqmin=float(self.fminspin.text()[0:-2]),
                                      freqmax=float(self.fmaxspin.text()[0:-2]), )
                     self.pgb.setValue(float(currnum * 100) / float(allnum))
@@ -402,7 +405,7 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog, QtWidgets.QDialog):
                 for item in self.File_list.selectedItems():
                     file = item.parent
                     for station in file.stations:
-                        station.bandpass('bandpass',
+                        station.Filter('bandpass',
                                          freqmin=float(self.fminspin.text()[0:-2]),
                                          freqmax=float(self.fmaxspin.text()[0:-2]), )
                         self.pgb.setValue(float(currnum * 100) / float(allnum))
@@ -468,6 +471,38 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog, QtWidgets.QDialog):
         except Exception, e:
             self.errorcontrol = False
             QMessageBox.about(self, "Error", str(e))
+
+    def lowpass_Filter(self):
+        currnum = 0
+        try:
+            if len(self.File_list.selectedItems()) == 1:
+                for item in self.channel_list.selectedItems():
+                    allnum = len(self.channel_list.selectedItems())
+                    station = item.parent
+                    station.Filter('lowpass',
+                                   freq=float(self.frqspin.text()[0:-2]),
+                                   corners=int(self.lowpass_corners_spin.text()))
+                    self.pgb.setValue(float(currnum * 100) / float(allnum))
+                    currnum = currnum + 1
+                pass
+            else:
+                '''calculate allnum'''
+                for item in self.File_list.selectedItems():
+                    allnum = len(item.parent.stations)
+                for item in self.File_list.selectedItems():
+                    file = item.parent
+                    for station in file.stations:
+                        station.Filter('lowpass',
+                                       freq=float(self.frqspin.text()[0:-2]),
+                                       corners=int(self.lowpass_corners_spin.text()))
+                        self.pgb.setValue(float(currnum * 100) / float(allnum))
+                        currnum = currnum + 1
+        except Exception, e:
+            self.errorcontrol = False
+            QMessageBox.about(self, "Error", str(e))
+        pass
+
+
 class Autopickdialog(rcspy_Autopickdialog.Ui_Dialog, QtWidgets.QDialog):
     def __init__(self, parent):
         super(Autopickdialog, self).__init__(parent)

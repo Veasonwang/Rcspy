@@ -42,7 +42,6 @@ class Files:
                 file.rebuildTreeview()
             else:
                 pass
-
     def removeselectedfile(self,selecteditems):
         reply = QMessageBox.question(self.parent, 'Message', 'You sure to remove?',
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -80,6 +79,20 @@ class Files:
                     file.removestationTree(station.QStationItem)
             if update==True:
                 self.parent.update_ondraw_stations()
+                self.parent.draw()
+        else:
+            pass
+    def clear_selected_station_picks(self,items):
+        reply = QMessageBox.question(self.parent, 'Message', 'You sure to remove?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            update = False
+            for item in items:
+                if isinstance(item.parent, Station):
+                    station = item.parent
+                    station.clearpicks()
+                    update=True
+            if update == True:
                 self.parent.draw()
         else:
             pass
@@ -145,10 +158,8 @@ class File:
         del(TreeItem)
     def __iter__(self):
         return iter(self.stations)
-
     def __getitem__(self, index):
         return self.stations[index]
-
     def __len__(self):
         return len(self.stations)
 class Station(object):
@@ -212,7 +223,7 @@ class Station(object):
             if type == 'linear':
                 channel.tr = channel.tr.detrend(type='linear')
             channel.datamean=channel.tr.data.mean()
-    def bandpass(self,type,**kwargs):
+    def Filter(self,type,**kwargs):
         for channel in self.channels:
             channel.tr=channel.tr.copy().filter(type=type,**kwargs)
             channel.datamean = channel.tr.data.mean()
@@ -241,10 +252,16 @@ class Station(object):
         for chn in self.channels:
             chn.getpick(pg_time,'Pg')
             chn.getpick(sg_time,'Sg')
+    def setwaveform(self,type):
+        for channel in self.channels:
+            channel.setwaveform(type)
+    def clearpicks(self):
+        for channel in self.channels:
+            channel.clearpicks()
+
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace
-
     self.QChannelItem represents the QTreeWidgetItem
     '''
     def __init__(self, tr, station):
@@ -262,6 +279,10 @@ class Channel(object):
         self.edntime=tr.stats.endtime
         self.setstationTree()
         self.datamean=self.tr.data.mean()
+        self.tr_VEL=self.tr.copy()
+        self.tr_DISP=None
+        self.tr_ACC=None
+        self.currentwaveform='VEL'
         self._initpicks()
     def _initpicks(self):
         self.pickPg=None
@@ -308,6 +329,9 @@ class Channel(object):
             if pick!=None:
                 if pick.phase_hint==phase:
                     self.picks[i]=None
+    def clearpicks(self):
+        for i in range(len(self.picks)):
+            self.picks[i]=None
     def setstationTree(self):
         self.QChannelItem = QTreeWidgetItem(self)
         self.QChannelItem.setText(1, '%s @ %d Hz' %
@@ -317,3 +341,33 @@ class Channel(object):
                                   (self.tr.stats.starttime,
                                    self.tr.stats.endtime))
         self.station.QStationItem.addChild(self.QChannelItem)
+    def setwaveform(self,type):
+        if type=='VEL':
+            if self.tr_VEL!=None:
+                self.tr=self.tr_VEL
+                self.currentwaveform='VEL'
+        if type=='DISP':
+            if self.tr_DISP!=None:
+                self.tr=self.tr_DISP
+                self.currentwaveform='DISP'
+        if type=='ACC':
+            if self.tr_ACC!=None:
+                self.tr=self.tr_ACC
+                self.currentwaveform='ACC'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

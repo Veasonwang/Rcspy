@@ -55,6 +55,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.actionRsac.triggered.connect(self.onRsac)
         self.actionexit.triggered.connect(self.onexit)
         self.actionexport.triggered.connect(self.Export)
+        self.action_export_phase.triggered.connect(self.Export_phase)
         self.actionpreprocess.triggered.connect(self.Preprocess)
         self.actionAr_pick.triggered.connect(self.Ar_pick)
         self.X_press.clicked.connect(self._OnbtnX_press_clicked)
@@ -62,6 +63,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.drawnumber_combobox.currentTextChanged.connect(self._Ondrawnumber_combobox_change)
         self.zoomswitch.stateChanged['int'].connect(self._Onzoomswitchchange)
         self.dragenable_switch.stateChanged.connect(self._Ondragenabeswitchchange)
+        self.Ampselect_comboBox.currentIndexChanged.connect(self._Onampunit_change)
     '''Drawing correlation function'''
     def initdrawstation(self):
         if len(self.ondrawstations) == 0:
@@ -157,6 +159,9 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                                                         (self.stationTree.selectedItems()))
                 rmstation=Menu.addAction('Remove Station')
                 rmstation.triggered.connect(lambda:self.Files.removeselectedstation(self.stationTree.selectedItems()))
+
+                clearpick=Menu.addAction('Clear picks')
+                clearpick.triggered.connect(lambda:self.Files.clear_selected_station_picks(self.stationTree.selectedItems()))
                 Menu.exec_(QtGui.QCursor.pos())
     def _Onstationtreeselectedchange(self):
         selectednumber=len(self.stationTree.selectedItems())
@@ -434,6 +439,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.exdialog = Exportdialog(self)
         self.exdialog.getFiles(self.Files)
         self.exdialog.exec_()
+    def Export_phase(self):
+        print 'Export_phase'
     def onexit(self):
         reply = QMessageBox.question(self, 'Message', 'You sure to quit?',
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -550,5 +557,16 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         else:
             self.qmldragswi = False
             pass
+    def _Onampunit_change(self):
+        selected_index=self.Ampselect_comboBox.currentIndex()
+        for file in self.Files.files:
+            for station in file.stations:
+                if selected_index == 0:
+                    station.setwaveform(type='VEL')
+                if selected_index == 1:
+                    station.setwaveform(type='DISP')
+                if selected_index == 2:
+                    station.setwaveform(type='ACC')
+        self.draw()
 if __name__ == '__main__':
     Rcspy()

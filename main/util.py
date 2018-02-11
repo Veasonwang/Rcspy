@@ -175,9 +175,10 @@ class MplCanvas(FigureCanvas):
         # labeloffset to adjust the size of the label in case of too large plotted number
         kwargs = dict(va="top", ha="left", fontsize=16*self.labeloffset, family='monospace',
                       zorder=10000)
-        for axes, tr in zip(self.axes, self.ondrawchn):
+        for axes, tr  in zip(self.axes, self.ondrawchn):
             axes.text(x, y, tr.tr.id, color="k", transform=axes.transAxes,
                     bbox=bbox, **kwargs)
+            axes.text(0.05,0.78,tr.currentwaveform,color='r',fontsize=9,transform=axes.transAxes)
     def drawPicks(self):
         for axes,chn in zip(self.axes,self.ondrawchn):
             for pick in chn.picks:
@@ -237,4 +238,5 @@ class MplCanvas(FigureCanvas):
                       zorder=10000)
         axes.text(0.01,0.9, chn.tr.id, color="k", transform=axes.transAxes,
                     bbox=bbox, **kwargs)
+        axes.text(0.05, 0.78, chn.currentwaveform, color='r', fontsize=9, transform=axes.transAxes)
         self.fig.canvas.draw()
