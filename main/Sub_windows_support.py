@@ -18,14 +18,13 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog, QtWidgets.QDialog):
         self.expath = ""
         self.radioMSEED.setChecked(True)
         self.radioSEED.setEnabled(False)
-
     def getFiles(self, Files):
         self.Files = Files
         for file in self.Files.files:
             listitem = QListWidgetItem(file)
             listitem.setText(file.name)
             self.File_list.addItem(listitem)
-
+        print self.Files.files[0].stations[0].channels[0].tr.stats
     def connectevent(self):
         self.btnOK.clicked.connect(self.Onbtnok)
         self.btn_Cancel.clicked.connect(self.Onbtncancel)

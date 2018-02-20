@@ -147,6 +147,11 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 Sortbyname.triggered.connect(lambda:self.Files.SortByName(self.stationTree.selectedItems()))
                 rmfile=Menu.addAction('remove file')
                 rmfile.triggered.connect(lambda:self.Files.removeselectedfile(self.stationTree.selectedItems()))
+                export_xml = Menu.addAction('export_xml')
+                #export_xml.triggered.connect(lambda: self.Files.exportxml(self.stationTree.selectedItems()))
+                export_xml.triggered.connect(lambda: self.export_xml(self.stationTree.selectedItems()))
+                attach_event=Menu.addAction('Attach event file')
+                attach_event.triggered.connect(lambda:self.attach_event_file(self.stationTree.selectedItems()))
                 Menu.exec_(QtGui.QCursor.pos())
 
             elif isinstance(self.stationTree.selectedItems()[-1].parent,Station)==True:
@@ -163,6 +168,15 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 clearpick=Menu.addAction('Clear picks')
                 clearpick.triggered.connect(lambda:self.Files.clear_selected_station_picks(self.stationTree.selectedItems()))
                 Menu.exec_(QtGui.QCursor.pos())
+    def attach_event_file(self,items):
+        if len(items)>0:
+            filename, _ = QFileDialog.getOpenFileName(self, 'event file', './')
+            items[-1].parent.attach_event(filename)
+            self.draw()
+    def export_xml(self,items):
+        if len(items)==1:
+            filename, _ = QFileDialog.getSaveFileName(self, 'save file', './', '.xml')
+            items[0].parent.export_event(filename)
     def _Onstationtreeselectedchange(self):
         selectednumber=len(self.stationTree.selectedItems())
         self.statusbar.showMessage(str(selectednumber)+" items selected")
@@ -436,6 +450,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                     QMessageBox.about(self, "Error", str(e))
                     pass
     def Export(self):
+        self.Files.updatestats()
         self.exdialog = Exportdialog(self)
         self.exdialog.getFiles(self.Files)
         self.exdialog.exec_()

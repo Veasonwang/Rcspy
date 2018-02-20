@@ -5,6 +5,7 @@ Core data framework
 from obspy.signal.trigger import ar_pick
 from obspy.core.event.base import *
 from obspy.core.event.origin import Pick
+from obspy.core.event.event import Event
 from obspy import *
 import os
 from PyQt5.QtWidgets import QMessageBox
@@ -96,6 +97,12 @@ class Files:
                 self.parent.draw()
         else:
             pass
+    def updatestats(self):
+        for file in self. files:
+            file.updatestats()
+    def exportxml(self,items):
+        for item in items:
+            item.parent.exportQuakeml()
 class File:
     """
     Represents a single file and hold the Stations()
@@ -110,6 +117,34 @@ class File:
         self.setname()
         for stat in set([tr.stats.station for tr in st]):
             self.addStation(st=st.select(station=stat))
+
+    def init_event(self):
+        self.picks=[]
+        for station in self.stations:
+            for pick in station.picks:
+                if pick != None:
+                    self.picks.append(pick)
+        self.event = Event(picks=self.picks)
+    def export_event(self,filename):
+
+        self.init_event()
+        self.event.write(filename,format='QUAKEML')
+    def attach_event(self,filename):
+        catalog=read_events(filename)
+        if len(catalog)==1:
+            event=catalog[0]
+            for pick in event.picks:
+                for station in self.stations:
+                    for channel in station.channels:
+                        if pick.waveform_id.__eq__(channel.stream_ID):
+                            if pick.phase_hint=='Pg':
+                                channel.picks[0]=pick.copy()
+                            if pick.phase_hint=='Sg':
+                                channel.picks[1]=pick.copy()
+                            if pick.phase_hint=='Pn':
+                                channel.picks[2]=pick.copy()
+                            if pick.phase_hint=='Sn':
+                                channel.picks[3]=pick.copy()
     def setstationTree(self):
         self.QStationItem = QTreeWidgetItem(self)
         self.QStationItem.setText(1, '%s' %
@@ -156,6 +191,9 @@ class File:
     def removestationTree(self,TreeItem):
         self.QStationItem.removeChild(TreeItem)
         del(TreeItem)
+    def updatestats(self):
+        for station in self.stations:
+            station.updatestats()
     def __iter__(self):
         return iter(self.stations)
     def __getitem__(self, index):
@@ -173,6 +211,7 @@ class Station(object):
         :stream: obspy.core.Stream()
         '''
         self.parent = parent
+        self.picks=[]
         self.st = stream.merge()
         self.stats = self.st[0].stats.copy()
         self.stats.channel = None
@@ -258,7 +297,9 @@ class Station(object):
     def clearpicks(self):
         for channel in self.channels:
             channel.clearpicks()
-
+    def updatestats(self):
+        for channel in self.channels:
+            channel.update_stats()
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace
@@ -271,8 +312,12 @@ class Channel(object):
         :param station: Station()
         '''
         self.tr = tr
-        self.stats=tr.stats
+        self.stats=tr.stats.copy()
         self.origintr=tr.copy()
+        self.stream_ID = WaveformStreamID(network_code=self.stats.network,
+                                     station_code=self.stats.station,
+                                     location_code=self.stats.location,
+                                     channel_code=self.stats.channel)
         self.station = station
         self.channel = tr.stats.channel
         self.starttime=tr.stats.starttime
@@ -284,6 +329,7 @@ class Channel(object):
         self.tr_ACC=None
         self.currentwaveform='VEL'
         self._initpicks()
+        self.readpicks()
     def _initpicks(self):
         self.pickPg=None
         self.pickSg=None
@@ -294,44 +340,38 @@ class Channel(object):
         self.picks.append(self.pickSg)
         self.picks.append(self.pickPn)
         self.picks.append(self.pickSn)
+        self.station.picks=self.picks
     def getpick(self,time,phase):
         if phase=='Pg':
-            stream_ID=WaveformStreamID(network_code=self.stats.network,
-                                       station_code=self.stats.station,
-                                       location_code=self.stats.location,
-                                       channel_code=self.stats.channel)
-            self.pickPg=Pick(time=time,waveform_id=stream_ID,phase_hint=phase)
+            self.pickPg=Pick(time=time,waveform_id=self.stream_ID,phase_hint=phase)
             self.picks[0]=self.pickPg
+            self.stats.Pg=time
         if phase=='Sg':
-            stream_ID=WaveformStreamID(network_code=self.stats.network,
-                                       station_code=self.stats.station,
-                                       location_code=self.stats.location,
-                                       channel_code=self.stats.channel)
-            self.pickSg=Pick(time=time,waveform_id=stream_ID,phase_hint=phase)
+            self.pickSg=Pick(time=time,waveform_id=self.stream_ID,phase_hint=phase)
             self.picks[1] = self.pickSg
+            self.stats.Sg = time
         if phase=='Pn':
-            stream_ID=WaveformStreamID(network_code=self.stats.network,
-                                       station_code=self.stats.station,
-                                       location_code=self.stats.location,
-                                       channel_code=self.stats.channel)
-            self.pickPn=Pick(time=time,waveform_id=stream_ID,phase_hint=phase)
+            self.pickPn=Pick(time=time,waveform_id=self.stream_ID,phase_hint=phase)
             self.picks[2] = self.pickPn
+            self.stats.Pn = time
         if phase=='Sn':
-            stream_ID=WaveformStreamID(network_code=self.stats.network,
-                                       station_code=self.stats.station,
-                                       location_code=self.stats.location,
-                                       channel_code=self.stats.channel)
-            self.pickSn=Pick(time=time,waveform_id=stream_ID,phase_hint=phase)
+            self.pickSn=Pick(time=time,waveform_id=self.stream_ID,phase_hint=phase)
             self.picks[3] = self.pickSn
+            self.stats.Sn = time
     def clearpick(self,phase):
         for pick in self.picks:
             i=self.picks.index(pick)
             if pick!=None:
                 if pick.phase_hint==phase:
                     self.picks[i]=None
+                    delattr(self.stats,phase)
     def clearpicks(self):
         for i in range(len(self.picks)):
             self.picks[i]=None
+            delattr(self.stats, 'Pg')
+            delattr(self.stats, 'Sg')
+            delattr(self.stats, 'Pn')
+            delattr(self.stats, 'Sg')
     def setstationTree(self):
         self.QChannelItem = QTreeWidgetItem(self)
         self.QChannelItem.setText(1, '%s @ %d Hz' %
@@ -354,6 +394,18 @@ class Channel(object):
             if self.tr_ACC!=None:
                 self.tr=self.tr_ACC
                 self.currentwaveform='ACC'
+    def update_stats(self):
+        self.tr.stats=self.stats
+        print 'OK'
+    def readpicks(self):
+        if hasattr(self.stats,'Pg'):
+            self.getpick(self.stats.Pg,'Pg')
+        if hasattr(self.stats,'Sg'):
+            self.getpick(self.stats.Sg,'Sg')
+        if hasattr(self.stats,'Pn'):
+            self.getpick(self.stats.Pn,'Pn')
+        if hasattr(self.stats,'Sn'):
+            self.getpick(self.stats.Sn,'Sn')
 
 
 
