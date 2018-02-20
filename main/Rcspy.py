@@ -58,6 +58,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.action_export_phase.triggered.connect(self.Export_phase)
         self.actionpreprocess.triggered.connect(self.Preprocess)
         self.actionAr_pick.triggered.connect(self.Ar_pick)
+        self.action_travel_time.triggered.connect(self.Traveltime)
         self.X_press.clicked.connect(self._OnbtnX_press_clicked)
         self.X_stretch.clicked.connect(self._OnbtnX_stretch_clicked)
         self.drawnumber_combobox.currentTextChanged.connect(self._Ondrawnumber_combobox_change)
@@ -152,6 +153,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 export_xml.triggered.connect(lambda: self.export_xml(self.stationTree.selectedItems()))
                 attach_event=Menu.addAction('Attach event file')
                 attach_event.triggered.connect(lambda:self.attach_event_file(self.stationTree.selectedItems()))
+                export_phase=Menu.addAction('Export_phase')
+                export_phase.triggered.connect(lambda:self.Export_phase_file(self.stationTree.selectedItems()))
                 Menu.exec_(QtGui.QCursor.pos())
 
             elif isinstance(self.stationTree.selectedItems()[-1].parent,Station)==True:
@@ -168,6 +171,11 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 clearpick=Menu.addAction('Clear picks')
                 clearpick.triggered.connect(lambda:self.Files.clear_selected_station_picks(self.stationTree.selectedItems()))
                 Menu.exec_(QtGui.QCursor.pos())
+    def Export_phase_file(self,items):
+        if len(items)>0:
+            filename, _ = QFileDialog.getSaveFileName(self, 'event file', './','.txt')
+            items.parent.Export_phase_file(filename)
+
     def attach_event_file(self,items):
         if len(items)>0:
             filename, _ = QFileDialog.getOpenFileName(self, 'event file', './')
@@ -455,7 +463,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.exdialog.getFiles(self.Files)
         self.exdialog.exec_()
     def Export_phase(self):
-        print 'Export_phase'
+        pass
     def onexit(self):
         reply = QMessageBox.question(self, 'Message', 'You sure to quit?',
                                      QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -476,6 +484,9 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def Ar_pick(self):
         self.ar_pickdialog = Autopickdialog(self)
         self.ar_pickdialog.show()
+    def Traveltime(self):
+        self.taup=Traveltimedialog(self)
+        self.taup.show()
     '''Top operation bar response function'''
     def _changeSelectedChannel(self):
         '''

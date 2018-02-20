@@ -159,6 +159,7 @@ class MplCanvas(FigureCanvas):
         self.Rcs.statusbar.showMessage("drawing")
         self.drawIds()          #draw label
         self.drawPicks()
+        self.drawTraveltimes()
         self.fig.subplots_adjust(bottom=0.001, hspace=0.000, right=0.999, top=0.999, left=0.001)
         self.draw()
     def get_drawchnarray(self,index):
@@ -179,6 +180,33 @@ class MplCanvas(FigureCanvas):
             axes.text(x, y, tr.tr.id, color="k", transform=axes.transAxes,
                     bbox=bbox, **kwargs)
             axes.text(0.05,0.78,tr.currentwaveform,color='r',fontsize=9,transform=axes.transAxes)
+    def drawTraveltimes(self):
+        for axes,chn in zip(self.axes,self.ondrawchn):
+            for pick in chn.traveltime:
+                if pick!=0:
+                    x=pick.time
+                    string=pick.phasename+str(pick.time)
+                    xmin,xmax=axes.get_xlim()
+                    if x>(xmax-xmin):
+                        pass
+                    else:
+                        ymin, ymax = axes.get_ylim()
+                        y=0.5*ymax
+                        '''draw pick_text'''
+                        if pick.phasename == 'P':
+                            y = 0.85 * ymax
+                            color = '#FF00FF'
+                        if pick.phasename == 'S':
+                            y = 0.75 * ymax
+                            color = '#EEB422'
+                        if pick.phasename == 'Pn':
+                            y = 0.65 * ymax
+                            color = '#00868B'
+                        if pick.phasename == 'Sn':
+                            y = 0.55 * ymax
+                            color = '#27408B'
+                        axes.axvline(x, 0.2, 0.95,color=color)
+                        axes.text(x,y,string,color=color,fontsize=10)
     def drawPicks(self):
         for axes,chn in zip(self.axes,self.ondrawchn):
             for pick in chn.picks:

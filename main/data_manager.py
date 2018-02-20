@@ -6,6 +6,8 @@ from obspy.signal.trigger import ar_pick
 from obspy.core.event.base import *
 from obspy.core.event.origin import Pick
 from obspy.core.event.event import Event
+from obspy.taup.tau import TauPyModel
+from obspy.geodetics.base import *
 from obspy import *
 import os
 from PyQt5.QtWidgets import QMessageBox
@@ -18,6 +20,10 @@ class ChannelVisible:
         self.ZVisible=True
         self.NVisible=False
         self.EVisible=False
+class Phasetime:
+    def __init__(self,phasename,traveltime):
+        self.phasename=phasename
+        self.time=traveltime
 class Files:
     """
     File() container object
@@ -117,7 +123,8 @@ class File:
         self.setname()
         for stat in set([tr.stats.station for tr in st]):
             self.addStation(st=st.select(station=stat))
-
+        self.Inv=None
+        self.Invpath=None
     def init_event(self):
         self.picks=[]
         for station in self.stations:
@@ -129,6 +136,10 @@ class File:
 
         self.init_event()
         self.event.write(filename,format='QUAKEML')
+    def Export_phase_file(self,filename):
+        head="UTCTIME\tTimeError\tLatitude\tLatitude_Error\tLongitude_Error\tDip\tDip_Error\tStationNumber\tTraveltime\tTravel_Error\tPhase\n"
+        wf=open(filename,'w')
+        wf.write(head)
     def attach_event(self,filename):
         catalog=read_events(filename)
         if len(catalog)==1:
@@ -168,7 +179,35 @@ class File:
         for station in self.stations:
             station.setVisible(False)
     def setInv(self):
-        self.Inv=read_inventory(self.path)
+        if self.format=='SEED':
+            try:
+                self.Inv=read_inventory(self.path)
+                self.Invpath = self.path
+                self.get_station_info()
+            except Exception,e:
+                print e
+    def setInvbypath(self,path):
+        try:
+            Inv=read_inventory(path)
+            self.Inv=Inv
+            self.Invpath=path
+            self.get_station_info()
+        except Exception,e:
+            QMessageBox.about(self.parent,'Error',str(e))
+    def get_station_info(self):
+        try:
+            for station in self.stations:
+                for network in self.Inv:
+                    if station.network == network.code:
+                        for sta in network:
+                            if station.stationname == sta.code:
+                                station.latitude = sta.latitude
+                                station.longitude = sta.longitude
+                                station.depth = sta[0].depth
+                                break
+                        break
+        except Exception,e:
+            print e
     def rebuildTreeview(self):
         for station in self.stations:
             self.QStationItem.removeChild(station.QStationItem)
@@ -212,9 +251,15 @@ class Station(object):
         '''
         self.parent = parent
         self.picks=[]
+        self.traveltime=[0,0,0,0]
         self.st = stream.merge()
         self.stats = self.st[0].stats.copy()
         self.stats.channel = None
+        self.network=self.stats.network
+        self.stationname=self.stats.station
+        self.depth=-1
+        self.longitude=-1
+        self.latitude=-1
         self.name=self.stats.network+"."+self.stats.station
         self.channels = []
         self.setstationTree()
@@ -300,6 +345,25 @@ class Station(object):
     def updatestats(self):
         for channel in self.channels:
             channel.update_stats()
+    def get_travel_time(self,phase_list):
+        #test
+        taup=TauPyModel()
+        degree=locations2degrees(23,102,self.latitude,self.longitude)
+        if self.depth !=-1:
+            arrivals=taup.get_travel_times(1,degree,phase_list,self.depth)
+            for phasetime in arrivals:
+                if phasetime.name=='P':
+                    self.traveltime[0]=Phasetime('P',phasetime.time)
+                if phasetime.name=='S':
+                    self.traveltime[1]=Phasetime('S',phasetime.time)
+                if phasetime.name=='Pn':
+                    self.traveltime[2]=Phasetime('Pn',phasetime.time)
+                if phasetime.name=='Sn':
+                    self.traveltime[3]=Phasetime('Sn',phasetime.time)
+            for channel in self.channels:
+                channel.traveltime=self.traveltime
+    def get_source_info(self):
+        pass
 class Channel(object):
     '''
     Channel Container Object handels an individual channel,obspy.core.trace
@@ -341,6 +405,7 @@ class Channel(object):
         self.picks.append(self.pickPn)
         self.picks.append(self.pickSn)
         self.station.picks=self.picks
+        self.traveltime=[]
     def getpick(self,time,phase):
         if phase=='Pg':
             self.pickPg=Pick(time=time,waveform_id=self.stream_ID,phase_hint=phase)

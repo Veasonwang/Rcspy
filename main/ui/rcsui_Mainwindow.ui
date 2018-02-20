@@ -454,8 +454,15 @@
     <addaction name="actionpreprocess"/>
     <addaction name="actionAr_pick"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>分析</string>
+    </property>
+    <addaction name="action_travel_time"/>
+   </widget>
    <addaction name="menufile"/>
    <addaction name="menupreprocess"/>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="sizeGripEnabled">
@@ -500,6 +507,11 @@
   <action name="action_export_phase">
    <property name="text">
     <string>输出震相文件</string>
+   </property>
+  </action>
+  <action name="action_travel_time">
+   <property name="text">
+    <string>计算理论到时</string>
    </property>
   </action>
  </widget>

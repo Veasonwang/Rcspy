@@ -2,6 +2,7 @@
 import rcspy_Exportdialog
 import rcspy_Preprocessdialog
 import rcspy_Autopickdialog
+import rcspy_Taupdialog
 import obspy.core
 from PyQt5.QtWidgets import QMessageBox,QProgressBar,QAbstractItemView,QFileDialog
 from PyQt5.QtCore import QDir
@@ -500,8 +501,6 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog, QtWidgets.QDialog):
             self.errorcontrol = False
             QMessageBox.about(self, "Error", str(e))
         pass
-
-
 class Autopickdialog(rcspy_Autopickdialog.Ui_Dialog, QtWidgets.QDialog):
     def __init__(self, parent):
         super(Autopickdialog, self).__init__(parent)
@@ -599,4 +598,77 @@ class Autopickdialog(rcspy_Autopickdialog.Ui_Dialog, QtWidgets.QDialog):
 
     def Onbtnback(self):
         self.close()
+        pass
+
+class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
+    def __init__(self, parent):
+        super(Traveltimedialog, self).__init__(parent)
+        self.setupUi(self)
+        self.Rcs = parent
+        self.initList()
+        #self.File_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.connectevent()
+        self.setInv()
+    def setInv(self):
+        for file in self.Files.files:
+            file.setInv()
+    def initList(self):
+        self.Files = self.Rcs.Files
+        for file in self.Files.files:
+            listitem = QListWidgetItem(file)
+            listitem.setText(file.name)
+            self.File_list.addItem(listitem)
+    def connectevent(self):
+        self.File_list.itemSelectionChanged.connect(self.OnFilelist_selectionchange)
+        self.channel_list.itemSelectionChanged.connect(self.Onchannellist_selectionchange)
+        self.btnOK.clicked.connect(self.Onbtnok)
+        self.btn_Cancel.clicked.connect(self.Onbtnback)
+        self.btn_Inv.clicked.connect(self.OnbtnattachInv)
+        self.btn_Event.clicked.connect(self.OnbtnattachEvent)
+        pass
+    def OnFilelist_selectionchange(self):
+        self.channel_list.clear()
+        if len(self.File_list.selectedItems()) == 1:
+            file = self.File_list.selectedItems()[0].parent
+            for station in file.stations:
+                listitem = QListWidgetItem(station)
+                listitem.setText(station.name)
+                self.channel_list.addItem(listitem)
+            if file.Invpath!=None:
+                self.invdisplayer.setText(str(file.Invpath))
+    def Onchannellist_selectionchange(self):
+        station=self.channel_list.selectedItems()[0].parent
+        if station.depth!=-1:
+            self.stadepth.setText(str(station.depth))
+        if station.longitude!=-1:
+            self.stalongti.setText(str(station.longitude))
+        if station.latitude!=-1:
+            self.stalati.setText(str(station.latitude))
+        pass
+    def Onbtnok(self):
+        if len(self.File_list.selectedItems())==1:
+            list=[]
+            if self.Pgchenkbox.isChecked():
+                list.append('P')
+            if self.Sgchenkbox.isChecked():
+                list.append('S')
+            if self.Pnchenkbox.isChecked():
+                list.append('Pn')
+            if self.Snchenkbox.isChecked():
+                list.append('Sn')
+            file=self.File_list.selectedItems()[0].parent
+            for station in file.stations:
+                station.get_travel_time(list)
+        pass
+
+    def Onbtnback(self):
+        self.close()
+        pass
+    def OnbtnattachInv(self):
+        if len(self.File_list.selectedItems())>0:
+            filename, _ = QFileDialog.getOpenFileName(self, 'Open file', './', '*.*')
+            self.File_list.selectedItems()[0].parent.setInvbypath(filename)
+            self.invdisplayer.setText(filename)
+        pass
+    def OnbtnattachEvent(self):
         pass

@@ -201,6 +201,8 @@ class Ui_MainWindow(object):
         self.menu_2.setObjectName("menu_2")
         self.menupreprocess = QtWidgets.QMenu(self.menubar)
         self.menupreprocess.setObjectName("menupreprocess")
+        self.menu = QtWidgets.QMenu(self.menubar)
+        self.menu.setObjectName("menu")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setSizeGripEnabled(True)
@@ -222,6 +224,8 @@ class Ui_MainWindow(object):
         self.actionAr_pick.setObjectName("actionAr_pick")
         self.action_export_phase = QtWidgets.QAction(MainWindow)
         self.action_export_phase.setObjectName("action_export_phase")
+        self.action_travel_time = QtWidgets.QAction(MainWindow)
+        self.action_travel_time.setObjectName("action_travel_time")
         self.menu_2.addAction(self.actionRseed)
         self.menu_2.addAction(self.actionRminiseed)
         self.menu_2.addAction(self.actionRsac)
@@ -231,8 +235,10 @@ class Ui_MainWindow(object):
         self.menufile.addAction(self.actionexit)
         self.menupreprocess.addAction(self.actionpreprocess)
         self.menupreprocess.addAction(self.actionAr_pick)
+        self.menu.addAction(self.action_travel_time)
         self.menubar.addAction(self.menufile.menuAction())
         self.menubar.addAction(self.menupreprocess.menuAction())
+        self.menubar.addAction(self.menu.menuAction())
 
         self.retranslateUi(MainWindow)
         self.stationTree.itemDoubleClicked['QTreeWidgetItem*','int'].connect(MainWindow._changeStationVisibility)
@@ -274,6 +280,7 @@ class Ui_MainWindow(object):
         self.menufile.setTitle(_translate("MainWindow", "文件"))
         self.menu_2.setTitle(_translate("MainWindow", "打开"))
         self.menupreprocess.setTitle(_translate("MainWindow", "预处理"))
+        self.menu.setTitle(_translate("MainWindow", "分析"))
         self.actionexit.setText(_translate("MainWindow", "退出"))
         self.actionRseed.setText(_translate("MainWindow", "seed"))
         self.actionRminiseed.setText(_translate("MainWindow", "miniseed"))
@@ -282,5 +289,6 @@ class Ui_MainWindow(object):
         self.actionpreprocess.setText(_translate("MainWindow", "预处理"))
         self.actionAr_pick.setText(_translate("MainWindow", "震相拾取"))
         self.action_export_phase.setText(_translate("MainWindow", "输出震相文件"))
+        self.action_travel_time.setText(_translate("MainWindow", "计算理论到时"))
 
 from util import QcScrollArea, Qcwidget
