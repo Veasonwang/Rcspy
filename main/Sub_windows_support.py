@@ -258,6 +258,9 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog, QtWidgets.QDialog):
         for file in self.Files.files:
             if file.format != 'SEED':
                 current = current + 1
+            else:
+                if file.Inv==None:
+                    current=current-1
         if current != 0:
             QMessageBox.about(self, "warning", str(current) + "File(s) not set Inventory")
 
@@ -608,7 +611,6 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
         self.initList()
         #self.File_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.connectevent()
-        self.setInv()
     def setInv(self):
         for file in self.Files.files:
             file.setInv()
@@ -647,19 +649,33 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
         pass
     def Onbtnok(self):
         if len(self.File_list.selectedItems())==1:
-            list=[]
-            if self.Pgchenkbox.isChecked():
-                list.append('P')
-            if self.Sgchenkbox.isChecked():
-                list.append('S')
-            if self.Pnchenkbox.isChecked():
-                list.append('Pn')
-            if self.Snchenkbox.isChecked():
-                list.append('Sn')
-            file=self.File_list.selectedItems()[0].parent
-            for station in file.stations:
-                station.get_travel_time(list)
-        pass
+            source=self.get_source()
+            if source!=None:
+                list=[]
+                if self.Pgchenkbox.isChecked():
+                    list.append('P')
+                if self.Sgchenkbox.isChecked():
+                    list.append('S')
+                if self.Pnchenkbox.isChecked():
+                    list.append('Pn')
+                if self.Snchenkbox.isChecked():
+                    list.append('Sn')
+                file=self.File_list.selectedItems()[0].parent
+                self.pgb = QProgressBar(self)
+                self.pgb.setWindowTitle("Working")
+                self.pgb.setGeometry(10, 465, 520, 30)
+                self.pgb.show()
+                allnum=len(file.stations)
+                currnum=0
+                for station in file.stations:
+                    self.pgb.setValue(float(currnum*100)/float(allnum))
+                    station.get_travel_time(list)
+                    currnum=currnum+1
+                self.pgb.close()
+                self.Rcs.draw()
+                QMessageBox.about(self,'tips','finished')
+            else:
+                QMessageBox.about(self, 'tips', 'No source information')
 
     def Onbtnback(self):
         self.close()
@@ -671,4 +687,7 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
             self.invdisplayer.setText(filename)
         pass
     def OnbtnattachEvent(self):
+        pass
+    def get_source(self):
+        return None
         pass

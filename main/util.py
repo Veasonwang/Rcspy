@@ -195,16 +195,16 @@ class MplCanvas(FigureCanvas):
                         '''draw pick_text'''
                         if pick.phasename == 'P':
                             y = 0.85 * ymax
-                            color = '#FF00FF'
+                            color = '#00868B'
                         if pick.phasename == 'S':
                             y = 0.75 * ymax
-                            color = '#EEB422'
+                            color = '#00868B'
                         if pick.phasename == 'Pn':
                             y = 0.65 * ymax
                             color = '#00868B'
                         if pick.phasename == 'Sn':
                             y = 0.55 * ymax
-                            color = '#27408B'
+                            color = '#00868B'
                         axes.axvline(x, 0.2, 0.95,color=color)
                         axes.text(x,y,string,color=color,fontsize=10)
     def drawPicks(self):
@@ -239,32 +239,98 @@ class MplCanvas(FigureCanvas):
         self.axes[i].set_ylim(ymin, ymax)
         self.axes[i].set_xlim(xmin,xmax)
         '''draw picks'''
-        chn=self.ondrawchn[i]
+        self.updateaxes(axes)
+        '''draw Ids'''
+        self.updateIds(axes)
+        '''draw Tracel_time'''
+        self.updateTravel_time()
+        self.fig.canvas.draw()
+    def updatePicks(self,axes):
+        i = self.axes.index(axes)
+        chn = self.ondrawchn[i]
         for pick in chn.picks:
             if pick != None:
                 x = pick.time - chn.starttime
-                ymin,ymax = axes.get_ylim()
+                ymin, ymax = axes.get_ylim()
                 '''draw pick_text'''
                 if pick.phase_hint == 'Pg':
-                    y = 0.85*ymax
+                    y = 0.85 * ymax
                     color = '#FF00FF'
                 if pick.phase_hint == 'Sg':
-                    y = 0.75*ymax
+                    y = 0.75 * ymax
                     color = '#EEB422'
                 if pick.phase_hint == 'Pn':
-                    y = 0.65*ymax
+                    y = 0.65 * ymax
                     color = '#00868B'
                 if pick.phase_hint == 'Sn':
-                    y = 0.55*ymax
+                    y = 0.55 * ymax
                     color = '#27408B'
-                string = pick.phase_hint +" "+ str(pick.time)
-                axes.axvline(x, 0.2, 0.95,color=color)
-                axes.text(x, y, string, color=color,  fontsize=10)
-        '''draw Ids'''
+                string = pick.phase_hint + " " + str(pick.time)
+                axes.axvline(x, 0.2, 0.95, color=color)
+                axes.text(x, y, string, color=color, fontsize=10)
+
+    def updateIds(self,axes):
+        chn = self.get_drawchnarray(self.axes.index(axes))
         bbox = dict(boxstyle="round,pad=0.4", fc="w", ec="k", lw=1.2, alpha=1.0)
         kwargs = dict(va="top", ha="left", fontsize=16 * self.labeloffset, family='monospace',
                       zorder=10000)
-        axes.text(0.01,0.9, chn.tr.id, color="k", transform=axes.transAxes,
-                    bbox=bbox, **kwargs)
+        axes.text(0.01, 0.9, chn.tr.id, color="k", transform=axes.transAxes,
+                  bbox=bbox, **kwargs)
         axes.text(0.05, 0.78, chn.currentwaveform, color='r', fontsize=9, transform=axes.transAxes)
-        self.fig.canvas.draw()
+
+    def updateTravel_time(self,axes):
+        chn = self.get_drawchnarray(self.axes.index(axes))
+        for pick in chn.traveltime:
+            if pick != 0:
+                x = pick.time
+                string = pick.phasename + str(pick.time)
+                xmin, xmax = axes.get_xlim()
+                if x > (xmax - xmin):
+                    pass
+                else:
+                    ymin, ymax = axes.get_ylim()
+                    y = 0.5 * ymax
+                    '''draw pick_text'''
+                    if pick.phasename == 'P':
+                        y = 0.85 * ymax
+
+                    if pick.phasename == 'S':
+                        y = 0.75 * ymax
+
+                    if pick.phasename == 'Pn':
+                        y = 0.65 * ymax
+
+                    if pick.phasename == 'Sn':
+                        y = 0.55 * ymax
+
+                    axes.axvline(x, 0.2, 0.95, color='r')
+                    axes.text(x, y, string, color=color, fontsize=10)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -14,6 +14,14 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QIcon
 from util import QTreeWidgetItem
 from operator import attrgetter
+class Source:
+    '''
+    TO hold source info
+    '''
+    def __init__(self,longitude,latitude,depth):
+        self.longitude=longitude
+        self.latitude=latitude
+        self.depth=depth
 class ChannelVisible:
     def __init__(self,parent=None):
         self.parent=parent
@@ -125,6 +133,7 @@ class File:
             self.addStation(st=st.select(station=stat))
         self.Inv=None
         self.Invpath=None
+        self.setInv()
     def init_event(self):
         self.picks=[]
         for station in self.stations:
@@ -180,12 +189,17 @@ class File:
             station.setVisible(False)
     def setInv(self):
         if self.format=='SEED':
-            try:
-                self.Inv=read_inventory(self.path)
-                self.Invpath = self.path
-                self.get_station_info()
-            except Exception,e:
-                print e
+            if self.Inv==None:
+                try:
+                    self.Inv=read_inventory(self.path)
+                    self.Invpath = self.path
+                    self.get_station_info()
+                except Exception,e:
+                    self.Inv=None
+                    self.Invpath=None
+                    self.clear_station_info()
+                    print e
+
     def setInvbypath(self,path):
         try:
             Inv=read_inventory(path)
@@ -193,7 +207,16 @@ class File:
             self.Invpath=path
             self.get_station_info()
         except Exception,e:
+            self.Inv = None
+            self.Invpath = None
+            self.clear_station_info()
             QMessageBox.about(self.parent,'Error',str(e))
+    def clear_station_info(self):
+        for station in self.stations:
+            station.depth = -1
+            station.longitude = -1
+            station.latitude = -1
+
     def get_station_info(self):
         try:
             for station in self.stations:
@@ -250,22 +273,24 @@ class Station(object):
         :stream: obspy.core.Stream()
         '''
         self.parent = parent
-        self.picks=[]
-        self.traveltime=[0,0,0,0]
         self.st = stream.merge()
         self.stats = self.st[0].stats.copy()
-        self.stats.channel = None
-        self.network=self.stats.network
-        self.stationname=self.stats.station
-        self.depth=-1
-        self.longitude=-1
-        self.latitude=-1
-        self.name=self.stats.network+"."+self.stats.station
-        self.channels = []
+        self._initvariable()
         self.setstationTree()
         for tr in self.st:
             self.channels.append(Channel(tr, station=self))
         self.setVisible(False)
+    def _initvariable(self):
+        self.picks = []
+        self.traveltime = [0, 0, 0, 0]
+        self.stats.channel = None
+        self.network = self.stats.network
+        self.stationname = self.stats.station
+        self.depth = -1
+        self.longitude = -1
+        self.latitude = -1
+        self.name = self.stats.network + "." + self.stats.station
+        self.channels = []
     def setstationTree(self):
         self.QStationItem = QTreeWidgetItem(self)
         self.QStationItem.setText(1, '%s.%s' %
@@ -345,12 +370,12 @@ class Station(object):
     def updatestats(self):
         for channel in self.channels:
             channel.update_stats()
-    def get_travel_time(self,phase_list):
+    def get_travel_time(self,phase_list,source):
         #test
         taup=TauPyModel()
-        degree=locations2degrees(23,102,self.latitude,self.longitude)
+        degree=locations2degrees(source.latitude,source.longitude,self.latitude,self.longitude)
         if self.depth !=-1:
-            arrivals=taup.get_travel_times(1,degree,phase_list,self.depth)
+            arrivals=taup.get_travel_times(source.depth,degree,phase_list,self.depth)
             for phasetime in arrivals:
                 if phasetime.name=='P':
                     self.traveltime[0]=Phasetime('P',phasetime.time)
