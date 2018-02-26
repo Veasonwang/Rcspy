@@ -18,10 +18,11 @@ class Source:
     '''
     TO hold source info
     '''
-    def __init__(self,longitude,latitude,depth):
+    def __init__(self,longitude,latitude,depth,time):
         self.longitude=longitude
         self.latitude=latitude
         self.depth=depth
+        self.time=time
 class ChannelVisible:
     def __init__(self,parent=None):
         self.parent=parent
@@ -131,6 +132,7 @@ class File:
         self.setname()
         for stat in set([tr.stats.station for tr in st]):
             self.addStation(st=st.select(station=stat))
+        self.source=None
         self.Inv=None
         self.Invpath=None
         self.setInv()
@@ -282,6 +284,7 @@ class Station(object):
         self.setVisible(False)
     def _initvariable(self):
         self.picks = []
+        self.starttime=self.stats.starttime
         self.traveltime = [0, 0, 0, 0]
         self.stats.channel = None
         self.network = self.stats.network
@@ -378,13 +381,13 @@ class Station(object):
             arrivals=taup.get_travel_times(source.depth,degree,phase_list,self.depth)
             for phasetime in arrivals:
                 if phasetime.name=='P':
-                    self.traveltime[0]=Phasetime('P',phasetime.time)
+                    self.traveltime[0]=Phasetime('P',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
                 if phasetime.name=='S':
-                    self.traveltime[1]=Phasetime('S',phasetime.time)
+                    self.traveltime[1]=Phasetime('S',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
                 if phasetime.name=='Pn':
-                    self.traveltime[2]=Phasetime('Pn',phasetime.time)
+                    self.traveltime[2]=Phasetime('Pn',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
                 if phasetime.name=='Sn':
-                    self.traveltime[3]=Phasetime('Sn',phasetime.time)
+                    self.traveltime[3]=Phasetime('Sn',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
             for channel in self.channels:
                 channel.traveltime=self.traveltime
     def get_source_info(self):

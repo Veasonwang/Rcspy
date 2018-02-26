@@ -6,7 +6,7 @@ import rcspy_Taupdialog
 import rcspy_Sourceinputdialog
 import obspy.core
 from PyQt5.QtWidgets import QMessageBox,QProgressBar,QAbstractItemView,QFileDialog
-from PyQt5.QtCore import QDir
+from PyQt5.QtCore import QDir,QDateTime,QDate,QTime
 from PyQt5 import  QtWidgets
 from PyQt5.QtGui import QDoubleValidator
 from util import QListWidgetItem
@@ -613,6 +613,8 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
         self.setupUi(self)
         self.Rcs = parent
         self.initList()
+        self.source=None
+        self.btn_input_source.setEnabled(False)
         #self.File_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.connectevent()
     def setInv(self):
@@ -635,6 +637,7 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
         pass
 
     def OnFilelist_selectionchange(self):
+        self.btn_input_source.setEnabled(True)
         self.channel_list.clear()
         if len(self.File_list.selectedItems()) == 1:
             file = self.File_list.selectedItems()[0].parent
@@ -644,6 +647,15 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
                 self.channel_list.addItem(listitem)
             if file.Invpath!=None:
                 self.invdisplayer.setText(str(file.Invpath))
+            self.source=file.source
+            if self.source!=None:
+                self.soulongti.setText(str(self.source.longitude))
+                self.soulati.setText(str(self.source.latitude))
+                self.soudepth.setText(str(self.source.depth))
+            else:
+                self.soulongti.setText('')
+                self.soulati.setText('')
+                self.soudepth.setText('')
     def Onchannellist_selectionchange(self):
         if len(self.channel_list.selectedItems())>0:
             station=self.channel_list.selectedItems()[0].parent
@@ -654,11 +666,13 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
             if station.latitude!=-1:
                 self.stalati.setText(str(station.latitude))
     def Oninputsouceinfo(self):
-        self.inputdialog=Sourceinputdialog(self)
-        self.inputdialog.show()
+        if len(self.File_list.selectedItems())==1:
+            self.inputdialog=Sourceinputdialog(self,self.File_list.selectedItems()[0].parent)
+            self.inputdialog.show()
     def Onbtnok(self):
         if len(self.File_list.selectedItems())==1:
-            source=self.get_source()
+            file = self.File_list.selectedItems()[0].parent
+            source=file.source
             if source!=None:
                 list=[]
                 if self.Pgchenkbox.isChecked():
@@ -669,7 +683,6 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
                     list.append('Pn')
                 if self.Snchenkbox.isChecked():
                     list.append('Sn')
-                file=self.File_list.selectedItems()[0].parent
                 self.pgb = QProgressBar(self)
                 self.pgb.setWindowTitle("Working")
                 self.pgb.setGeometry(10, 465, 520, 30)
@@ -697,24 +710,63 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
         pass
     def OnbtnattachEvent(self):
         pass
-    def get_source(self):
-        return None
-        pass
+    def get_source(self,file):
+        return file.source
 
 class Sourceinputdialog(rcspy_Sourceinputdialog.Ui_Dialog,QtWidgets.QDialog):
-    def __init__(self, parent):
+    def __init__(self, parent,file):
         super(Sourceinputdialog, self).__init__(parent)
         self.setupUi(self)
-        Qdvlong=QDoubleValidator(-180,180,10)
-        Qdvlati=QDoubleValidator(-90,90,10)
-        Qdepth=QDoubleValidator(0,6500,10)
+        self.file=file
+        self.parent=parent
+        Qdvlong=QDoubleValidator(-180.0,180.0,10,self)
+        Qdvlati=QDoubleValidator(-90.0,90.0,10,self)
+        Qdepth=QDoubleValidator(0.0,6500.0,10,self)
         self.latitude.setValidator(Qdvlati)
         self.longitude.setValidator(Qdvlong)
         self.depth.setValidator(Qdepth)
+        self.connectevent()
+        starttime=UTCDateTime(self.file.stations[0].starttime)
+        date=QDate(starttime.year,starttime.month,starttime.day)
+        time=QTime(starttime.hour,starttime.minute,starttime.second)
+        Datetime=QDateTime(date,time)
+        self.time.setDateTime(Datetime)
 
     def connectevent(self):
+        self.btn_back.clicked.connect(self.Onbtn_back)
+        self.btn_ok.clicked.connect(self.Onbtn_ok)
         pass
+    def Onbtn_ok(self):
+        try:
+            print 1
+            longitude=float(self.longitude.text())
+            latitude=float(self.latitude.text())
+            depth=float(self.depth.text())
 
+            if longitude<-180 or longitude>180or latitude<-90or latitude>90or depth<0 or depth>6346:
+                #QMessageBox.about(self, 'Error', 'Please enter the correct number')
+                pass
+            else:
+                datetime=self.time.dateTime()
+
+                sourcetime=UTCDateTime(datetime.date().year(),
+                                       datetime.date().month(),
+                                       datetime.date().day(),
+                                       datetime.time().hour(),
+                                       datetime.time().minute(),
+                                       datetime.time().second())
+                self.file.source=Source(longitude,latitude,depth,sourcetime)
+                self.parent.OnFilelist_selectionchange()
+                self.close()
+        except Exception,e:
+            print e
+            QMessageBox.about(self,'Error','Please enter the correct number')
+        pass
+    def Onbtn_back(self):
+        self.close()
+        pass
+    def messagesender(self):
+        pass
 
 
 

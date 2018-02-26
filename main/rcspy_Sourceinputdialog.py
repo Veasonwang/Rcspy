@@ -11,13 +11,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(220, 185)
-        Dialog.setMaximumSize(QtCore.QSize(220, 185))
+        Dialog.resize(220, 200)
+        Dialog.setMaximumSize(QtCore.QSize(220, 200))
         self.btn_ok = QtWidgets.QPushButton(Dialog)
-        self.btn_ok.setGeometry(QtCore.QRect(44, 140, 51, 23))
+        self.btn_ok.setGeometry(QtCore.QRect(44, 160, 51, 23))
         self.btn_ok.setObjectName("btn_ok")
         self.btn_back = QtWidgets.QPushButton(Dialog)
-        self.btn_back.setGeometry(QtCore.QRect(130, 140, 51, 23))
+        self.btn_back.setGeometry(QtCore.QRect(130, 160, 51, 23))
         self.btn_back.setObjectName("btn_back")
         self.label_6 = QtWidgets.QLabel(Dialog)
         self.label_6.setGeometry(QtCore.QRect(20, 20, 51, 17))
@@ -43,6 +43,11 @@ class Ui_Dialog(object):
         self.depth.setFrame(True)
         self.depth.setAlignment(QtCore.Qt.AlignCenter)
         self.depth.setObjectName("depth")
+        self.time = QtWidgets.QDateTimeEdit(Dialog)
+        self.time.setGeometry(QtCore.QRect(10, 130, 194, 22))
+        self.time.setCurrentSection(QtWidgets.QDateTimeEdit.YearSection)
+        self.time.setTimeSpec(QtCore.Qt.UTC)
+        self.time.setObjectName("time")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -55,4 +60,5 @@ class Ui_Dialog(object):
         self.label_6.setText(_translate("Dialog", "经度(度)"))
         self.label_7.setText(_translate("Dialog", "深度(km)"))
         self.label_8.setText(_translate("Dialog", "纬度(度)"))
+        self.time.setDisplayFormat(_translate("Dialog", "yyyy/M/d H:mm:ss"))
 

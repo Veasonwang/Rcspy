@@ -239,11 +239,11 @@ class MplCanvas(FigureCanvas):
         self.axes[i].set_ylim(ymin, ymax)
         self.axes[i].set_xlim(xmin,xmax)
         '''draw picks'''
-        self.updateaxes(axes)
+        self.updatePicks(axes)
         '''draw Ids'''
         self.updateIds(axes)
         '''draw Tracel_time'''
-        self.updateTravel_time()
+        self.updateTravel_time(axes)
         self.fig.canvas.draw()
     def updatePicks(self,axes):
         i = self.axes.index(axes)
@@ -270,7 +270,8 @@ class MplCanvas(FigureCanvas):
                 axes.text(x, y, string, color=color, fontsize=10)
 
     def updateIds(self,axes):
-        chn = self.get_drawchnarray(self.axes.index(axes))
+        i = self.axes.index(axes)
+        chn = self.ondrawchn[i]
         bbox = dict(boxstyle="round,pad=0.4", fc="w", ec="k", lw=1.2, alpha=1.0)
         kwargs = dict(va="top", ha="left", fontsize=16 * self.labeloffset, family='monospace',
                       zorder=10000)
@@ -304,7 +305,7 @@ class MplCanvas(FigureCanvas):
                         y = 0.55 * ymax
 
                     axes.axvline(x, 0.2, 0.95, color='r')
-                    axes.text(x, y, string, color=color, fontsize=10)
+                    axes.text(x, y, string, color='r', fontsize=10)
 
 
 
