@@ -248,8 +248,8 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>30</y>
-      <width>151</width>
+      <y>20</y>
+      <width>71</width>
       <height>17</height>
      </rect>
     </property>
@@ -261,7 +261,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>20</y>
       <width>31</width>
       <height>17</height>
      </rect>
@@ -274,7 +274,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>90</y>
+      <y>80</y>
       <width>31</width>
       <height>17</height>
      </rect>
@@ -287,7 +287,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>90</y>
+      <y>80</y>
       <width>151</width>
       <height>17</height>
      </rect>
@@ -300,7 +300,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>60</y>
+      <y>50</y>
       <width>151</width>
       <height>17</height>
      </rect>
@@ -313,7 +313,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>60</y>
+      <y>50</y>
       <width>31</width>
       <height>17</height>
      </rect>
@@ -413,6 +413,19 @@
      <string>深度</string>
     </property>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="btn_input_source">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>10</y>
+     <width>61</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>输入震源</string>
+   </property>
   </widget>
  </widget>
  <resources/>

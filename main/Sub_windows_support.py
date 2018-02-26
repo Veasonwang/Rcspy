@@ -3,10 +3,12 @@ import rcspy_Exportdialog
 import rcspy_Preprocessdialog
 import rcspy_Autopickdialog
 import rcspy_Taupdialog
+import rcspy_Sourceinputdialog
 import obspy.core
 from PyQt5.QtWidgets import QMessageBox,QProgressBar,QAbstractItemView,QFileDialog
 from PyQt5.QtCore import QDir
 from PyQt5 import  QtWidgets
+from PyQt5.QtGui import QDoubleValidator
 from util import QListWidgetItem
 from data_manager import *
 class Exportdialog(rcspy_Exportdialog.Ui_Dialog, QtWidgets.QDialog):
@@ -242,6 +244,7 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog, QtWidgets.QDialog):
                     self.currnum = self.currnum + 1
                     step = self.currnum * 100 / self.allnum
                     self.pgb.setValue(int(step))
+
 class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog, QtWidgets.QDialog):
     def __init__(self, parent):
         super(Preprocessdialog, self).__init__(parent)
@@ -504,6 +507,7 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog, QtWidgets.QDialog):
             self.errorcontrol = False
             QMessageBox.about(self, "Error", str(e))
         pass
+
 class Autopickdialog(rcspy_Autopickdialog.Ui_Dialog, QtWidgets.QDialog):
     def __init__(self, parent):
         super(Autopickdialog, self).__init__(parent)
@@ -627,7 +631,9 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
         self.btn_Cancel.clicked.connect(self.Onbtnback)
         self.btn_Inv.clicked.connect(self.OnbtnattachInv)
         self.btn_Event.clicked.connect(self.OnbtnattachEvent)
+        self.btn_input_source.clicked.connect(self.Oninputsouceinfo)
         pass
+
     def OnFilelist_selectionchange(self):
         self.channel_list.clear()
         if len(self.File_list.selectedItems()) == 1:
@@ -639,14 +645,17 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
             if file.Invpath!=None:
                 self.invdisplayer.setText(str(file.Invpath))
     def Onchannellist_selectionchange(self):
-        station=self.channel_list.selectedItems()[0].parent
-        if station.depth!=-1:
-            self.stadepth.setText(str(station.depth))
-        if station.longitude!=-1:
-            self.stalongti.setText(str(station.longitude))
-        if station.latitude!=-1:
-            self.stalati.setText(str(station.latitude))
-        pass
+        if len(self.channel_list.selectedItems())>0:
+            station=self.channel_list.selectedItems()[0].parent
+            if station.depth!=-1:
+                self.stadepth.setText(str(station.depth))
+            if station.longitude!=-1:
+                self.stalongti.setText(str(station.longitude))
+            if station.latitude!=-1:
+                self.stalati.setText(str(station.latitude))
+    def Oninputsouceinfo(self):
+        self.inputdialog=Sourceinputdialog(self)
+        self.inputdialog.show()
     def Onbtnok(self):
         if len(self.File_list.selectedItems())==1:
             source=self.get_source()
@@ -669,7 +678,7 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
                 currnum=0
                 for station in file.stations:
                     self.pgb.setValue(float(currnum*100)/float(allnum))
-                    station.get_travel_time(list)
+                    station.get_travel_time(list,source)
                     currnum=currnum+1
                 self.pgb.close()
                 self.Rcs.draw()
@@ -691,3 +700,47 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
     def get_source(self):
         return None
         pass
+
+class Sourceinputdialog(rcspy_Sourceinputdialog.Ui_Dialog,QtWidgets.QDialog):
+    def __init__(self, parent):
+        super(Sourceinputdialog, self).__init__(parent)
+        self.setupUi(self)
+        Qdvlong=QDoubleValidator(-180,180,10)
+        Qdvlati=QDoubleValidator(-90,90,10)
+        Qdepth=QDoubleValidator(0,6500,10)
+        self.latitude.setValidator(Qdvlati)
+        self.longitude.setValidator(Qdvlong)
+        self.depth.setValidator(Qdepth)
+
+    def connectevent(self):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
