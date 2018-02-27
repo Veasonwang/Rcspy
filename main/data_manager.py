@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtGui import QIcon
 from util import QTreeWidgetItem
 from operator import attrgetter
+from obspy.core.inventory import Inventory
 class Source:
     '''
     TO hold source info
@@ -148,7 +149,7 @@ class File:
         self.event.write(filename,format='QUAKEML')
     def Export_calculation_phase_file(self,filename):
         head1=' \tUTCTIME\tTimeError\tLatitude\tLatitude_Error\tLongitude_Error\tDepth\tDepth_Error'
-        head2='\tStationNumber\tTraveltime\tTravel_Error\tPhase\n'
+        head2='\tStationNumber\tTraveltime\tPhase\n'
         head=head1+head2
         wf=open(filename,'w')
         wf.write(unicode(head))
@@ -167,27 +168,24 @@ class File:
                 wf.write(unicode(line))
     def Export_Pick_phase_file(self,filename):
         head1 = ' \tUTCTIME\tTimeError\tLatitude\tLatitude_Error\tLongitude_Error\tDepth\tDepth_Error'
-        head2 = '\tStationNumber\tTraveltime\tTravel_Error\tPhase\n'
+        head2 = '\tStationNumber\tTraveltime\tPhase\n'
         head = head1 + head2
         wf = open(filename, 'w')
         wf.write(unicode(head))
-        if self.source!=None:
-            source_info = "#\t" + str(self.source.time.year) + " " + str(self.source.time.month) + " " \
-                          + str(self.source.time.day) + " " + str(self.source.time.hour) + " " \
-                          + str(self.source.time.minute) + " " + str(self.source.time.second)
-            source_info += "\ttimeerror"
-            source_info += "\t" + str(self.source.latitude) + "\tlatierror"
-            source_info += "\t" + str(self.source.longitude) + "\tlongierror"
-            source_info += "\t" + str(self.source.depth) + "\tdeptherror"
-            for station in self.stations:
-                station_info = "\t" + station.name
-                for pick in station.picks:
-                    if pick!=None:
-                        pick_info = "\t" + str(pick.time) + "\t" + pick.phase_hint+ "\n"
-                        line = source_info + station_info + pick_info
-                        wf.write(unicode(line))
-        else:
-            QMessageBox.about(self,'tips','No source info')
+        source_info = "#\t" + str(self.source.time.year) + " " + str(self.source.time.month) + " " \
+                      + str(self.source.time.day) + " " + str(self.source.time.hour) + " " \
+                      + str(self.source.time.minute) + " " + str(self.source.time.second)
+        source_info += "\ttimeerror"
+        source_info += "\t" + str(self.source.latitude) + "\tlatierror"
+        source_info += "\t" + str(self.source.longitude) + "\tlongierror"
+        source_info += "\t" + str(self.source.depth) + "\tdeptherror"
+        for station in self.stations:
+            station_info = "\t" + station.name
+            for pick in station.picks:
+                if pick!=None:
+                    pick_info = "\t" + str(pick.time) + "\t" + pick.phase_hint+ "\n"
+                    line = source_info + station_info + pick_info
+                    wf.write(unicode(line))
     def attach_event(self,filename):
         catalog=read_events(filename)
         if len(catalog)==1:
@@ -228,7 +226,7 @@ class File:
             station.setVisible(False)
     def setInv(self):
         if self.format=='SEED':
-            if self.Inv==None:
+            if not isinstance(self.Inv,Inventory):
                 try:
                     self.Inv=read_inventory(self.path)
                     self.Invpath = self.path

@@ -11,6 +11,7 @@ from PyQt5 import  QtWidgets
 from PyQt5.QtGui import QDoubleValidator
 from util import QListWidgetItem
 from data_manager import *
+from obspy.core.inventory import Inventory
 class Exportdialog(rcspy_Exportdialog.Ui_Dialog, QtWidgets.QDialog):
     def __init__(self, parent):
         super(Exportdialog, self).__init__(parent)
@@ -262,7 +263,7 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog, QtWidgets.QDialog):
             if file.format != 'SEED':
                 current = current + 1
             else:
-                if file.Inv==None:
+                if not isinstance(file.Inv,Inventory):
                     current=current-1
         if current != 0:
             QMessageBox.about(self, "warning", str(current) + "File(s) not set Inventory")

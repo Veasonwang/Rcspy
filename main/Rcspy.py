@@ -146,9 +146,9 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 ASI.triggered.connect(lambda :self.Files.setstationsinvisible(self.stationTree.selectedItems()))
                 Sortbyname=Menu.addAction('Sort by Name')
                 Sortbyname.triggered.connect(lambda:self.Files.SortByName(self.stationTree.selectedItems()))
-                rmfile=Menu.addAction('remove file')
+                rmfile=Menu.addAction('Remove file')
                 rmfile.triggered.connect(lambda:self.Files.removeselectedfile(self.stationTree.selectedItems()))
-                export_xml = Menu.addAction('export_xml')
+                export_xml = Menu.addAction('Eport_Eventxml')
                 #export_xml.triggered.connect(lambda: self.Files.exportxml(self.stationTree.selectedItems()))
                 export_xml.triggered.connect(lambda: self.export_xml(self.stationTree.selectedItems()))
                 attach_event=Menu.addAction('Attach event file')
@@ -181,9 +181,12 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 items[-1].parent.Export_calculation_phase_file(filename)
     def Export_Pick_phase_file(self,items):
         if len(items)>0:
-            filename, _ = QFileDialog.getSaveFileName(self, 'savefile', './','.txt')
-            if filename!='':
-                items[-1].parent.Export_Pick_phase_file(filename)
+            if items[-1].parent.source==None:
+                QMessageBox.about(self.parent, 'tips', 'No source info')
+            else:
+                filename, _ = QFileDialog.getSaveFileName(self, 'savefile', './','.txt')
+                if filename!='':
+                    items[-1].parent.Export_Pick_phase_file(filename)
     def attach_event_file(self,items):
         if len(items)>0:
             filename, _ = QFileDialog.getOpenFileName(self, 'event file', './')
