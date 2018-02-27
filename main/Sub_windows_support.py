@@ -652,10 +652,12 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
                 self.soulongti.setText(str(self.source.longitude))
                 self.soulati.setText(str(self.source.latitude))
                 self.soudepth.setText(str(self.source.depth))
+                self.sourcetime.setText(str(self.source.time))
             else:
                 self.soulongti.setText('')
                 self.soulati.setText('')
                 self.soudepth.setText('')
+                self.sourcetime.setText('')
     def Onchannellist_selectionchange(self):
         if len(self.channel_list.selectedItems())>0:
             station=self.channel_list.selectedItems()[0].parent
@@ -744,7 +746,7 @@ class Sourceinputdialog(rcspy_Sourceinputdialog.Ui_Dialog,QtWidgets.QDialog):
             depth=float(self.depth.text())
 
             if longitude<-180 or longitude>180or latitude<-90or latitude>90or depth<0 or depth>6346:
-                #QMessageBox.about(self, 'Error', 'Please enter the correct number')
+                QMessageBox.about(self, 'Error', 'Please enter the correct number')
                 pass
             else:
                 datetime=self.time.dateTime()

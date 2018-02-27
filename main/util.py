@@ -195,26 +195,20 @@ class MplCanvas(FigureCanvas):
                         '''draw pick_text'''
                         if pick.phasename == 'P':
                             y = 0.85 * ymax
-                            color = '#00868B'
                         if pick.phasename == 'S':
                             y = 0.75 * ymax
-                            color = '#00868B'
                         if pick.phasename == 'Pn':
                             y = 0.65 * ymax
-                            color = '#00868B'
                         if pick.phasename == 'Sn':
                             y = 0.55 * ymax
-                            color = '#00868B'
-                        axes.axvline(x, 0.2, 0.95,color=color)
-                        axes.text(x,y,string,color=color,fontsize=10)
+                        axes.axvline(x, 0.2, 0.95,color='r')
+                        axes.text(x,y,string,color='r',fontsize=10)
     def drawPicks(self):
         for axes,chn in zip(self.axes,self.ondrawchn):
             for pick in chn.picks:
-                if pick!=None:
-                    x=pick.time-chn.starttime
-                    string=pick.phase_hint+str(pick.time)
+                if pick != None:
+                    x = pick.time - chn.starttime
                     ymin, ymax = axes.get_ylim()
-                    y=0.5*ymax
                     '''draw pick_text'''
                     if pick.phase_hint == 'Pg':
                         y = 0.85 * ymax
@@ -228,8 +222,9 @@ class MplCanvas(FigureCanvas):
                     if pick.phase_hint == 'Sn':
                         y = 0.55 * ymax
                         color = '#27408B'
-                    axes.axvline(x, 0.2, 0.95,color=color)
-                    axes.text(x,y,string,color=color,fontsize=10)
+                    string = pick.phase_hint + " " + str(pick.time)
+                    axes.axvline(x, 0.2, 0.95, color=color)
+                    axes.text(x, y, string, color=color, fontsize=10)
     def updateaxes(self,axes):
         i=self.axes.index(axes)
         ymin, ymax = self.axes[i].get_ylim()
@@ -281,10 +276,10 @@ class MplCanvas(FigureCanvas):
 
     def updateTravel_time(self,axes):
         chn = self.get_drawchnarray(self.axes.index(axes))
-        for pick in chn.traveltime:
-            if pick != 0:
-                x = pick.time
-                string = pick.phasename + str(pick.time)
+        for arrive in chn.arriveltime:
+            if arrive != 0:
+                x = arrive.time
+                string = arrive.phasename + str(arrive.time)
                 xmin, xmax = axes.get_xlim()
                 if x > (xmax - xmin):
                     pass
@@ -292,16 +287,16 @@ class MplCanvas(FigureCanvas):
                     ymin, ymax = axes.get_ylim()
                     y = 0.5 * ymax
                     '''draw pick_text'''
-                    if pick.phasename == 'P':
+                    if arrive.phasename == 'P':
                         y = 0.85 * ymax
 
-                    if pick.phasename == 'S':
+                    if arrive.phasename == 'S':
                         y = 0.75 * ymax
 
-                    if pick.phasename == 'Pn':
+                    if arrive.phasename == 'Pn':
                         y = 0.65 * ymax
 
-                    if pick.phasename == 'Sn':
+                    if arrive.phasename == 'Sn':
                         y = 0.55 * ymax
 
                     axes.axvline(x, 0.2, 0.95, color='r')

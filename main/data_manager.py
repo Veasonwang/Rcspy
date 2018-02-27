@@ -144,13 +144,50 @@ class File:
                     self.picks.append(pick)
         self.event = Event(picks=self.picks)
     def export_event(self,filename):
-
         self.init_event()
         self.event.write(filename,format='QUAKEML')
-    def Export_phase_file(self,filename):
-        head="UTCTIME\tTimeError\tLatitude\tLatitude_Error\tLongitude_Error\tDip\tDip_Error\tStationNumber\tTraveltime\tTravel_Error\tPhase\n"
+    def Export_calculation_phase_file(self,filename):
+        head1=' \tUTCTIME\tTimeError\tLatitude\tLatitude_Error\tLongitude_Error\tDepth\tDepth_Error'
+        head2='\tStationNumber\tTraveltime\tTravel_Error\tPhase\n'
+        head=head1+head2
         wf=open(filename,'w')
-        wf.write(head)
+        wf.write(unicode(head))
+        source_info="#\t"+str(self.source.time.year)+" "+str(self.source.time.month)+" "\
+                         +str(self.source.time.day)+" "+str(self.source.time.hour)+" "\
+                         +str(self.source.time.minute)+" "+str(self.source.time.second)
+        source_info+="\ttimeerror"
+        source_info+="\t"+str(self.source.latitude)+"\tlatierror"
+        source_info+="\t"+str(self.source.longitude)+"\tlongierror"
+        source_info+="\t"+str(self.source.depth)+"\tdeptherror"
+        for station in self.stations:
+            station_info="\t"+station.name
+            for phase in station.traveltime:
+                phase_info="\t"+str(phase.time)+"\t"+phase.phasename+"\n"
+                line=source_info+station_info+phase_info
+                wf.write(unicode(line))
+    def Export_Pick_phase_file(self,filename):
+        head1 = ' \tUTCTIME\tTimeError\tLatitude\tLatitude_Error\tLongitude_Error\tDepth\tDepth_Error'
+        head2 = '\tStationNumber\tTraveltime\tTravel_Error\tPhase\n'
+        head = head1 + head2
+        wf = open(filename, 'w')
+        wf.write(unicode(head))
+        if self.source!=None:
+            source_info = "#\t" + str(self.source.time.year) + " " + str(self.source.time.month) + " " \
+                          + str(self.source.time.day) + " " + str(self.source.time.hour) + " " \
+                          + str(self.source.time.minute) + " " + str(self.source.time.second)
+            source_info += "\ttimeerror"
+            source_info += "\t" + str(self.source.latitude) + "\tlatierror"
+            source_info += "\t" + str(self.source.longitude) + "\tlongierror"
+            source_info += "\t" + str(self.source.depth) + "\tdeptherror"
+            for station in self.stations:
+                station_info = "\t" + station.name
+                for pick in station.picks:
+                    if pick!=None:
+                        pick_info = "\t" + str(pick.time) + "\t" + pick.phase_hint+ "\n"
+                        line = source_info + station_info + pick_info
+                        wf.write(unicode(line))
+        else:
+            QMessageBox.about(self,'tips','No source info')
     def attach_event(self,filename):
         catalog=read_events(filename)
         if len(catalog)==1:
@@ -285,7 +322,8 @@ class Station(object):
     def _initvariable(self):
         self.picks = []
         self.starttime=self.stats.starttime
-        self.traveltime = [0, 0, 0, 0]
+        self.traveltime = [Phasetime('P',0),Phasetime('S',0),Phasetime('Pn',0),Phasetime('Sn',0)]
+        self.arriveltime = [Phasetime('P',0),Phasetime('S',0),Phasetime('Pn',0),Phasetime('Sn',0)]
         self.stats.channel = None
         self.network = self.stats.network
         self.stationname = self.stats.station
@@ -381,14 +419,19 @@ class Station(object):
             arrivals=taup.get_travel_times(source.depth,degree,phase_list,self.depth)
             for phasetime in arrivals:
                 if phasetime.name=='P':
-                    self.traveltime[0]=Phasetime('P',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
+                    self.traveltime[0]=Phasetime('P',phasetime.time)
+                    self.arriveltime[0]=Phasetime('P',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
                 if phasetime.name=='S':
-                    self.traveltime[1]=Phasetime('S',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
+                    self.traveltime[1] = Phasetime('S', phasetime.time)
+                    self.arriveltime[1]=Phasetime('S',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
                 if phasetime.name=='Pn':
-                    self.traveltime[2]=Phasetime('Pn',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
+                    self.traveltime[2] =Phasetime('Pn', phasetime.time)
+                    self.arriveltime[2]=Phasetime('Pn',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
                 if phasetime.name=='Sn':
-                    self.traveltime[3]=Phasetime('Sn',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
+                    self.traveltime[3] = Phasetime('Sn', phasetime.time)
+                    self.arriveltime[3]=Phasetime('Sn',self.parent.source.time+phasetime.time-UTCDateTime(self.starttime))
             for channel in self.channels:
+                channel.arriveltime=self.arriveltime
                 channel.traveltime=self.traveltime
     def get_source_info(self):
         pass
@@ -434,6 +477,7 @@ class Channel(object):
         self.picks.append(self.pickSn)
         self.station.picks=self.picks
         self.traveltime=[]
+        self.arriveltime=[]
     def getpick(self,time,phase):
         if phase=='Pg':
             self.pickPg=Pick(time=time,waveform_id=self.stream_ID,phase_hint=phase)
@@ -489,7 +533,6 @@ class Channel(object):
                 self.currentwaveform='ACC'
     def update_stats(self):
         self.tr.stats=self.stats
-        print 'OK'
     def readpicks(self):
         if hasattr(self.stats,'Pg'):
             self.getpick(self.stats.Pg,'Pg')
