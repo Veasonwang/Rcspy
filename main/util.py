@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import   QSizePolicy,QWidget
 from PyQt5 import  QtWidgets
 from PyQt5.QtWidgets import QScrollArea as QSLA
 import math
+import matplotlib
 class Qcwidget(QWidget):
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
@@ -54,6 +55,8 @@ class MplCanvas(FigureCanvas):
         self.ondrawchn=[]             #To write down the channel order
         self.labeloffset = 1         #offset label offset
         FigureCanvas.updateGeometry(self)
+        matplotlib.rcParams['xtick.direction'] = 'in'
+        matplotlib.rcParams['ytick.direction'] = 'in'
     def setRcs(self,Rcs):
         self.Rcs=Rcs
     def drawAxes(self,stations,VisibleChn):
@@ -141,7 +144,9 @@ class MplCanvas(FigureCanvas):
         currentnum=0
         for i in range(len(self.axes)):
             self.axes[i].cla()
+            self.axes[i].xaxis.set_tick_params(direction='in')
             self.axes[i].plot(self.tt[i], self.ss[i],'g')
+
             '''set Ylimratio'''
             mean=self.ondrawchn[i].datamean
             ymin,ymax=self.axes[i].get_ylim()
