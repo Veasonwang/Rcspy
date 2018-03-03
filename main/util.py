@@ -162,11 +162,7 @@ class MplCanvas(FigureCanvas):
             self.Rcs.statusbar.showMessage(string)
             currentnum=currentnum+1
         self.Rcs.statusbar.showMessage("drawing")
-        self.drawIds()          #draw label
-        self.drawPicks()
-        self.drawTraveltimes()
         self.fig.subplots_adjust(bottom=0.001, hspace=0.000, right=0.999, top=0.999, left=0.001)
-        self.draw()
     def get_drawchnarray(self,index):
         return self.ondrawchn[index]
     def get_drawaxes(self,index):

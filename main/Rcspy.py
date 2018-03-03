@@ -81,6 +81,10 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         height=self.scrollArea.geometry().height()
         self.qml.signalheight = height / int(self.drawnumber_combobox.currentText())
         self.qml.drawAxes(self.ondrawstations,self.VisibleChannel)
+        self.qml.drawIds()  # draw label
+        self.qml.drawPicks()
+        self.qml.drawTraveltimes()
+        self.qml.draw()
         self.stationTree.clearSelection()
         self.statusbar.showMessage("Ready")
     def update_ondraw_stations(self):
@@ -182,7 +186,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def Export_Pick_phase_file(self,items):
         if len(items)>0:
             if items[-1].parent.source==None:
-                QMessageBox.about(self.parent, 'tips', 'No source info')
+                QMessageBox.about(self, 'tips', 'No source info')
             else:
                 filename, _ = QFileDialog.getSaveFileName(self, 'savefile', './','.txt')
                 if filename!='':
@@ -196,7 +200,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def export_xml(self,items):
         if len(items)==1:
             filename, _ = QFileDialog.getSaveFileName(self, 'save file', './', '.xml')
-            items[0].parent.export_event(filename)
+            if filename!="":
+                items[0].parent.export_event(filename)
     def _Onstationtreeselectedchange(self):
         selectednumber=len(self.stationTree.selectedItems())
         self.statusbar.showMessage(str(selectednumber)+" items selected")
