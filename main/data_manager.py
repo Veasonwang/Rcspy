@@ -236,7 +236,6 @@ class File:
                     self.Invpath=None
                     self.clear_station_info()
                     print e
-
     def setInvbypath(self,path):
         try:
             Inv=read_inventory(path)
@@ -253,7 +252,6 @@ class File:
             station.depth = -1
             station.longitude = -1
             station.latitude = -1
-
     def get_station_info(self):
         try:
             for station in self.stations:
