@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1225</width>
+    <width>1300</width>
     <height>868</height>
    </rect>
   </property>
@@ -359,7 +359,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QCheckBox" name="pick_phase_chenkbox">
+       <widget class="QCheckBox" name="pick_phase_checkbox">
         <property name="text">
          <string>震相</string>
         </property>
@@ -419,7 +419,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>863</width>
+          <width>938</width>
           <height>755</height>
          </rect>
         </property>
@@ -440,7 +440,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1225</width>
+     <width>1300</width>
      <height>23</height>
     </rect>
    </property>

@@ -235,11 +235,13 @@ class MplCanvas(FigureCanvas):
         self.axes[i].set_ylim(ymin, ymax)
         self.axes[i].set_xlim(xmin,xmax)
         '''draw picks'''
-        self.updatePicks(axes)
+        if self.Rcs.pick_phase_checkbox.isChecked():
+            self.updatePicks(axes)
         '''draw Ids'''
         self.updateIds(axes)
-        '''draw Tracel_time'''
-        self.updateTravel_time(axes)
+        '''draw Travel_time'''
+        if self.Rcs.traveltime_checkBox.isChecked():
+            self.updateTravel_time(axes)
         self.fig.canvas.draw()
     def updatePicks(self,axes):
         i = self.axes.index(axes)

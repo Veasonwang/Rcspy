@@ -62,6 +62,8 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.X_press.clicked.connect(self._OnbtnX_press_clicked)
         self.X_stretch.clicked.connect(self._OnbtnX_stretch_clicked)
         self.drawnumber_combobox.currentTextChanged.connect(self._Ondrawnumber_combobox_change)
+        self.traveltime_checkBox.stateChanged.connect(self._Ontravelswitchchanse)
+        self.pick_phase_checkbox.stateChanged.connect(self._Onpick_phaseswitchchanse)
         self.zoomswitch.stateChanged['int'].connect(self._Onzoomswitchchange)
         self.dragenable_switch.stateChanged.connect(self._Ondragenabeswitchchange)
         self.Ampselect_comboBox.currentIndexChanged.connect(self._Onampunit_change)
@@ -82,8 +84,10 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
         self.qml.signalheight = height / int(self.drawnumber_combobox.currentText())
         self.qml.drawAxes(self.ondrawstations,self.VisibleChannel)
         self.qml.drawIds()  # draw label
-        self.qml.drawPicks()
-        self.qml.drawTraveltimes()
+        if self.pick_phase_checkbox.isChecked():
+            self.qml.drawPicks()
+        if self.traveltime_checkBox.isChecked():
+            self.qml.drawTraveltimes()
         self.qml.draw()
         self.stationTree.clearSelection()
         self.statusbar.showMessage("Ready")
@@ -612,5 +616,19 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 if selected_index == 2:
                     station.setwaveform(type='ACC')
         self.draw()
+    def _Ontravelswitchchanse(self):
+        if self.traveltime_checkBox.isChecked():
+            self.qml.drawTraveltimes()
+            self.qml.draw()
+        else:
+            self.draw()
+        pass
+    def _Onpick_phaseswitchchanse(self):
+        if self.pick_phase_checkbox.isChecked():
+            self.qml.drawPicks()
+            self.qml.draw()
+        else:
+            self.draw()
+        pass
 if __name__ == '__main__':
     Rcspy()
