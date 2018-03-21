@@ -15,6 +15,7 @@ from PyQt5.QtGui import QIcon
 from util import QTreeWidgetItem
 from operator import attrgetter
 from obspy.core.inventory import Inventory
+from obspy.core.event.origin import Origin
 class Source:
     '''
     TO hold source info
@@ -114,7 +115,7 @@ class Files:
         else:
             pass
     def updatestats(self):
-        for file in self. files:
+        for file in self.files:
             file.updatestats()
     def exportxml(self,items):
         for item in items:
@@ -137,15 +138,30 @@ class File:
         self.Inv=None
         self.Invpath=None
         self.setInv()
+        self.origin = Origin()
+    '''
     def init_event(self):
         self.picks=[]
         for station in self.stations:
             for pick in station.picks:
                 if pick != None:
                     self.picks.append(pick)
-        self.event = Event(picks=self.picks)
+        self.origin=Origin()
+        self.origins=[]
+        self.origins.append(self.origin)
+        self.event = Event(picks=self.picks,origins=self.origins)
+    '''
+    def update_event(self):
+        self.picks = []
+        for station in self.stations:
+            for pick in station.picks:
+                if pick != None:
+                    self.picks.append(pick)
+        self.origins = []
+        self.origins.append(self.origin)
+        self.event = Event(picks=self.picks, origins=self.origins)
     def export_event(self,filename):
-        self.init_event()
+        self.update_event()
         self.event.write(filename,format='QUAKEML')
     def Export_calculation_phase_file(self,filename):
         head1=' \tUTCTIME\tTimeError\tLatitude\tLatitude_Error\tLongitude_Error\tDepth\tDepth_Error'
@@ -187,21 +203,30 @@ class File:
                     line = source_info + station_info + pick_info
                     wf.write(unicode(line))
     def attach_event(self,filename):
-        catalog=read_events(filename)
-        if len(catalog)==1:
-            event=catalog[0]
-            for pick in event.picks:
-                for station in self.stations:
-                    for channel in station.channels:
-                        if pick.waveform_id.__eq__(channel.stream_ID):
-                            if pick.phase_hint=='Pg':
-                                channel.picks[0]=pick.copy()
-                            if pick.phase_hint=='Sg':
-                                channel.picks[1]=pick.copy()
-                            if pick.phase_hint=='Pn':
-                                channel.picks[2]=pick.copy()
-                            if pick.phase_hint=='Sn':
-                                channel.picks[3]=pick.copy()
+        try:
+            catalog=read_events(filename)
+        except Exception, e :
+            QMessageBox.about(self.parent,"tips",e)
+        self.event=catalog.events[0]
+        event=self.event
+        self.origin=self.event.origins[0]
+        try:
+            self.source=Source(self.origin.longitude,self.origin.latitude,
+                            self.origin.depth,self.origin.time)
+        except:
+            self.source=None
+        for pick in event.picks:
+            for station in self.stations:
+                for channel in station.channels:
+                    if pick.waveform_id.__eq__(channel.stream_ID):
+                        if pick.phase_hint=='Pg':
+                            channel.picks[0]=pick.copy()
+                        if pick.phase_hint=='Sg':
+                            channel.picks[1]=pick.copy()
+                        if pick.phase_hint=='Pn':
+                            channel.picks[2]=pick.copy()
+                        if pick.phase_hint=='Sn':
+                            channel.picks[3]=pick.copy()
     def setstationTree(self):
         self.QStationItem = QTreeWidgetItem(self)
         self.QStationItem.setText(1, '%s' %
@@ -408,7 +433,6 @@ class Station(object):
         for channel in self.channels:
             channel.update_stats()
     def get_travel_time(self,phase_list,source):
-        #test
         taup=TauPyModel()
         degree=locations2degrees(source.latitude,source.longitude,self.latitude,self.longitude)
         if self.depth !=-1:
@@ -460,7 +484,6 @@ class Channel(object):
         self.tr_ACC=None
         self.currentwaveform='VEL'
         self._initpicks()
-        self.readpicks()
     def _initpicks(self):
         self.pickPg=None
         self.pickSg=None
@@ -529,6 +552,7 @@ class Channel(object):
                 self.currentwaveform='ACC'
     def update_stats(self):
         self.tr.stats=self.stats
+    '''
     def readpicks(self):
         if hasattr(self.stats,'Pg'):
             self.getpick(self.stats.Pg,'Pg')
@@ -538,6 +562,7 @@ class Channel(object):
             self.getpick(self.stats.Pn,'Pn')
         if hasattr(self.stats,'Sn'):
             self.getpick(self.stats.Sn,'Sn')
+    '''
 
 
 

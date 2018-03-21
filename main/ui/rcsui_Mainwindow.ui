@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1300</width>
-    <height>868</height>
+    <width>1600</width>
+    <height>900</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -259,13 +259,13 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>120</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>80</width>
+          <width>120</width>
           <height>16777215</height>
          </size>
         </property>
@@ -419,8 +419,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>938</width>
-          <height>755</height>
+          <width>1241</width>
+          <height>781</height>
          </rect>
         </property>
         <property name="sizePolicy">
@@ -440,8 +440,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1300</width>
-     <height>23</height>
+     <width>1600</width>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menufile">

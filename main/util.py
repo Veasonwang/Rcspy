@@ -180,7 +180,7 @@ class MplCanvas(FigureCanvas):
         for axes, tr  in zip(self.axes, self.ondrawchn):
             axes.text(x, y, tr.tr.id, color="k", transform=axes.transAxes,
                     bbox=bbox, **kwargs)
-            axes.text(0.05,0.78,tr.currentwaveform,color='r',fontsize=9,transform=axes.transAxes)
+            axes.text(0.85,0.85,tr.currentwaveform,color='r',fontsize=9,transform=axes.transAxes)
     def drawTraveltimes(self):
         for axes,chn in zip(self.axes,self.ondrawchn):
             for pick in chn.traveltime:

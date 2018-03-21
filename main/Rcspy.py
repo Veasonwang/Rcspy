@@ -149,24 +149,30 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
     def poptreemenu(self):
         if len(self.stationTree.selectedItems())>0:
             if isinstance(self.stationTree.selectedItems()[-1].parent,File)==True:
-                Menu = QMenu()
-                ASI = Menu.addAction('All Stations Invisible')
-                ASI.triggered.connect(lambda :self.Files.setstationsinvisible(self.stationTree.selectedItems()))
-                Sortbyname=Menu.addAction('Sort by Name')
-                Sortbyname.triggered.connect(lambda:self.Files.SortByName(self.stationTree.selectedItems()))
-                rmfile=Menu.addAction('Remove file')
-                rmfile.triggered.connect(lambda:self.Files.removeselectedfile(self.stationTree.selectedItems()))
-                export_xml = Menu.addAction('Eport_Eventxml')
-                #export_xml.triggered.connect(lambda: self.Files.exportxml(self.stationTree.selectedItems()))
-                export_xml.triggered.connect(lambda: self.export_xml(self.stationTree.selectedItems()))
-                attach_event=Menu.addAction('Attach event file')
-                attach_event.triggered.connect(lambda:self.attach_event_file(self.stationTree.selectedItems()))
-                Export_calculation_phase_file=Menu.addAction('Export_Calculation_phase')
-                Export_calculation_phase_file.triggered.connect(lambda:self.Export_calculation_phase_file(self.stationTree.selectedItems()))
-                Export_calculation_phase_file = Menu.addAction('Export_Pick_phase')
-                Export_calculation_phase_file.triggered.connect(
-                    lambda: self.Export_Pick_phase_file(self.stationTree.selectedItems()))
-                Menu.exec_(QtGui.QCursor.pos())
+                if len(self.stationTree.selectedItems())==1:
+                    Menu = QMenu()
+                    ASI = Menu.addAction('All Stations Invisible')
+                    ASI.triggered.connect(lambda :self.Files.setstationsinvisible(self.stationTree.selectedItems()))
+                    Sortbyname=Menu.addAction('Sort by Name')
+                    Sortbyname.triggered.connect(lambda:self.Files.SortByName(self.stationTree.selectedItems()))
+                    rmfile=Menu.addAction('Remove file')
+                    rmfile.triggered.connect(lambda:self.Files.removeselectedfile(self.stationTree.selectedItems()))
+                    export_xml = Menu.addAction('Eport_Eventxml')
+                    #export_xml.triggered.connect(lambda: self.Files.exportxml(self.stationTree.selectedItems()))
+                    export_xml.triggered.connect(lambda: self.export_xml(self.stationTree.selectedItems()))
+                    attach_event=Menu.addAction('Attach event file')
+                    attach_event.triggered.connect(lambda:self.attach_event_file(self.stationTree.selectedItems()))
+                    Export_calculation_phase_file=Menu.addAction('Export_Calculation_phase')
+                    Export_calculation_phase_file.triggered.connect(lambda:self.Export_calculation_phase_file(self.stationTree.selectedItems()))
+
+                    Export_Pick_phase_file = Menu.addAction('Export_Pick_phase')
+                    Export_Pick_phase_file.triggered.connect(
+                        lambda: self.Export_Pick_phase_file(self.stationTree.selectedItems()))
+
+                    Input_Source_info=Menu.addAction('Input_Source_info')
+                    Input_Source_info.triggered.connect(lambda:self.Input_Source_info(self.stationTree.selectedItems()))
+
+                    Menu.exec_(QtGui.QCursor.pos())
 
             elif isinstance(self.stationTree.selectedItems()[-1].parent,Station)==True:
                 Menu = QMenu()
@@ -182,11 +188,16 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 clearpick=Menu.addAction('Clear picks')
                 clearpick.triggered.connect(lambda:self.Files.clear_selected_station_picks(self.stationTree.selectedItems()))
                 Menu.exec_(QtGui.QCursor.pos())
+    def Input_Source_info(self,items):
+        self.inputdialog = Sourceinputdialog(self, items[0].parent)
+        self.inputdialog.show()
+        pass
     def Export_calculation_phase_file(self,items):
         if len(items)>0:
             filename, _ = QFileDialog.getSaveFileName(self, 'savefile', './','.txt')
             if filename!='':
                 items[-1].parent.Export_calculation_phase_file(filename)
+                QMessageBox.about(self,"tips","ok!")
     def Export_Pick_phase_file(self,items):
         if len(items)>0:
             if items[-1].parent.source==None:
@@ -195,6 +206,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                 filename, _ = QFileDialog.getSaveFileName(self, 'savefile', './','.txt')
                 if filename!='':
                     items[-1].parent.Export_Pick_phase_file(filename)
+                    QMessageBox.about(self, "tips", "ok!")
     def attach_event_file(self,items):
         if len(items)>0:
             filename, _ = QFileDialog.getOpenFileName(self, 'event file', './')

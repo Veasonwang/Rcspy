@@ -28,7 +28,6 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog, QtWidgets.QDialog):
             listitem = QListWidgetItem(file)
             listitem.setText(file.name)
             self.File_list.addItem(listitem)
-        print self.Files.files[0].stations[0].channels[0].tr.stats
     def connectevent(self):
         self.btnOK.clicked.connect(self.Onbtnok)
         self.btn_Cancel.clicked.connect(self.Onbtncancel)
@@ -673,6 +672,7 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
             self.inputdialog=Sourceinputdialog(self,self.File_list.selectedItems()[0].parent)
             self.inputdialog.show()
     def Onbtnok(self):
+
         if len(self.File_list.selectedItems())==1:
             file = self.File_list.selectedItems()[0].parent
             source=file.source
@@ -692,13 +692,17 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
                 self.pgb.show()
                 allnum=len(file.stations)
                 currnum=0
-                for station in file.stations:
-                    self.pgb.setValue(float(currnum*100)/float(allnum))
-                    station.get_travel_time(list,source)
-                    currnum=currnum+1
-                self.pgb.close()
-                self.Rcs.draw()
-                QMessageBox.about(self,'tips','finished')
+                try:
+                    for station in file.stations:
+                        self.pgb.setValue(float(currnum*100)/float(allnum))
+                        station.get_travel_time(list,source)
+                        currnum=currnum+1
+                        self.pgb.close()
+                        self.Rcs.draw()
+                        QMessageBox.about(self, 'tips', 'finished')
+                except Exception ,e:
+                    QMessageBox.about(self,"tips","ErrorSourceinfo")
+                    self.pgb.close()
             else:
                 QMessageBox.about(self, 'tips', 'No source information')
 
@@ -734,14 +738,13 @@ class Sourceinputdialog(rcspy_Sourceinputdialog.Ui_Dialog,QtWidgets.QDialog):
         time=QTime(starttime.hour,starttime.minute,starttime.second)
         Datetime=QDateTime(date,time)
         self.time.setDateTime(Datetime)
-
     def connectevent(self):
         self.btn_back.clicked.connect(self.Onbtn_back)
         self.btn_ok.clicked.connect(self.Onbtn_ok)
         pass
     def Onbtn_ok(self):
         try:
-            print 1
+
             longitude=float(self.longitude.text())
             latitude=float(self.latitude.text())
             depth=float(self.depth.text())
@@ -759,7 +762,10 @@ class Sourceinputdialog(rcspy_Sourceinputdialog.Ui_Dialog,QtWidgets.QDialog):
                                        datetime.time().minute(),
                                        datetime.time().second())
                 self.file.source=Source(longitude,latitude,depth,sourcetime)
-                self.parent.OnFilelist_selectionchange()
+                origin=Origin(time=sourcetime,longitude=longitude,latitude=latitude,depth=depth*1000)
+                self.file.origin=origin
+                if isinstance(self.parent,Traveltimedialog):
+                    self.parent.OnFilelist_selectionchange()
                 self.close()
         except Exception,e:
             print e
