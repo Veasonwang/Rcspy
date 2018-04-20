@@ -132,13 +132,13 @@ class File:
         self.format=fformat
         self.setstationTree()
         self.setname()
-        for stat in set([tr.stats.station for tr in st]):
-            self.addStation(st=st.select(station=stat))
         self.source=None
         self.Inv=None
         self.Invpath=None
-        self.setInv()
         self.origin = Origin()
+        for stat in set([tr.stats.station for tr in st]):
+            self.addStation(st=st.select(station=stat))
+        self.setInv()
     '''
     def init_event(self):
         self.picks=[]
@@ -151,6 +151,13 @@ class File:
         self.origins.append(self.origin)
         self.event = Event(picks=self.picks,origins=self.origins)
     '''
+    def addStation(self, st):
+        '''
+        Adds a station from
+        :param st: obspy stream
+        '''
+        self.stations.append(Station(stream=st, parent=self))
+        self.QStationItem.addChild(self.stations[-1].QStationItem)
     def update_event(self):
         self.picks = []
         for station in self.stations:
@@ -239,13 +246,7 @@ class File:
         self.ename = ""
         for n in self.name.split('.')[0:-1]:
             self.ename=self.ename+n
-    def addStation(self, st):
-        '''
-        Adds a station from
-        :param st: obspy stream
-        '''
-        self.stations.append(Station(stream=st, parent=self))
-        self.QStationItem.addChild(self.stations[-1].QStationItem)
+
     def setinvisible(self):
         for station in self.stations:
             station.setVisible(False)
@@ -436,7 +437,7 @@ class Station(object):
         taup=TauPyModel()
         degree=locations2degrees(source.latitude,source.longitude,self.latitude,self.longitude)
         if self.depth !=-1:
-            arrivals=taup.get_travel_times(source.depth,degree,phase_list,self.depth)
+            arrivals=taup.get_travel_times(source.depth/1000,degree,phase_list,self.depth)
             for phasetime in arrivals:
                 if phasetime.name=='P':
                     self.traveltime[0]=Phasetime('P',phasetime.time)
@@ -453,6 +454,8 @@ class Station(object):
             for channel in self.channels:
                 channel.arriveltime=self.arriveltime
                 channel.traveltime=self.traveltime
+            print self.arriveltime[0].time
+            print self.traveltime[0].time
     def get_source_info(self):
         pass
 class Channel(object):

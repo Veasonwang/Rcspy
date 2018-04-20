@@ -213,11 +213,13 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
             if filename!='':
                 items[-1].parent.attach_event(filename)
                 self.draw()
+                QMessageBox.about(self, 'Tips', filename+"successed!")
     def export_xml(self,items):
         if len(items)==1:
             filename, _ = QFileDialog.getSaveFileName(self, 'save file', './', '.xml')
             if filename!="":
                 items[0].parent.export_event(filename)
+                QMessageBox.about(self, 'Tips', filename + "successed!")
     def _Onstationtreeselectedchange(self):
         selectednumber=len(self.stationTree.selectedItems())
         self.statusbar.showMessage(str(selectednumber)+" items selected")
@@ -429,6 +431,7 @@ class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
                     currentfile = currentfile + 1
                     stream = read(filename)
                     file = File(filename,stream,parent=self, fformat='SEED')
+                    file.setInv()  # low performance
                     self.Files.addfile(file)
                 self.connectevent()
                 self.statusbar.showMessage("drawing")

@@ -697,9 +697,9 @@ class Traveltimedialog(rcspy_Taupdialog.Ui_Dialog,QtWidgets.QDialog):
                         self.pgb.setValue(float(currnum*100)/float(allnum))
                         station.get_travel_time(list,source)
                         currnum=currnum+1
-                        self.pgb.close()
-                        self.Rcs.draw()
-                        QMessageBox.about(self, 'tips', 'finished')
+                    self.pgb.close()
+                    self.Rcs.draw()
+                    QMessageBox.about(self, 'tips', 'finished')
                 except Exception ,e:
                     QMessageBox.about(self,"tips","ErrorSourceinfo")
                     self.pgb.close()
@@ -766,6 +766,7 @@ class Sourceinputdialog(rcspy_Sourceinputdialog.Ui_Dialog,QtWidgets.QDialog):
                 self.file.origin=origin
                 if isinstance(self.parent,Traveltimedialog):
                     self.parent.OnFilelist_selectionchange()
+                QMessageBox.about(self, 'Tips', 'successed!')
                 self.close()
         except Exception,e:
             print e

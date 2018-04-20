@@ -183,7 +183,7 @@ class MplCanvas(FigureCanvas):
             axes.text(0.85,0.85,tr.currentwaveform,color='r',fontsize=9,transform=axes.transAxes)
     def drawTraveltimes(self):
         for axes,chn in zip(self.axes,self.ondrawchn):
-            for pick in chn.traveltime:
+            for pick in chn.arriveltime:
                 if pick!=0:
                     x=pick.time
                     string=pick.phasename+str(pick.time)
