@@ -139,7 +139,7 @@ class Exportdialog(rcspy_Exportdialog.Ui_Dialog, QtWidgets.QDialog):
             '''
             if self.single_channel_checkbox.isChecked() == True:
                 for item in self.File_list.selectedItems():
-                    self.allnum = self.allnum + len(item.parent.stations.stations) * 3
+                    self.allnum = self.allnum + len(item.parent.stations) * 3
                 for item in self.File_list.selectedItems():
                     file = item.parent
                     if self.dir.exists(file.ename) == False:
