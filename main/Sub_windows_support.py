@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-import rcspy_Exportdialog
-import rcspy_Preprocessdialog
-import rcspy_Autopickdialog
-import rcspy_Taupdialog
-import rcspy_Sourceinputdialog
+
+from ui_package import rcspy_Exportdialog
+from ui_package import rcspy_Preprocessdialog
+from ui_package import rcspy_Autopickdialog
+from ui_package import rcspy_Exportdialog
+from ui_package import rcspy_Taupdialog
+from ui_package import rcspy_Sourceinputdialog
 import obspy.core
 from PyQt5.QtWidgets import QMessageBox,QProgressBar,QAbstractItemView,QFileDialog
 from PyQt5.QtCore import QDir,QDateTime,QDate,QTime

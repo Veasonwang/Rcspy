@@ -7,10 +7,10 @@ from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu
 from util import *
 from matplotlib.widgets import MultiCursor
-import rcsui_Mainwindow
+from ui_package.rcsui_Mainwindow import *
 import sys
 from Sub_windows_support import *
-class Rcspy(rcsui_Mainwindow.Ui_MainWindow,QMainWindow):
+class Rcspy(Ui_MainWindow,QMainWindow):
     def __init__(self,parent=None):
         app = QApplication(sys.argv)
         super(Rcspy,self).__init__()
