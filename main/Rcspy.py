@@ -278,10 +278,12 @@ class Rcspy(Ui_MainWindow,QMainWindow):
         Sg = Menu.addAction('PICK Sg')
         Pn = Menu.addAction('PICK Pn')
         Sn = Menu.addAction('PICK Sn')
+        spectrogram=Menu.addAction("show spectrogram")
         Pg.triggered.connect(lambda:self.pick(event,'Pg'))
         Sg.triggered.connect(lambda:self.pick(event,'Sg'))
         Pn.triggered.connect(lambda:self.pick(event,'Pn'))
         Sn.triggered.connect(lambda:self.pick(event,'Sn'))
+        spectrogram.triggered.connect(lambda:self._Onspectrogram(event))
         Menu.exec_(QtGui.QCursor.pos())
     def __mpl_mouseButtonReleaseEvent(self,event):
         if self.qmldragswi==True:
@@ -645,5 +647,8 @@ class Rcspy(Ui_MainWindow,QMainWindow):
         else:
             self.draw()
         pass
+    def _Onspectrogram(self,event):
+        chn=self.getchnbyaxes(event.inaxes)
+        chn.spectrogram()
 if __name__ == '__main__':
     Rcspy()

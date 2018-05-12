@@ -555,6 +555,8 @@ class Channel(object):
                 self.currentwaveform='ACC'
     def update_stats(self):
         self.tr.stats=self.stats
+    def spectrogram(self):
+        self.tr.spectrogram(log=True,title=self.channel+str(self.starttime))
     '''
     def readpicks(self):
         if hasattr(self.stats,'Pg'):
