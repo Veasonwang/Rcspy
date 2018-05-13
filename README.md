@@ -13,6 +13,7 @@ README
 * [使用QtDesigner](#使用QtDesigner)
 * [源码文件结构](#源码文件结构)
 * [主要类成员变量与API](#主要类成员变量与API)
+* [二次开发示例](#二次开发示例)
 
 ****
 ### 开发环境
@@ -133,4 +134,43 @@ self.exdialog.exec_()
 * `detrend(type)`：去倾，type选择是常数型还是线性型
 * `removestationTree（TreeItem）`：把指定的台站从列表树中移除
 * `updatestats()`：更新每个台站的状态
+-----------------------------------
+#### Stations类
+* `self.traveltime`：指地震波从产生到被台站接受时经过的时间
+* `self.arriveltime`：指地震波到达时间
+* `getchannelbyNZE（direction）`：通过方向获取该台站对应channel的实例
+* `gettrbyNZE（direction）`：通过方向获取channel中的trace实例
+* `get_travel_time(phase_list,source)`:获取走时信息
+-------------------------------------
+#### Channel类
+* `self.datamean`：当前通道数据的平均值
+* `self.tr_VEL`：速度曲线
+* `self.tr_DISP`：位移曲线
+* `self.tr_ACC`：加速度曲线
+* `self.currentwaveform`：当前显示的曲线类型
+* `setwaveform(type)`：修改当前显示的曲线类型。调用该接口后需要调用draw()函数重绘整个画布。
+--------------------------------------
+### 二次开发示例
+接下来我将通过一个简单的例子讲解如何在本程序基础上进行二次开发。
+#### 添加显示短时傅里叶变换功能
+1. 通过obspy文档查询了解obspy的短时傅里叶变换接口`Trace.spectrogram(**kwargs)`，通过进一步查询的到接口参数的意义
+```
+Parameters:	
+    data Input data
+    samp_rate (float) Samplerate in Hz
+    per_lap (float) Percentage of overlap of sliding window, ranging from 0 to 1. High overlaps take a long time to compute.
+    wlen (int or float) Window length for fft in seconds. If this parameter is too small, the calculation will take forever. If None, it defaults to (samp_rate/100.0).
+    log (bool) Logarithmic frequency axis if True, linear frequency axis otherwise.
+    outfile (str) String for the filename of output file, if None interactive plotting is activated.
+    fmt (str) Format of image to save
+    axes (matplotlib.axes.Axes) Plot into given axes, this deactivates the fmt and outfile option.
+    dbscale (bool) If True 10 * log10 of color values is taken, if False the sqrt is taken.
+    mult (float) Pad zeros to length mult * wlen. This will make the spectrogram smoother.
+    cmap (matplotlib.colors.Colormap) Specify a custom colormap instance. If not specified, then the default ObsPy sequential colormap is used.
+    zorder (float) Specify the zorder of the plot. Only of importance if other plots in the same axes are executed.
+    title (str)  Set the plot title
+    show (bool)  Do not call plt.show() at end of routine. That way, further modifications can be done to the figure before showing it.
+    sphinx (bool)  Internal flag used for API doc generation, default False
+    clip ([float, float])  adjust colormap to clip at lower and/or upper end. The given percentages of the amplitude range (linear or logarithmic depending on option dbscale) are clipped.
 
+```
