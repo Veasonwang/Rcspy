@@ -115,4 +115,22 @@ self.exdialog.exec_()
 * `updateIds(axes)`：仅重绘axes的id标签
 * `updateTravel_time(axes)`：仅绘制axes的走时
 -------------------------------
-#### Files
+#### Files类
+* `self.files[]`：储存File类
+* `addfile(file)`：添加将实例化的File添加进files[]中
+* `setstationsinvisible(selecteditems)`：是的选中的文件的所有stations不可见。
+* `exportxml（items）`：将选中的的文件导出。
+-------------------------------
+#### File类
+* `self.path`：文件绝对路径
+* `self.format`：记录文件类型
+* `self.Inv`：文件Inventory类实例（仅seed文件支持）
+* `self.stations[]`：一个文件所拥有的stations
+* `update_event()`：更新当前文件的Event类，一个文件有一个Event实例，描述该文件对应的地震事件
+* `attach_event(filename)`：为该文件关联对应的事件文件
+* `setstationTree()`：列表树的初始化
+* `setInv()`：调用read_inventory(path)方法获取inventory实例
+* `detrend(type)`：去倾，type选择是常数型还是线性型
+* `removestationTree（TreeItem）`：把指定的台站从列表树中移除
+* `updatestats()`：更新每个台站的状态
+
