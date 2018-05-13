@@ -155,22 +155,22 @@ self.exdialog.exec_()
 #### 添加显示短时傅里叶变换功能
 1. 通过obspy文档查询了解obspy的短时傅里叶变换接口`Trace.spectrogram(**kwargs)`，通过进一步查询的到接口参数的意义
 Parameters:	
-    `data` Input data
-    `samp_rate (float)` Samplerate in Hz
-    `per_lap (float) `Percentage of overlap of sliding window, ranging from 0 to 1. High overlaps take a long time to compute.
-    `wlen (int or float) `Window length for fft in seconds. If this parameter is too small, the calculation will take forever. If None, it defaults to (samp_rate/100.0).
-    `log (bool) `Logarithmic frequency axis if True, linear frequency axis otherwise.
-    `outfile (str) `String for the filename of output file, if None interactive plotting is activated.
-   ` fmt (str)` Format of image to save
-    a`xes (matplotlib.axes.Axes) `Plot into given axes, this deactivates the fmt and outfile option.
-    `dbscale (bool)` If True 10 * log10 of color values is taken, if False the sqrt is taken.
-   ` mult (float)` Pad zeros to length mult * wlen. This will make the spectrogram smoother.
-    `cmap (matplotlib.colors.Colormap)` Specify a custom colormap instance. If not specified, then the default ObsPy sequential colormap is used.
-    `zorder (float) `Specify the zorder of the plot. Only of importance if other plots in the same axes are executed.
-    `title (str) ` Set the plot title
-    `show (bool)`  Do not call plt.show() at end of routine. That way, further modifications can be done to the figure before showing it.
-   ` sphinx (bool)`  Internal flag used for API doc generation, default False
-   ` clip ([float, float]) ` adjust colormap to clip at lower and/or upper end. The given percentages of the amplitude range (linear or logarithmic depending on option dbscale) are clipped.
+    `data` Input data  
+    `samp_rate (float)` Samplerate in Hz  
+    `per_lap (float) `Percentage of overlap of sliding window, ranging from 0 to 1. High overlaps take a long time to compute.  
+    `wlen (int or float) `Window length for fft in seconds. If this parameter is too small, the calculation will take forever. If None, it defaults to (samp_rate/100.0).  
+    `log (bool) `Logarithmic frequency axis if True, linear frequency axis otherwise.  
+    `outfile (str) `String for the filename of output file, if None interactive plotting is activated.  
+   ` fmt (str)` Format of image to save  
+    `axes (matplotlib.axes.Axes) `Plot into given axes, this deactivates the fmt and outfile option.  
+    `dbscale (bool)` If True 10 * log10 of color values is taken, if False the sqrt is taken.  
+   ` mult (float)` Pad zeros to length mult * wlen. This will make the spectrogram smoother.  
+    `cmap (matplotlib.colors.Colormap)` Specify a custom colormap instance. If not specified, then the default ObsPy sequential colormap is used.  
+    `zorder (float) `Specify the zorder of the plot. Only of importance if other plots in the same axes are executed.  
+    `title (str) ` Set the plot title  
+    `show (bool)`  Do not call plt.show() at end of routine. That way, further modifications can be done to the figure before showing it.  
+   ` sphinx (bool)`  Internal flag used for API doc generation, default False  
+   ` clip ([float, float]) ` adjust colormap to clip at lower and/or upper end. The given percentages of the amplitude range (linear or logarithmic depending on option dbscale) are clipped.  
 2. 根据接口的参数表，结合我自己的需要。在datamanager.py 中的channel类建立新接口。
 ```python
     def spectrogram(self):
@@ -185,14 +185,14 @@ Parameters:
         Pn = Menu.addAction('PICK Pn')
         Sn = Menu.addAction('PICK Sn')
         ```diff
-        +spectrogram=Menu.addAction("show spectrogram")
+        + spectrogram=Menu.addAction("show spectrogram")
         ```
         Pg.triggered.connect(lambda:self.pick(event,'Pg'))
         Sg.triggered.connect(lambda:self.pick(event,'Sg'))
         Pn.triggered.connect(lambda:self.pick(event,'Pn'))
         Sn.triggered.connect(lambda:self.pick(event,'Sn'))
         ```diff
-        +spectrogram.triggered.connect(lambda:self._Onspectrogram(event))
+        + spectrogram.triggered.connect(lambda:self._Onspectrogram(event))
         ```
         Menu.exec_(QtGui.QCursor.pos())
 ```
