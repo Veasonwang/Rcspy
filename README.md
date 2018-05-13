@@ -25,10 +25,18 @@ README
 |PyQt|5.6.0
 |Matplotlib|2.0.2
 -----------
-
+#### 开发环境配置
+1. 登录清华镜像站`https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/ `针对机器平台选择合适的镜像下载并安装。
+2. 配置完成Anaconda环境后，执行`pip install obspy`安装obspy框架。
+3. 安装pycharm ：登录`http://www.jetbrains.com/pycharm/download/ `选择合适的版本下载安装
+4. 拉取源代码，登录`https://github.com/Veasonwang/Rcspy`下载源代码或者输入命令拉取源代码（需要安装git）
+`git clone https://github.com/Veasonwang/Rcspy.git`
+5. 打开pycharm，打开源代码文件夹。
+6. 运行Rcspy.py
+****
 ### 使用QtDesigner
 1.	安装Qt，Windows平台登录 https://www.qt.io/ 下载Qt。Linux下运行`sudo apt-get install qtcreator` 命令完成安装。
-2.	打开QtDesigner，创建一个新的窗口，另存为.ui文件。执行命令：`pyuic5 –o xxx.ui xxx.py` 可生成py源码文件
+2.	打开QtDesigner，创建一个新的窗口，另存为.ui文件。执行命令：`pyuic5 –o xxx.py xxx.ui` 可生成py源码文件
 3.	将.py文件移动到main/ui_package中，在Sub_windows_support.py中添加`from ui_package import xxxx `即可完成该窗口类的导入
 4.	定义该窗口对应的class，编写构造函数，需要继承创建的窗口类。
 ```python
@@ -52,7 +60,7 @@ self.exdialog.exec_()
       * `Sub_windows_support.py` 所有的子窗口类在此文件中。
 3. `main/icons` 存放各类图标
 4. `main/ui` 存放qtdesigner的.ui文件
-5. `main/ui_package` ui界面包，通过 `pyuic5 –o xxx.ui xxx.py` 命令生成的源码文件
+5. `main/ui_package` ui界面包，通过 `pyuic5 –o xxx.py xxx.ui` 命令生成的源码文件
 
 ****
 ### 主要类成员变量与API
@@ -90,3 +98,21 @@ self.exdialog.exec_()
 * `popqmlmenu()`: 画布右键菜单的实现
 * `getchnbyaxes(ax)`：通过当前鼠标所在的axes，获取对应的channel的引用
 * `getaxesbychn(chn)`：获取channel所对应的axes
+------------------------------
+#### MplCanvas类
+* `self.axes[]：axes`：数组，按顺序保存每一个axes的引用
+* `self.fig：MplCanvas`：唯一Figure变量，画布
+* `self.signalheight`：单个通道的高度，单位像素。用以计算fig的总大小，以改变fig大小适应由单屏幕显示道数改变时带来的问题。
+* `self.ondrawchn[]`：保存每一个axes对应的channel的引用。
+* `self.labeloffset`：保存标签的放大倍数，实现标签同步放大缩小功能
+* `self.Rcs`：MplCanvas类用以保存对Rcspy类的引用
+* `drawAxes(stations,VisibleChn)`：给定需要绘制的stations列表和需要显示的N、E、Z的通道，将曲线绘制出来。该方法会把所有内容清除，再重新绘制。
+* `drawIds()`：绘制每一个Axes的id标签
+* `drawPicks()`：绘制所有拾取的震相
+* `drawTraveltimes()`：绘制所有计算的理论到时
+* `updateaxes（axes）`：仅重绘axes的曲线
+* `updatePicks(axes)`：仅重绘axes拾取的震相
+* `updateIds(axes)`：仅重绘axes的id标签
+* `updateTravel_time(axes)`：仅绘制axes的走时
+-------------------------------
+#### Files
