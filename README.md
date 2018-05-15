@@ -19,7 +19,7 @@ README
 ### 开发环境
 |系统|Windows/linux/mac均可，建议Ubuntu14.04/16.04LTS|
 |---|---
-|anaconda版本|4.4及以上，建议5.0.1。64位
+|anaconda版本|anaconda2,4.3及以上，建议5.0.1。64位
 |Python版本|2.7.x
 |obspy|1.1.0
 |IDE|JetBrains Pycharm 2018.03
