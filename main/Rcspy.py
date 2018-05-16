@@ -649,6 +649,7 @@ class Rcspy(Ui_MainWindow,QMainWindow):
         pass
     def _Onspectrogram(self,event):
         chn=self.getchnbyaxes(event.inaxes)
+        print event.inaxes
         chn.spectrogram()
 if __name__ == '__main__':
     Rcspy()
