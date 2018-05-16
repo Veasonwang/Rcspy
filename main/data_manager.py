@@ -403,10 +403,12 @@ class Station(object):
         for channel in self.channels:
             channel.tr_VEL=channel.tr.copy().remove_response(inventory=inventory,output='VEL',water_level=water_level,
                                                         pre_filt=pre_filt)
-            channel.tr_DISP = channel.tr.copy().remove_response(inventory=inventory, output='DISP', water_level=water_level,
-                                                        pre_filt=pre_filt)
-            channel.tr_ACC = channel.tr.copy().remove_response(inventory=inventory, output='ACC', water_level=water_level,
-                                                        pre_filt=pre_filt)
+            #channel.tr_DISP = channel.tr.copy().remove_response(inventory=inventory, output='DISP', water_level=water_level,
+            #                                            pre_filt=pre_filt)
+            #channel.tr_ACC = channel.tr.copy().remove_response(inventory=inventory, output='ACC', water_level=water_level,
+            #                                            pre_filt=pre_filt)
+            channel.tr_DISP=channel.tr_VEL.copy().integrate()
+            channel.tr_ACC=channel.tr_VEL.copy().differentiate()
             if isinstance(channel.tr_VEL,Trace):
                 channel.tr=channel.tr_VEL.copy()
                 channel.datamean = channel.tr.data.mean()
