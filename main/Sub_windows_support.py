@@ -349,15 +349,15 @@ class Preprocessdialog(rcspy_Preprocessdialog.Ui_Dialog, QtWidgets.QDialog):
             if self.detrend_switch.isChecked():
                 self.current_process.setText("detrend")
                 self.detrend()
-            if self.remove_response_switch.isChecked():
-                self.current_process.setText("rm_response")
-                self.remove_response()
             if self.bandpass_switch.isChecked():
                 self.current_process.setText("bp_filter")
                 self.bandpass_Filter()
             if self.lowpass_switch.isChecked():
                 self.current_process.setText("lp_filter")
                 self.lowpass_Filter()
+            if self.remove_response_switch.isChecked():
+                self.current_process.setText("rm_response")
+                self.remove_response()
             self.pgb.close()
             self.current_process.setText(" ")
             if self.errorcontrol == True:

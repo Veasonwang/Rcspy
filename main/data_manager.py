@@ -395,9 +395,11 @@ class Station(object):
             if type == 'linear':
                 channel.tr = channel.tr.detrend(type='linear')
             channel.datamean=channel.tr.data.mean()
+            channel.origintr = channel.tr.copy()
     def Filter(self,type,**kwargs):
         for channel in self.channels:
             channel.tr=channel.tr.copy().filter(type=type,**kwargs)
+            channel.origintr=channel.tr.copy()
             channel.datamean = channel.tr.data.mean()
     def remove_response(self,inventory=None,water_level=60,pre_filt=None):
         for channel in self.channels:
@@ -423,7 +425,9 @@ class Station(object):
         starttime=self.stats.starttime
         pg_time=starttime+pg_pick
         sg_time=starttime+sg_pick
+        print 1
         for chn in self.channels:
+            #chn.clearpicks()
             chn.getpick(pg_time,'Pg')
             chn.getpick(sg_time,'Sg')
     def setwaveform(self,type):
@@ -558,7 +562,7 @@ class Channel(object):
     def update_stats(self):
         self.tr.stats=self.stats
     def spectrogram(self):
-        self.tr.spectrogram(log=True,title=self.channel+str(self.starttime))
+        self.tr.spectrogram(log=True,title=self.station.name+"."+self.channel+"."+str(self.starttime))
     '''
     def readpicks(self):
         if hasattr(self.stats,'Pg'):
